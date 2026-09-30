@@ -11,6 +11,12 @@ export interface Student {
   reportsGrades: { '3': number; '4': number; '5': number };  // Количество оценок за доклады
 }
 
+export interface GradeToPoints {
+  grade3: number;
+  grade4: number;
+  grade5: number;
+}
+
 export interface CategoryConfig {
   key: keyof Pick<Student, 'notes' | 'practice' | 'reports' | 'bonus'>;
   name: string;
@@ -18,6 +24,8 @@ export interface CategoryConfig {
   maxTotal: number; // настраивается преподавателем
   description: string;
   shortDesc: string;
+  useGrades?: boolean; // использовать систему оценок
+  gradeMapping?: GradeToPoints; // соответствие оценок и баллов
 }
 
 export const defaultCategories: CategoryConfig[] = [
@@ -32,18 +40,22 @@ export const defaultCategories: CategoryConfig[] = [
   {
     key: 'practice',
     name: 'Практические работы',
-    maxPerItem: 5,
+    maxPerItem: 10,
     maxTotal: 30,
     description: 'Защита практических работ',
-    shortDesc: '5 баллов за защиту',
+    shortDesc: 'Оценка 3→3б, 4→7б, 5→10б',
+    useGrades: true,
+    gradeMapping: { grade3: 3, grade4: 7, grade5: 10 },
   },
   {
     key: 'reports',
     name: 'Доклады',
-    maxPerItem: 10,
+    maxPerItem: 8,
     maxTotal: 20,
     description: 'Выступление с докладами',
-    shortDesc: '10 баллов за доклад',
+    shortDesc: 'Оценка 3→3б, 4→6б, 5→8б',
+    useGrades: true,
+    gradeMapping: { grade3: 3, grade4: 6, grade5: 8 },
   },
   {
     key: 'bonus',

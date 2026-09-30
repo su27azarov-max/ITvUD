@@ -449,11 +449,33 @@ function TeacherInstructions() {
           Баллы можно добавлять кнопками или вводить вручную.
         </p>
         <ul className="space-y-2 text-sm text-gray-600">
-          <li>• <strong>Конспекты</strong> — за наличие конспектов на занятиях</li>
-          <li>• <strong>Практические работы</strong> — за защиту практических работ</li>
-          <li>• <strong>Доклады</strong> — за выступления с докладами</li>
-          <li>• <strong>Дополнительные баллы</strong> — на усмотрение преподавателя</li>
+          <li>• <strong>Конспекты</strong> — 2 балла за занятие (макс. 30)</li>
+          <li>
+            <strong>Практические работы</strong> — система оценок:
+            <div className="mt-1 ml-4 text-xs text-gray-500">
+              Оценка «3» → 3 балла | Оценка «4» → 7 баллов | Оценка «5» → 10 баллов (макс. 30)
+            </div>
+          </li>
+          <li>
+            <strong>Доклады</strong> — система оценок:
+            <div className="mt-1 ml-4 text-xs text-gray-500">
+              Оценка «3» → 3 балла | Оценка «4» → 6 баллов | Оценка «5» → 8 баллов (макс. 20)
+            </div>
+          </li>
+          <li>• <strong>Дополнительные баллы</strong> — на усмотрение преподавателя (макс. 10)</li>
         </ul>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h3 className="font-bold text-gray-800 mb-4">💾 Сохранение изменений</h3>
+        <p className="text-sm text-gray-600 mb-3">
+          После внесения изменений (импорт студентов, начисление баллов, настройка весов) 
+          появится кнопка <strong>«💾 Сохранить изменения»</strong>. 
+          Нажмите её для сохранения всех данных в браузере.
+        </p>
+        <p className="text-sm text-gray-600">
+          Данные сохраняются локально в браузере и будут доступны при следующем входе.
+        </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
