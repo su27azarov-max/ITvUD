@@ -2,10 +2,9 @@ import { useState } from 'react';
 import {
   Student,
   CategoryConfig,
-  GradeMapping,
   defaultCategories,
-  defaultGradeMapping,
   calculateTotal,
+  calculateMaxTotal,
   getGroups,
   createEmptyStudent,
 } from './data/students';
@@ -16,43 +15,46 @@ import ScoreModal from './components/ScoreModal';
 import StudentInstructions from './components/StudentInstructions';
 
 type TabType = 'general' | 'groups' | 'instructions';
+type RoleType = 'teacher' | 'student';
 
-// Демо-данные для начального отображения
+// Демо-данные
 const demoStudents: Student[] = [
-  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, grades: 15, bonus: 5 },
-  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, grades: 18, bonus: 8 },
-  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, grades: 8, bonus: 2 },
-  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, grades: 14, bonus: 4 },
-  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, grades: 4, bonus: 0 },
-  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, grades: 17, bonus: 6 },
-  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, grades: 12, bonus: 3 },
-  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, grades: 16, bonus: 5 },
-  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, grades: 6, bonus: 1 },
-  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, grades: 15, bonus: 4 },
-  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, grades: 20, bonus: 10 },
-  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, grades: 10, bonus: 2 },
-  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, grades: 6, bonus: 0 },
-  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, grades: 18, bonus: 7 },
-  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, grades: 9, bonus: 1 },
+  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, bonus: 5 },
+  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, bonus: 8 },
+  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, bonus: 2 },
+  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, bonus: 4 },
+  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, bonus: 0 },
+  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, bonus: 6 },
+  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, bonus: 3 },
+  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, bonus: 5 },
+  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, bonus: 1 },
+  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, bonus: 4 },
+  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, bonus: 10 },
+  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, bonus: 2 },
+  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, bonus: 0 },
+  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, bonus: 7 },
+  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, bonus: 1 },
 ];
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('general');
+  const [role, setRole] = useState<RoleType>('teacher');
   const [students, setStudents] = useState<Student[]>(demoStudents);
-  const [categories] = useState<CategoryConfig[]>(defaultCategories);
-  const [gradeMapping, setGradeMapping] = useState<GradeMapping>(defaultGradeMapping);
+  const [categories, setCategories] = useState<CategoryConfig[]>(defaultCategories);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [showImport, setShowImport] = useState(false);
-  const [showGradeSettings, setShowGradeSettings] = useState(false);
+  const [showWeights, setShowWeights] = useState(false);
+
+  const isTeacher = role === 'teacher';
+  const maxTotal = calculateMaxTotal(categories);
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: 'general', label: 'Общий рейтинг', icon: '📊' },
     { id: 'groups', label: 'Рейтинг по группам', icon: '👥' },
-    { id: 'instructions', label: 'Для обучающихся', icon: '📋' },
+    { id: 'instructions', label: isTeacher ? 'Инструкция' : 'Для обучающихся', icon: '📋' },
   ];
 
   const handleImport = (imported: Student[]) => {
-    // Assign new IDs starting after the last existing student
     const maxId = students.reduce((max, s) => Math.max(max, s.id), 0);
     const withNewIds = imported.map((s, i) => ({ ...s, id: maxId + i + 1 }));
     setStudents([...students, ...withNewIds]);
@@ -68,6 +70,10 @@ function App() {
     if (confirm('Вы уверены, что хотите удалить всех студентов?')) {
       setStudents([]);
     }
+  };
+
+  const handleUpdateWeight = (key: string, newMax: number) => {
+    setCategories(categories.map(c => (c.key === key ? { ...c, maxTotal: Math.max(0, newMax) } : c)));
   };
 
   const totalStudents = students.length;
@@ -92,20 +98,45 @@ function App() {
                 <p className="text-xs text-gray-500">Накопительная система оценивания</p>
               </div>
             </div>
-            <div className="hidden sm:flex items-center gap-4 text-sm">
-              <div className="text-center">
-                <div className="font-bold text-indigo-600">{totalStudents}</div>
-                <div className="text-xs text-gray-500">Студентов</div>
+            <div className="flex items-center gap-4">
+              {/* Role Switcher */}
+              <div className="flex items-center bg-gray-100 rounded-xl p-1">
+                <button
+                  onClick={() => setRole('teacher')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isTeacher
+                      ? 'bg-white text-indigo-700 shadow-sm'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  👨‍🏫 Преподаватель
+                </button>
+                <button
+                  onClick={() => setRole('student')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    !isTeacher
+                      ? 'bg-white text-indigo-700 shadow-sm'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  👨‍🎓 Обучающийся
+                </button>
               </div>
-              <div className="w-px h-8 bg-gray-200"></div>
-              <div className="text-center">
-                <div className="font-bold text-indigo-600">{groups.length}</div>
-                <div className="text-xs text-gray-500">Групп</div>
-              </div>
-              <div className="w-px h-8 bg-gray-200"></div>
-              <div className="text-center">
-                <div className="font-bold text-indigo-600">{avgRating}</div>
-                <div className="text-xs text-gray-500">Ср. балл</div>
+              <div className="hidden sm:flex items-center gap-4 text-sm">
+                <div className="text-center">
+                  <div className="font-bold text-indigo-600">{totalStudents}</div>
+                  <div className="text-xs text-gray-500">Студентов</div>
+                </div>
+                <div className="w-px h-8 bg-gray-200"></div>
+                <div className="text-center">
+                  <div className="font-bold text-indigo-600">{groups.length}</div>
+                  <div className="text-xs text-gray-500">Групп</div>
+                </div>
+                <div className="w-px h-8 bg-gray-200"></div>
+                <div className="text-center">
+                  <div className="font-bold text-indigo-600">{avgRating}</div>
+                  <div className="text-xs text-gray-500">Ср. балл</div>
+                </div>
               </div>
             </div>
           </div>
@@ -141,106 +172,86 @@ function App() {
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Общий рейтинг</h2>
                 <p className="text-sm text-gray-500 mt-1">
-                  Рейтинг всех обучающихся по дисциплине (сортировка по убыванию баллов)
+                  Рейтинг всех обучающихся по дисциплине (макс. {maxTotal} баллов)
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setShowGradeSettings(!showGradeSettings)}
-                  className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
-                >
-                  ⚙️ Настройки оценок
-                </button>
-                <button
-                  onClick={() => setShowImport(!showImport)}
-                  className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
-                >
-                  📥 Импорт
-                </button>
-                <button
-                  onClick={() => {
-                    const maxId = students.reduce((max, s) => Math.max(max, s.id), 0);
-                    setEditingStudent(createEmptyStudent(maxId + 1, '', ''));
-                  }}
-                  className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl text-sm font-medium shadow-md shadow-indigo-200 hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  Добавить
-                </button>
-                {students.length > 0 && (
+              {isTeacher && (
+                <div className="flex flex-wrap gap-2">
                   <button
-                    onClick={handleClearAll}
-                    className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-medium hover:bg-red-100 transition-colors"
+                    onClick={() => setShowWeights(!showWeights)}
+                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
                   >
-                    🗑️ Очистить
+                    ⚖️ Веса категорий
                   </button>
-                )}
-              </div>
+                  <button
+                    onClick={() => setShowImport(!showImport)}
+                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
+                  >
+                    📥 Импорт
+                  </button>
+                  <button
+                    onClick={() => {
+                      const maxId = students.reduce((max, s) => Math.max(max, s.id), 0);
+                      setEditingStudent(createEmptyStudent(maxId + 1, '', ''));
+                    }}
+                    className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl text-sm font-medium shadow-md shadow-indigo-200 hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Добавить
+                  </button>
+                  {students.length > 0 && (
+                    <button
+                      onClick={handleClearAll}
+                      className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-medium hover:bg-red-100 transition-colors"
+                    >
+                      🗑️ Очистить
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
-            {/* Grade Settings */}
-            {showGradeSettings && (
+            {/* Weights Settings (teacher only) */}
+            {showWeights && isTeacher && (
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <span>⚙️</span> Настройки соответствия оценок и баллов
+                <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <span>⚖️</span> Настройка весов категорий
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  Укажите, сколько баллов начисляется за каждую оценку на занятии:
+                  Установите максимальное количество баллов для каждой категории. Итого: <strong className="text-indigo-600">{maxTotal}</strong> баллов.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Оценка «5» → баллов
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="10"
-                      value={gradeMapping.grade5}
-                      onChange={(e) =>
-                        setGradeMapping({ ...gradeMapping, grade5: parseInt(e.target.value) || 5 })
-                      }
-                      className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Оценка «4» → баллов
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="10"
-                      value={gradeMapping.grade4}
-                      onChange={(e) =>
-                        setGradeMapping({ ...gradeMapping, grade4: parseInt(e.target.value) || 3 })
-                      }
-                      className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Оценка «3» → баллов
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="10"
-                      value={gradeMapping.grade3}
-                      onChange={(e) =>
-                        setGradeMapping({ ...gradeMapping, grade3: parseInt(e.target.value) || 1 })
-                      }
-                      className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                    />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {categories.map(cat => (
+                    <div key={cat.key} className="bg-gray-50 rounded-xl p-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {cat.name}
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={cat.maxTotal}
+                          onChange={(e) => handleUpdateWeight(cat.key, parseInt(e.target.value) || 0)}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-center font-bold"
+                        />
+                        <span className="text-sm text-gray-500 whitespace-nowrap">баллов</span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">{cat.shortDesc}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 p-3 bg-indigo-50 rounded-lg text-sm text-indigo-700">
+                  💡 Шкала оценок рассчитывается в процентах от суммы весов:
+                  Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%
                 </div>
               </div>
             )}
 
             {/* Import */}
-            {showImport && <ImportStudents onImport={handleImport} existingCount={students.length} />}
+            {showImport && isTeacher && <ImportStudents onImport={handleImport} existingCount={students.length} />}
 
             {/* Rating Table */}
             {students.length > 0 ? (
@@ -248,7 +259,7 @@ function App() {
                 <RatingTable
                   students={students}
                   categories={categories}
-                  onEditStudent={setEditingStudent}
+                  onEditStudent={isTeacher ? setEditingStudent : undefined}
                 />
               </div>
             ) : (
@@ -256,14 +267,16 @@ function App() {
                 <div className="text-5xl mb-4">📭</div>
                 <h3 className="text-lg font-bold text-gray-800 mb-2">Список студентов пуст</h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  Импортируйте студентов или добавьте их вручную
+                  {isTeacher ? 'Импортируйте студентов или добавьте их вручную' : 'Преподаватель ещё не загрузил данные'}
                 </p>
-                <button
-                  onClick={() => setShowImport(true)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl text-sm font-medium shadow-md"
-                >
-                  📥 Импортировать студентов
-                </button>
+                {isTeacher && (
+                  <button
+                    onClick={() => setShowImport(true)}
+                    className="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl text-sm font-medium shadow-md"
+                  >
+                    📥 Импортировать студентов
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -275,47 +288,54 @@ function App() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Рейтинг по группам</h2>
               <p className="text-sm text-gray-500 mt-1">
-                Просмотр рейтинга с фильтрацией по учебным группам
+                Просмотр рейтинга с фильтрацией по учебным группам (макс. {maxTotal} баллов)
               </p>
             </div>
             {students.length > 0 ? (
               <GroupRating
                 students={students}
                 categories={categories}
-                onEditStudent={setEditingStudent}
+                onEditStudent={isTeacher ? setEditingStudent : undefined}
               />
             ) : (
               <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 text-center">
                 <div className="text-5xl mb-4">📭</div>
                 <h3 className="text-lg font-bold text-gray-800 mb-2">Нет данных</h3>
                 <p className="text-sm text-gray-500">
-                  Сначала импортируйте студентов во вкладке «Общий рейтинг»
+                  {isTeacher ? 'Сначала импортируйте студентов' : 'Преподаватель ещё не загрузил данные'}
                 </p>
               </div>
             )}
           </div>
         )}
 
-        {/* Student Instructions Tab */}
+        {/* Instructions Tab */}
         {activeTab === 'instructions' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Инструкция для обучающихся</h2>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {isTeacher ? 'Инструкция' : 'Инструкция для обучающихся'}
+              </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Какие баллы и за что можно получить в рамках дисциплины
+                {isTeacher
+                  ? 'Руководство по работе с системой рейтинга'
+                  : 'Какие баллы и за что можно получить в рамках дисциплины'}
               </p>
             </div>
-            <StudentInstructions categories={categories} gradeMapping={gradeMapping} />
+            {isTeacher ? (
+              <TeacherInstructions />
+            ) : (
+              <StudentInstructions categories={categories} />
+            )}
           </div>
         )}
       </main>
 
-      {/* Score Modal */}
-      {editingStudent && (
+      {/* Score Modal (teacher only) */}
+      {editingStudent && isTeacher && (
         <ScoreModal
           student={editingStudent}
           categories={categories}
-          gradeMapping={gradeMapping}
           onSave={handleSaveStudent}
           onClose={() => setEditingStudent(null)}
         />
@@ -336,6 +356,68 @@ function App() {
           </div>
         </div>
       </footer>
+    </div>
+  );
+}
+
+// Компонент инструкции для преподавателя
+function TeacherInstructions() {
+  return (
+    <div className="space-y-4">
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4">
+        <p className="text-amber-800 text-sm">
+          <strong>📌 Режим преподавателя:</strong> Вы можете импортировать студентов, начислять баллы и настраивать веса категорий.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h3 className="font-bold text-gray-800 mb-4">📥 Импорт студентов</h3>
+        <p className="text-sm text-gray-600 mb-3">
+          Используйте кнопку «Импорт» для загрузки списка студентов. Поддерживаются два формата:
+        </p>
+        <div className="space-y-3">
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="font-medium text-sm text-gray-700 mb-1">Формат 1 — по группам:</p>
+            <pre className="text-xs text-gray-600 overflow-x-auto">{`# Группа ИТ-201
+Иванов Иван Сергеевич
+Петрова Анна Михайловна
+
+# Группа ИТ-202
+Сидоров Алексей Дмитриевич`}</pre>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="font-medium text-sm text-gray-700 mb-1">Формат 2 — CSV:</p>
+            <pre className="text-xs text-gray-600 overflow-x-auto">{`Иванов Иван Сергеевич;ИТ-201
+Петрова Анна Михайловна;ИТ-201`}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h3 className="font-bold text-gray-800 mb-4">✏️ Начисление баллов</h3>
+        <p className="text-sm text-gray-600 mb-3">
+          Нажмите кнопку «Баллы» рядом с именем студента для открытия окна начисления.
+          Баллы можно добавлять кнопками или вводить вручную.
+        </p>
+        <ul className="space-y-2 text-sm text-gray-600">
+          <li>• <strong>Конспекты</strong> — за наличие конспектов на занятиях</li>
+          <li>• <strong>Практические работы</strong> — за защиту практических работ</li>
+          <li>• <strong>Доклады</strong> — за выступления с докладами</li>
+          <li>• <strong>Дополнительные баллы</strong> — на усмотрение преподавателя</li>
+        </ul>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h3 className="font-bold text-gray-800 mb-4">⚖️ Веса категорий</h3>
+        <p className="text-sm text-gray-600 mb-3">
+          Нажмите «Веса категорий» для настройки максимального количества баллов по каждой категории.
+          Это позволяет гибко определять значимость каждого вида работы.
+        </p>
+        <p className="text-sm text-gray-600">
+          Итоговая оценка рассчитывается в процентах от суммы весов:
+          Отлично ≥90%, Хорошо 75-89%, Удовлетворительно 60-74%, Неудовлетворительно &lt;60%.
+        </p>
+      </div>
     </div>
   );
 }

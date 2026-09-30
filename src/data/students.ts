@@ -2,34 +2,20 @@ export interface Student {
   id: number;
   fullName: string;
   group: string;
-  // Категории баллов (суммируются внутри каждой)
   notes: number;       // Конспекты
   practice: number;    // Защита практических работ
   reports: number;     // Выступления с докладами
-  grades: number;      // Баллы по оценкам на занятиях
   bonus: number;       // Дополнительные баллы
 }
 
-export interface GradeMapping {
-  grade5: number;  // Баллы за оценку "5"
-  grade4: number;  // Баллы за оценку "4"
-  grade3: number;  // Баллы за оценку "3"
-}
-
 export interface CategoryConfig {
-  key: keyof Pick<Student, 'notes' | 'practice' | 'reports' | 'grades' | 'bonus'>;
+  key: keyof Pick<Student, 'notes' | 'practice' | 'reports' | 'bonus'>;
   name: string;
   maxPerItem: number;
-  maxTotal: number;
+  maxTotal: number; // настраивается преподавателем
   description: string;
   shortDesc: string;
 }
-
-export const defaultGradeMapping: GradeMapping = {
-  grade5: 5,
-  grade4: 3,
-  grade3: 1,
-};
 
 export const defaultCategories: CategoryConfig[] = [
   {
@@ -38,7 +24,7 @@ export const defaultCategories: CategoryConfig[] = [
     maxPerItem: 2,
     maxTotal: 30,
     description: 'Наличие конспектов на занятиях',
-    shortDesc: '2 балла за занятие (макс. 30)',
+    shortDesc: '2 балла за занятие',
   },
   {
     key: 'practice',
@@ -46,7 +32,7 @@ export const defaultCategories: CategoryConfig[] = [
     maxPerItem: 5,
     maxTotal: 30,
     description: 'Защита практических работ',
-    shortDesc: '5 баллов за защиту (макс. 30)',
+    shortDesc: '5 баллов за защиту',
   },
   {
     key: 'reports',
@@ -54,15 +40,7 @@ export const defaultCategories: CategoryConfig[] = [
     maxPerItem: 10,
     maxTotal: 20,
     description: 'Выступление с докладами',
-    shortDesc: '10 баллов за доклад (макс. 20)',
-  },
-  {
-    key: 'grades',
-    name: 'Оценки на занятиях',
-    maxPerItem: 5,
-    maxTotal: 20,
-    description: 'Баллы по оценкам, полученным на занятиях',
-    shortDesc: '5/3/1 балл за оценку 5/4/3 (макс. 20)',
+    shortDesc: '10 баллов за доклад',
   },
   {
     key: 'bonus',
@@ -70,25 +48,32 @@ export const defaultCategories: CategoryConfig[] = [
     maxPerItem: 5,
     maxTotal: 10,
     description: 'Дополнительные баллы от преподавателя',
-    shortDesc: 'На усмотрение преподавателя (макс. 10)',
+    shortDesc: 'На усмотрение преподавателя',
   },
 ];
 
 export function calculateTotal(student: Student): number {
-  return student.notes + student.practice + student.reports + student.grades + student.bonus;
+  return student.notes + student.practice + student.reports + student.bonus;
 }
 
-export function getGrade(total: number): string {
-  if (total >= 90) return 'Отлично';
-  if (total >= 75) return 'Хорошо';
-  if (total >= 60) return 'Удовлетворительно';
+export function calculateMaxTotal(categories: CategoryConfig[]): number {
+  return categories.reduce((sum, c) => sum + c.maxTotal, 0);
+}
+
+export function getGrade(total: number, maxTotal: number): string {
+  // Шкала в процентах от максимума
+  const pct = (total / maxTotal) * 100;
+  if (pct >= 90) return 'Отлично';
+  if (pct >= 75) return 'Хорошо';
+  if (pct >= 60) return 'Удовлетворительно';
   return 'Неудовлетворительно';
 }
 
-export function getGradeColor(total: number): string {
-  if (total >= 90) return 'text-green-700 bg-green-100';
-  if (total >= 75) return 'text-blue-700 bg-blue-100';
-  if (total >= 60) return 'text-yellow-700 bg-yellow-100';
+export function getGradeColor(total: number, maxTotal: number): string {
+  const pct = (total / maxTotal) * 100;
+  if (pct >= 90) return 'text-green-700 bg-green-100';
+  if (pct >= 75) return 'text-blue-700 bg-blue-100';
+  if (pct >= 60) return 'text-yellow-700 bg-yellow-100';
   return 'text-red-700 bg-red-100';
 }
 
@@ -98,7 +83,7 @@ export function getGroups(students: Student[]): string[] {
 }
 
 export function createEmptyStudent(id: number, fullName: string, group: string): Student {
-  return { id, fullName, group, notes: 0, practice: 0, reports: 0, grades: 0, bonus: 0 };
+  return { id, fullName, group, notes: 0, practice: 0, reports: 0, bonus: 0 };
 }
 
 export function parseImportText(text: string): Student[] {
@@ -111,17 +96,14 @@ export function parseImportText(text: string): Student[] {
     const line = rawLine.trim();
     if (!line) continue;
 
-    // Формат группы: # Группа ИТ-201 или Группа: ИТ-201 или просто ИТ-201 (строка в скобках)
     const groupMatch = line.match(/^(?:#\s*Группа\s*|Группа\s*[:\-]?\s*)(.+)$/i);
     if (groupMatch) {
       currentGroup = groupMatch[1].trim();
       continue;
     }
 
-    // Формат CSV: ФИО;Группа или ФИО,Группа
     const csvMatch = line.match(/^(.+?)\s*[;,]\s*(.+)$/);
     if (csvMatch && !csvMatch[2].includes(' ')) {
-      // Если вторая часть похожа на номер группы (короткая, без пробелов или с дефисом)
       const possibleGroup = csvMatch[2].trim();
       if (possibleGroup.length <= 20 && !possibleGroup.includes('.')) {
         students.push(createEmptyStudent(nextId++, csvMatch[1].trim(), possibleGroup));
@@ -129,7 +111,6 @@ export function parseImportText(text: string): Student[] {
       }
     }
 
-    // Если группа уже установлена — это студент
     if (currentGroup) {
       students.push(createEmptyStudent(nextId++, line, currentGroup));
     }

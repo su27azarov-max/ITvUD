@@ -1,4 +1,4 @@
-import { Student, CategoryConfig, calculateTotal, getGrade, getGradeColor } from '../data/students';
+import { Student, CategoryConfig, calculateTotal, calculateMaxTotal, getGrade, getGradeColor } from '../data/students';
 
 interface RatingTableProps {
   students: Student[];
@@ -9,6 +9,7 @@ interface RatingTableProps {
 
 export default function RatingTable({ students, categories, title, onEditStudent }: RatingTableProps) {
   const sorted = [...students].sort((a, b) => calculateTotal(b) - calculateTotal(a));
+  const maxTotal = calculateMaxTotal(categories);
 
   return (
     <div>
@@ -32,7 +33,7 @@ export default function RatingTable({ students, categories, title, onEditStudent
               ))}
               <th className="px-3 py-3 text-center font-medium">
                 Итого
-                <span className="block text-xs opacity-80 font-normal">(макс. 100)</span>
+                <span className="block text-xs opacity-80 font-normal">(макс. {maxTotal})</span>
               </th>
               <th className="px-3 py-3 text-center font-medium">Оценка</th>
               {onEditStudent && (
@@ -61,8 +62,8 @@ export default function RatingTable({ students, categories, title, onEditStudent
                     <span className="font-bold text-indigo-700 text-base">{total}</span>
                   </td>
                   <td className="px-3 py-3 text-center">
-                    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${getGradeColor(total)}`}>
-                      {getGrade(total)}
+                    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${getGradeColor(total, maxTotal)}`}>
+                      {getGrade(total, maxTotal)}
                     </span>
                   </td>
                   {onEditStudent && (
@@ -82,10 +83,10 @@ export default function RatingTable({ students, categories, title, onEditStudent
         </table>
       </div>
       <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></span> Отлично (90-100)</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-blue-100 border border-blue-300"></span> Хорошо (75-89)</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-yellow-100 border border-yellow-300"></span> Удовл. (60-74)</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-red-100 border border-red-300"></span> Неудовл. (&lt;60)</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></span> Отлично (≥90%)</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-blue-100 border border-blue-300"></span> Хорошо (75-89%)</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-yellow-100 border border-yellow-300"></span> Удовл. (60-74%)</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-red-100 border border-red-300"></span> Неудовл. (&lt;60%)</span>
       </div>
     </div>
   );

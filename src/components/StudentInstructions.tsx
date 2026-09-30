@@ -1,12 +1,11 @@
-import { CategoryConfig, GradeMapping } from '../data/students';
+import { CategoryConfig, calculateMaxTotal } from '../data/students';
 
 interface StudentInstructionsProps {
   categories: CategoryConfig[];
-  gradeMapping: GradeMapping;
 }
 
-export default function StudentInstructions({ categories, gradeMapping }: StudentInstructionsProps) {
-  const maxTotal = categories.reduce((sum, cat) => sum + cat.maxTotal, 0);
+export default function StudentInstructions({ categories }: StudentInstructionsProps) {
+  const maxTotal = calculateMaxTotal(categories);
 
   return (
     <div className="space-y-6">
@@ -16,7 +15,7 @@ export default function StudentInstructions({ categories, gradeMapping }: Studen
         <p className="text-indigo-700 text-sm leading-relaxed">
           Рейтинг формируется по накопительной системе в течение семестра. 
           Максимальный рейтинг — <strong>{maxTotal} баллов</strong>. 
-          Итоговая оценка выставляется автоматически на основе набранных баллов.
+          Итоговая оценка выставляется автоматически на основе процента от максимального количества баллов.
         </p>
       </div>
 
@@ -54,59 +53,34 @@ export default function StudentInstructions({ categories, gradeMapping }: Studen
         </div>
       </div>
 
-      {/* Grade mapping */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
-        <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="text-xl">🎯</span>
-          Соответствие оценок и баллов
-        </h3>
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-            <div className="text-3xl font-bold text-green-600">5</div>
-            <div className="text-sm text-green-700 mt-1">→ {gradeMapping.grade5} баллов</div>
-            <div className="text-xs text-green-600 mt-1">за каждый ответ на занятии</div>
-          </div>
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-            <div className="text-3xl font-bold text-blue-600">4</div>
-            <div className="text-sm text-blue-700 mt-1">→ {gradeMapping.grade4} балла</div>
-            <div className="text-xs text-blue-600 mt-1">за каждый ответ на занятии</div>
-          </div>
-          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
-            <div className="text-3xl font-bold text-yellow-600">3</div>
-            <div className="text-sm text-yellow-700 mt-1">→ {gradeMapping.grade3} балл</div>
-            <div className="text-xs text-yellow-600 mt-1">за каждый ответ на занятии</div>
-          </div>
-        </div>
-        <p className="text-sm text-gray-500 italic">
-          * Преподаватель может изменить соответствие оценок и баллов
-        </p>
-      </div>
-
       {/* Final grades */}
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
           <span className="text-xl">🏆</span>
           Итоговые оценки
         </h3>
+        <p className="text-sm text-gray-500 mb-4">
+          Оценка определяется как процент от максимального количества баллов ({maxTotal})
+        </p>
         <div className="space-y-3">
           <div className="flex items-center gap-4 p-3 bg-green-50 rounded-xl border border-green-100">
-            <span className="w-20 text-center font-bold text-green-700 text-lg">90–100</span>
-            <span className="text-sm text-gray-600">баллов</span>
+            <span className="w-20 text-center font-bold text-green-700 text-lg">≥90%</span>
+            <span className="text-sm text-gray-600">от максимума</span>
             <span className="ml-auto px-4 py-1.5 bg-green-100 text-green-700 rounded-full font-bold text-sm">Отлично (5)</span>
           </div>
           <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
-            <span className="w-20 text-center font-bold text-blue-700 text-lg">75–89</span>
-            <span className="text-sm text-gray-600">баллов</span>
+            <span className="w-20 text-center font-bold text-blue-700 text-lg">75–89%</span>
+            <span className="text-sm text-gray-600">от максимума</span>
             <span className="ml-auto px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full font-bold text-sm">Хорошо (4)</span>
           </div>
           <div className="flex items-center gap-4 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
-            <span className="w-20 text-center font-bold text-yellow-700 text-lg">60–74</span>
-            <span className="text-sm text-gray-600">баллов</span>
+            <span className="w-20 text-center font-bold text-yellow-700 text-lg">60–74%</span>
+            <span className="text-sm text-gray-600">от максимума</span>
             <span className="ml-auto px-4 py-1.5 bg-yellow-100 text-yellow-700 rounded-full font-bold text-sm">Удовлетворительно (3)</span>
           </div>
           <div className="flex items-center gap-4 p-3 bg-red-50 rounded-xl border border-red-100">
-            <span className="w-20 text-center font-bold text-red-700 text-lg">&lt; 60</span>
-            <span className="text-sm text-gray-600">баллов</span>
+            <span className="w-20 text-center font-bold text-red-700 text-lg">&lt; 60%</span>
+            <span className="text-sm text-gray-600">от максимума</span>
             <span className="ml-auto px-4 py-1.5 bg-red-100 text-red-700 rounded-full font-bold text-sm">Неудовлетворительно (2)</span>
           </div>
         </div>
@@ -133,10 +107,6 @@ export default function StudentInstructions({ categories, gradeMapping }: Studen
           </li>
           <li className="flex items-start gap-2">
             <span className="text-amber-500 mt-0.5">•</span>
-            <span>Активно отвечайте на занятиях — каждая оценка «5» приносит {gradeMapping.grade5} баллов</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-amber-500 mt-0.5">•</span>
             <span>Проявляйте дополнительную активность — преподаватель может начислить до {categories.find(c => c.key === 'bonus')?.maxTotal || 10} дополнительных баллов</span>
           </li>
         </ul>
@@ -151,7 +121,7 @@ export default function StudentInstructions({ categories, gradeMapping }: Studen
         <ul className="space-y-2 text-sm text-blue-800">
           <li className="flex items-start gap-2">
             <span className="text-blue-500 mt-0.5">•</span>
-            <span>Студенты, набравшие менее 60 баллов, допускаются к пересдаче</span>
+            <span>Студенты, набравшие менее 60% от максимального количества баллов, допускаются к пересдаче</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-blue-500 mt-0.5">•</span>
@@ -164,6 +134,10 @@ export default function StudentInstructions({ categories, gradeMapping }: Studen
           <li className="flex items-start gap-2">
             <span className="text-blue-500 mt-0.5">•</span>
             <span>При возникновении вопросов по начислению баллов обращайтесь к преподавателю</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-blue-500 mt-0.5">•</span>
+            <span>Максимальное количество баллов по каждой категории устанавливается преподавателем</span>
           </li>
         </ul>
       </div>

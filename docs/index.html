@@ -13,6 +13,10 @@
         .header-icon { width: 42px; height: 42px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
         .header-title { font-size: 1.15rem; font-weight: 700; color: #111827; }
         .header-subtitle { font-size: 0.75rem; color: #6b7280; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .role-switcher { display: flex; align-items: center; background: #f3f4f6; border-radius: 10px; padding: 4px; }
+        .role-btn { padding: 6px 12px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s; background: transparent; color: #6b7280; }
+        .role-btn.active { background: white; color: #4338ca; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .header-stats { display: flex; align-items: center; gap: 16px; }
         .stat-item { text-align: center; }
         .stat-value { font-weight: 700; color: #4f46e5; font-size: 1rem; }
@@ -59,7 +63,6 @@
         .btn-edit:hover { background: #e0e7ff; }
         .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1rem; }
         .toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-        /* Import panel */
         .import-panel { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; margin-bottom: 1.5rem; }
         .import-panel textarea { width: 100%; height: 150px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 12px; font-family: monospace; font-size: 0.85rem; resize: vertical; outline: none; }
         .import-panel textarea:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
@@ -71,7 +74,6 @@
         .preview-table thead th { padding: 8px; font-weight: 500; font-size: 0.75rem; color: #6b7280; }
         .preview-table tbody td { padding: 8px; }
         .group-tag { background: #eef2ff; color: #4f46e5; padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 500; }
-        /* Group Rating */
         .group-selector { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
         .group-selector label { font-weight: 500; color: #374151; }
         .group-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -94,6 +96,16 @@
         .group-card-stat-value { font-size: 1.1rem; font-weight: 700; }
         .group-card-stat-label { font-size: 0.7rem; color: #6b7280; }
         .stat-avg { color: #4f46e5; } .stat-max { color: #16a34a; } .stat-min { color: #ea580c; }
+        /* Weights panel */
+        .weights-panel { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; margin-bottom: 1.5rem; }
+        .weights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+        .weight-item { background: #f9fafb; border-radius: 12px; padding: 16px; }
+        .weight-item label { display: block; font-size: 0.85rem; font-weight: 500; color: #374151; margin-bottom: 4px; }
+        .weight-input-row { display: flex; align-items: center; gap: 8px; }
+        .weight-input { width: 100%; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; font-weight: 700; font-size: 1rem; outline: none; }
+        .weight-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+        .weight-desc { font-size: 0.7rem; color: #9ca3af; margin-top: 4px; }
+        .weights-info { margin-top: 16px; padding: 12px; background: #eef2ff; border-radius: 8px; font-size: 0.85rem; color: #3730a3; }
         /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
         .modal { background: white; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); width: 100%; max-width: 600px; max-height: 90vh; overflow: hidden; }
@@ -124,14 +136,6 @@
         .manual-input { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
         .manual-input input { width: 80px; padding: 8px; border: 1px solid #e5e7eb; border-radius: 10px; text-align: center; font-weight: 700; font-size: 1rem; outline: none; }
         .manual-input input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
-        .grade-buttons { display: flex; gap: 8px; margin-top: 12px; }
-        .grade-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center; }
-        .grade-btn-5 { background: #dcfce7; color: #166534; }
-        .grade-btn-5:hover { background: #bbf7d0; }
-        .grade-btn-4 { background: #dbeafe; color: #1e40af; }
-        .grade-btn-4:hover { background: #bfdbfe; }
-        .grade-btn-3 { background: #fef9c3; color: #854d0e; }
-        .grade-btn-3:hover { background: #fef08a; }
         /* Instructions */
         .instr-card { background: white; border-radius: 16px; border: 1px solid #f3f4f6; overflow: hidden; margin-bottom: 1.5rem; }
         .instr-card-header { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 16px 24px; color: white; }
@@ -146,19 +150,6 @@
         .instr-cat-max-label { font-size: 0.7rem; color: #6b7280; }
         .instr-cat-desc { font-size: 0.85rem; color: #6b7280; margin-left: 44px; }
         .instr-cat-detail { margin-top: 10px; margin-left: 44px; background: #f9fafb; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; color: #374151; }
-        .grade-mapping { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
-        .grade-mapping-card { padding: 16px; border-radius: 12px; text-align: center; border: 1px solid; }
-        .grade-mapping-card.g5 { background: #f0fdf4; border-color: #bbf7d0; }
-        .grade-mapping-card.g4 { background: #eff6ff; border-color: #bfdbfe; }
-        .grade-mapping-card.g3 { background: #fefce8; border-color: #fef08a; }
-        .grade-mapping-num { font-size: 2rem; font-weight: 700; }
-        .grade-mapping-card.g5 .grade-mapping-num { color: #16a34a; }
-        .grade-mapping-card.g4 .grade-mapping-num { color: #2563eb; }
-        .grade-mapping-card.g3 .grade-mapping-num { color: #ca8a04; }
-        .grade-mapping-text { font-size: 0.85rem; margin-top: 4px; }
-        .grade-mapping-card.g5 .grade-mapping-text { color: #166534; }
-        .grade-mapping-card.g4 .grade-mapping-text { color: #1e40af; }
-        .grade-mapping-card.g3 .grade-mapping-text { color: #854d0e; }
         .final-grades { padding: 24px; }
         .final-grade-row { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; border: 1px solid; }
         .final-grade-row.excellent { background: #f0fdf4; border-color: #bbf7d0; }
@@ -189,12 +180,19 @@
         .overview-box { background: linear-gradient(135deg, #eef2ff, #faf5ff); border: 1px solid #c7d2fe; border-radius: 12px; padding: 20px; margin-bottom: 1.5rem; }
         .overview-box h3 { font-size: 1.1rem; font-weight: 700; color: #3730a3; margin-bottom: 8px; }
         .overview-box p { font-size: 0.875rem; color: #4338ca; line-height: 1.6; }
-        /* Empty state */
+        .teacher-notice { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 1.5rem; }
+        .teacher-notice p { color: #92400e; font-size: 0.875rem; }
+        .teacher-section { background: white; border-radius: 16px; border: 1px solid #f3f4f6; padding: 24px; margin-bottom: 16px; }
+        .teacher-section h3 { font-weight: 700; color: #1f2937; margin-bottom: 12px; }
+        .teacher-section p { font-size: 0.875rem; color: #4b5563; margin-bottom: 8px; }
+        .teacher-section pre { background: #f9fafb; border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 0.75rem; overflow-x: auto; border: 1px solid #e5e7eb; }
+        .teacher-section ul { list-style: none; margin-top: 8px; }
+        .teacher-section li { font-size: 0.875rem; color: #4b5563; padding: 4px 0; padding-left: 16px; position: relative; }
+        .teacher-section li::before { content: '•'; position: absolute; left: 0; color: #6366f1; }
         .empty-state { background: white; border-radius: 16px; padding: 48px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; text-align: center; }
         .empty-state .icon { font-size: 3rem; margin-bottom: 16px; }
         .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
         .empty-state p { font-size: 0.875rem; color: #6b7280; margin-bottom: 16px; }
-        /* Footer */
         .footer { border-top: 1px solid #e5e7eb; background: rgba(255,255,255,0.5); margin-top: 3rem; }
         .footer-inner { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
         .footer-text { font-size: 0.875rem; color: #6b7280; }
@@ -207,7 +205,6 @@
             .tabs-container { flex-direction: column; }
             .tab-btn { min-width: auto; }
             .group-cards { grid-template-columns: 1fr; }
-            .grade-mapping { grid-template-columns: 1fr; }
             .toolbar { flex-direction: column; align-items: flex-start; }
         }
     </style>
@@ -222,12 +219,18 @@
                     <div class="header-subtitle">Накопительная система оценивания</div>
                 </div>
             </div>
-            <div class="header-stats">
-                <div class="stat-item"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Студентов</div></div>
-                <div class="stat-divider"></div>
-                <div class="stat-item"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Групп</div></div>
-                <div class="stat-divider"></div>
-                <div class="stat-item"><div class="stat-value" id="avgRating">0</div><div class="stat-label">Ср. балл</div></div>
+            <div class="header-right">
+                <div class="role-switcher">
+                    <button class="role-btn active" id="roleTeacher" onclick="setRole('teacher')">👨‍🏫 Преподаватель</button>
+                    <button class="role-btn" id="roleStudent" onclick="setRole('student')">👨‍🎓 Обучающийся</button>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Студентов</div></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Групп</div></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item"><div class="stat-value" id="avgRating">0</div><div class="stat-label">Ср. балл</div></div>
+                </div>
             </div>
         </div>
     </header>
@@ -236,7 +239,7 @@
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('general')"><span>📊</span><span>Общий рейтинг</span></button>
             <button class="tab-btn" onclick="switchTab('groups')"><span>👥</span><span>Рейтинг по группам</span></button>
-            <button class="tab-btn" onclick="switchTab('instructions')"><span>📋</span><span>Для обучающихся</span></button>
+            <button class="tab-btn" onclick="switchTab('instructions')" id="tabInstructionsBtn"><span>📋</span><span id="tabInstructionsLabel">Инструкция</span></button>
         </div>
 
         <!-- General Rating -->
@@ -245,13 +248,22 @@
                 <div class="toolbar">
                     <div>
                         <h2 class="section-title">Общий рейтинг</h2>
-                        <p class="section-desc">Рейтинг всех обучающихся (сортировка по убыванию баллов)</p>
+                        <p class="section-desc" id="generalDesc">Рейтинг всех обучающихся (макс. 90 баллов)</p>
                     </div>
-                    <div class="toolbar-actions">
+                    <div class="toolbar-actions" id="teacherActions">
+                        <button class="btn btn-secondary" onclick="toggleWeights()">⚖️ Веса категорий</button>
                         <button class="btn btn-secondary" onclick="toggleImport()">📥 Импорт</button>
                         <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
                         <button class="btn btn-danger" onclick="clearAll()" id="clearBtn" style="display:none">🗑️ Очистить</button>
                     </div>
+                </div>
+
+                <!-- Weights Panel -->
+                <div id="weightsPanel" class="weights-panel" style="display:none">
+                    <h3 style="font-weight:700;color:#1f2937;margin-bottom:4px;display:flex;align-items:center;gap:8px">⚖️ Настройка весов категорий</h3>
+                    <p style="font-size:0.85rem;color:#6b7280">Установите максимальное количество баллов для каждой категории. Итого: <strong id="weightsTotal" style="color:#4f46e5">90</strong> баллов.</p>
+                    <div class="weights-grid" id="weightsGrid"></div>
+                    <div class="weights-info">💡 Шкала оценок рассчитывается в процентах от суммы весов: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%</div>
                 </div>
 
                 <!-- Import Panel -->
@@ -290,18 +302,18 @@
             <div class="content-section">
                 <div class="section-header">
                     <h2 class="section-title">Рейтинг по группам</h2>
-                    <p class="section-desc">Просмотр рейтинга с фильтрацией по учебным группам</p>
+                    <p class="section-desc" id="groupsDesc">Просмотр рейтинга с фильтрацией по учебным группам (макс. 90 баллов)</p>
                 </div>
                 <div id="groupContent"></div>
             </div>
         </div>
 
-        <!-- Student Instructions -->
+        <!-- Instructions -->
         <div id="tab-instructions" class="tab-content">
             <div class="content-section">
                 <div class="section-header">
-                    <h2 class="section-title">Инструкция для обучающихся</h2>
-                    <p class="section-desc">Какие баллы и за что можно получить в рамках дисциплины</p>
+                    <h2 class="section-title" id="instrTitle">Инструкция</h2>
+                    <p class="section-desc" id="instrDesc">Руководство по работе с системой рейтинга</p>
                 </div>
                 <div id="instructionsContent"></div>
             </div>
@@ -319,7 +331,7 @@
                     </div>
                     <div style="text-align:right">
                         <div class="score-display" id="modalTotalScore">0</div>
-                        <div style="font-size:0.75rem;opacity:0.8">из 110 баллов</div>
+                        <div style="font-size:0.75rem;opacity:0.8" id="modalMaxLabel">из 90 баллов</div>
                     </div>
                 </div>
             </div>
@@ -348,34 +360,32 @@
 
     <script>
     // ===== DATA =====
-    const categories = [
-        { key: 'notes', name: 'Конспекты', maxPerItem: 2, maxTotal: 30, desc: 'Наличие конспектов на занятиях', shortDesc: '2 балла за занятие (макс. 30)' },
-        { key: 'practice', name: 'Практические', maxPerItem: 5, maxTotal: 30, desc: 'Защита практических работ', shortDesc: '5 баллов за защиту (макс. 30)' },
-        { key: 'reports', name: 'Доклады', maxPerItem: 10, maxTotal: 20, desc: 'Выступление с докладами', shortDesc: '10 баллов за доклад (макс. 20)' },
-        { key: 'grades', name: 'Оценки', maxPerItem: 5, maxTotal: 20, desc: 'Баллы по оценкам на занятиях', shortDesc: '5/3/1 балл за оценку 5/4/3 (макс. 20)' },
-        { key: 'bonus', name: 'Доп. баллы', maxPerItem: 5, maxTotal: 10, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя (макс. 10)' }
+    let categories = [
+        { key: 'notes', name: 'Конспекты', maxPerItem: 2, maxTotal: 30, desc: 'Наличие конспектов на занятиях', shortDesc: '2 балла за занятие' },
+        { key: 'practice', name: 'Практические работы', maxPerItem: 5, maxTotal: 30, desc: 'Защита практических работ', shortDesc: '5 баллов за защиту' },
+        { key: 'reports', name: 'Доклады', maxPerItem: 10, maxTotal: 20, desc: 'Выступление с докладами', shortDesc: '10 баллов за доклад' },
+        { key: 'bonus', name: 'Дополнительные баллы', maxPerItem: 5, maxTotal: 10, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя' }
     ];
-
-    let gradeMapping = { grade5: 5, grade4: 3, grade3: 1 };
 
     let students = [
-        { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, grades:15, bonus:5 },
-        { id:2, fullName:'Петрова Анна Михайловна', group:'ИТ-201', notes:28, practice:25, reports:20, grades:18, bonus:8 },
-        { id:3, fullName:'Сидоров Алексей Дмитриевич', group:'ИТ-201', notes:16, practice:10, reports:0, grades:8, bonus:2 },
-        { id:4, fullName:'Козлова Мария Андреевна', group:'ИТ-201', notes:22, practice:20, reports:10, grades:14, bonus:4 },
-        { id:5, fullName:'Новиков Дмитрий Павлович', group:'ИТ-201', notes:10, practice:5, reports:0, grades:4, bonus:0 },
-        { id:6, fullName:'Морозова Елена Викторовна', group:'ИТ-202', notes:26, practice:25, reports:15, grades:17, bonus:6 },
-        { id:7, fullName:'Волков Артём Николаевич', group:'ИТ-202', notes:20, practice:15, reports:10, grades:12, bonus:3 },
-        { id:8, fullName:'Соколова Дарья Олеговна', group:'ИТ-202', notes:24, practice:22, reports:10, grades:16, bonus:5 },
-        { id:9, fullName:'Лебедев Максим Игоревич', group:'ИТ-202', notes:14, practice:10, reports:0, grades:6, bonus:1 },
-        { id:10, fullName:'Кузнецова Ольга Романовна', group:'ИТ-202', notes:22, practice:20, reports:10, grades:15, bonus:4 },
-        { id:11, fullName:'Попов Никита Александрович', group:'ИТ-203', notes:30, practice:30, reports:20, grades:20, bonus:10 },
-        { id:12, fullName:'Васильева Татьяна Петровна', group:'ИТ-203', notes:18, practice:15, reports:10, grades:10, bonus:2 },
-        { id:13, fullName:'Зайцев Роман Владимирович', group:'ИТ-203', notes:12, practice:10, reports:0, grades:6, bonus:0 },
-        { id:14, fullName:'Павлова Наталья Сергеевна', group:'ИТ-203', notes:26, practice:24, reports:15, grades:18, bonus:7 },
-        { id:15, fullName:'Семёнов Кирилл Олегович', group:'ИТ-203', notes:16, practice:12, reports:0, grades:9, bonus:1 }
+        { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, bonus:5 },
+        { id:2, fullName:'Петрова Анна Михайловна', group:'ИТ-201', notes:28, practice:25, reports:20, bonus:8 },
+        { id:3, fullName:'Сидоров Алексей Дмитриевич', group:'ИТ-201', notes:16, practice:10, reports:0, bonus:2 },
+        { id:4, fullName:'Козлова Мария Андреевна', group:'ИТ-201', notes:22, practice:20, reports:10, bonus:4 },
+        { id:5, fullName:'Новиков Дмитрий Павлович', group:'ИТ-201', notes:10, practice:5, reports:0, bonus:0 },
+        { id:6, fullName:'Морозова Елена Викторовна', group:'ИТ-202', notes:26, practice:25, reports:15, bonus:6 },
+        { id:7, fullName:'Волков Артём Николаевич', group:'ИТ-202', notes:20, practice:15, reports:10, bonus:3 },
+        { id:8, fullName:'Соколова Дарья Олеговна', group:'ИТ-202', notes:24, practice:22, reports:10, bonus:5 },
+        { id:9, fullName:'Лебедев Максим Игоревич', group:'ИТ-202', notes:14, practice:10, reports:0, bonus:1 },
+        { id:10, fullName:'Кузнецова Ольга Романовна', group:'ИТ-202', notes:22, practice:20, reports:10, bonus:4 },
+        { id:11, fullName:'Попов Никита Александрович', group:'ИТ-203', notes:30, practice:30, reports:20, bonus:10 },
+        { id:12, fullName:'Васильева Татьяна Петровна', group:'ИТ-203', notes:18, practice:15, reports:10, bonus:2 },
+        { id:13, fullName:'Зайцев Роман Владимирович', group:'ИТ-203', notes:12, practice:10, reports:0, bonus:0 },
+        { id:14, fullName:'Павлова Наталья Сергеевна', group:'ИТ-203', notes:26, practice:24, reports:15, bonus:7 },
+        { id:15, fullName:'Семёнов Кирилл Олегович', group:'ИТ-203', notes:16, practice:12, reports:0, bonus:1 }
     ];
 
+    let role = 'teacher';
     let currentGroup = '';
     let editingStudent = null;
     let modalActiveCategory = 'notes';
@@ -383,23 +393,44 @@
     let importPreviewData = [];
 
     // ===== HELPERS =====
-    function calcTotal(s) { return s.notes + s.practice + s.reports + s.grades + s.bonus; }
+    function calcTotal(s) { return s.notes + s.practice + s.reports + s.bonus; }
     function getMaxTotal() { return categories.reduce((s,c) => s + c.maxTotal, 0); }
-    function getGrade(t) {
-        if (t >= 90) return { text:'Отлично', cls:'grade-excellent' };
-        if (t >= 75) return { text:'Хорошо', cls:'grade-good' };
-        if (t >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
+    function getGrade(total) {
+        const pct = (total / getMaxTotal()) * 100;
+        if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
+        if (pct >= 75) return { text:'Хорошо', cls:'grade-good' };
+        if (pct >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
         return { text:'Неудовлетворительно', cls:'grade-fail' };
     }
     function getGroups() { return [...new Set(students.map(s => s.group))].sort(); }
+
+    // ===== ROLE =====
+    function setRole(r) {
+        role = r;
+        document.getElementById('roleTeacher').classList.toggle('active', r === 'teacher');
+        document.getElementById('roleStudent').classList.toggle('active', r === 'student');
+        document.getElementById('teacherActions').style.display = r === 'teacher' ? '' : 'none';
+        document.getElementById('tabInstructionsLabel').textContent = r === 'teacher' ? 'Инструкция' : 'Для обучающихся';
+        renderAll();
+    }
 
     // ===== RENDERING =====
     function renderAll() {
         renderGeneralTable();
         renderGroupTab();
         renderInstructions();
+        renderWeightsPanel();
         updateHeaderStats();
-        document.getElementById('clearBtn').style.display = students.length > 0 ? '' : 'none';
+        document.getElementById('clearBtn').style.display = students.length > 0 && role === 'teacher' ? '' : 'none';
+        document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся (макс. ${getMaxTotal()} баллов)`;
+        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга с фильтрацией по учебным группам (макс. ${getMaxTotal()} баллов)`;
+        if (role === 'teacher') {
+            document.getElementById('instrTitle').textContent = 'Инструкция';
+            document.getElementById('instrDesc').textContent = 'Руководство по работе с системой рейтинга';
+        } else {
+            document.getElementById('instrTitle').textContent = 'Инструкция для обучающихся';
+            document.getElementById('instrDesc').textContent = 'Какие баллы и за что можно получить в рамках дисциплины';
+        }
     }
 
     function updateHeaderStats() {
@@ -412,13 +443,17 @@
     function renderGeneralTable() {
         const container = document.getElementById('ratingTableContainer');
         if (students.length === 0) {
-            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Список студентов пуст</h3><p>Импортируйте студентов или добавьте их вручную</p><button class="btn btn-primary" onclick="toggleImport()">📥 Импортировать студентов</button></div>`;
+            const msg = role === 'teacher' ? 'Импортируйте студентов или добавьте их вручную' : 'Преподаватель ещё не загрузил данные';
+            const btn = role === 'teacher' ? `<button class="btn btn-primary" onclick="toggleImport()">📥 Импортировать студентов</button>` : '';
+            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Список студентов пуст</h3><p>${msg}</p>${btn}</div>`;
             return;
         }
         const sorted = [...students].sort((a,b) => calcTotal(b) - calcTotal(a));
         let html = `<div class="table-wrapper"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
         categories.forEach(c => { html += `<th class="center">${c.name}<span class="sub-text">(макс. ${c.maxTotal})</span></th>`; });
-        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th><th class="center">Действия</th></tr></thead><tbody>`;
+        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th>`;
+        if (role === 'teacher') html += `<th class="center">Действия</th>`;
+        html += `</tr></thead><tbody>`;
         sorted.forEach((s, i) => {
             const total = calcTotal(s);
             const grade = getGrade(total);
@@ -426,17 +461,19 @@
             categories.forEach(c => { html += `<td class="center">${s[c.key]}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
             html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
-            html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td></tr>`;
+            if (role === 'teacher') html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
+            html += `</tr>`;
         });
         html += `</tbody></table></div>`;
-        html += `<div class="legend"><span class="legend-item"><span class="legend-dot" style="background:#dcfce7;border-color:#86efac"></span> Отлично (90-100)</span><span class="legend-item"><span class="legend-dot" style="background:#dbeafe;border-color:#93c5fd"></span> Хорошо (75-89)</span><span class="legend-item"><span class="legend-dot" style="background:#fef9c3;border-color:#fde047"></span> Удовл. (60-74)</span><span class="legend-item"><span class="legend-dot" style="background:#fee2e2;border-color:#fca5a5"></span> Неудовл. (&lt;60)</span></div>`;
+        html += `<div class="legend"><span class="legend-item"><span class="legend-dot" style="background:#dcfce7;border-color:#86efac"></span> Отлично (≥90%)</span><span class="legend-item"><span class="legend-dot" style="background:#dbeafe;border-color:#93c5fd"></span> Хорошо (75-89%)</span><span class="legend-item"><span class="legend-dot" style="background:#fef9c3;border-color:#fde047"></span> Удовл. (60-74%)</span><span class="legend-item"><span class="legend-dot" style="background:#fee2e2;border-color:#fca5a5"></span> Неудовл. (&lt;60%)</span></div>`;
         container.innerHTML = html;
     }
 
     function renderGroupTab() {
         const container = document.getElementById('groupContent');
         if (students.length === 0) {
-            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Нет данных</h3><p>Сначала импортируйте студентов во вкладке «Общий рейтинг»</p></div>`;
+            const msg = role === 'teacher' ? 'Сначала импортируйте студентов' : 'Преподаватель ещё не загрузил данные';
+            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Нет данных</h3><p>${msg}</p></div>`;
             return;
         }
         const groups = getGroups();
@@ -450,7 +487,9 @@
         html += `<div class="group-info"><div class="group-info-header"><h3 class="group-info-title">Группа <span>${currentGroup}</span></h3><span class="group-count">Студентов: ${filtered.length}</span></div>`;
         html += `<div style="overflow-x:auto"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
         categories.forEach(c => { html += `<th class="center">${c.name}<span class="sub-text">(макс. ${c.maxTotal})</span></th>`; });
-        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th><th class="center">Действия</th></tr></thead><tbody>`;
+        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th>`;
+        if (role === 'teacher') html += `<th class="center">Действия</th>`;
+        html += `</tr></thead><tbody>`;
         filtered.forEach((s, i) => {
             const total = calcTotal(s);
             const grade = getGrade(total);
@@ -458,7 +497,8 @@
             categories.forEach(c => { html += `<td class="center">${s[c.key]}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
             html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
-            html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td></tr>`;
+            if (role === 'teacher') html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
+            html += `</tr>`;
         });
         html += `</tbody></table></div></div>`;
 
@@ -478,34 +518,61 @@
     function renderInstructions() {
         const container = document.getElementById('instructionsContent');
         const maxT = getMaxTotal();
-        let html = `<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе в течение семестра. Максимальный рейтинг — <strong>${maxT} баллов</strong>. Итоговая оценка выставляется автоматически на основе набранных баллов.</p></div>`;
+        if (role === 'teacher') {
+            let html = `<div class="teacher-notice"><p><strong>📌 Режим преподавателя:</strong> Вы можете импортировать студентов, начислять баллы и настраивать веса категорий.</p></div>`;
+            html += `<div class="teacher-section"><h3>📥 Импорт студентов</h3><p>Используйте кнопку «Импорт» для загрузки списка студентов. Поддерживаются два формата:</p><div style="margin-top:8px"><strong>Формат 1 — по группам:</strong><pre># Группа ИТ-201
+Иванов Иван Сергеевич
+Петрова Анна Михайловна
 
-        html += `<div class="instr-card"><div class="instr-card-header"><h3>Категории оценивания</h3><p>За что можно получить баллы</p></div>`;
-        categories.forEach((c, i) => {
-            html += `<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">${i+1}</span><span class="instr-cat-name">${c.name}</span><div style="text-align:right"><div class="instr-cat-max">${c.maxTotal}</div><div class="instr-cat-max-label">макс. баллов</div></div></div><p class="instr-cat-desc">${c.desc}</p><div class="instr-cat-detail"><strong>Как начисляется:</strong> ${c.shortDesc}</div></div>`;
+# Группа ИТ-202
+Сидоров Алексей Дмитриевич</pre></div><div style="margin-top:8px"><strong>Формат 2 — CSV:</strong><pre>Иванов Иван Сергеевич;ИТ-201
+Петрова Анна Михайловна;ИТ-201</pre></div></div>`;
+            html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p>Нажмите кнопку «Баллы» рядом с именем студента для открытия окна начисления. Баллы можно добавлять кнопками или вводить вручную.</p><ul><li><strong>Конспекты</strong> — за наличие конспектов на занятиях</li><li><strong>Практические работы</strong> — за защиту практических работ</li><li><strong>Доклады</strong> — за выступления с докладами</li><li><strong>Дополнительные баллы</strong> — на усмотрение преподавателя</li></ul></div>`;
+            html += `<div class="teacher-section"><h3>⚖️ Веса категорий</h3><p>Нажмите «Веса категорий» для настройки максимального количества баллов по каждой категории. Это позволяет гибко определять значимость каждого вида работы.</p><p>Итоговая оценка рассчитывается в процентах от суммы весов: Отлично ≥90%, Хорошо 75-89%, Удовлетворительно 60-74%, Неудовлетворительно &lt;60%.</p></div>`;
+            container.innerHTML = html;
+        } else {
+            let html = `<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе в течение семестра. Максимальный рейтинг — <strong>${maxT} баллов</strong>. Итоговая оценка выставляется автоматически на основе процента от максимального количества баллов.</p></div>`;
+            html += `<div class="instr-card"><div class="instr-card-header"><h3>Категории оценивания</h3><p>За что можно получить баллы</p></div>`;
+            categories.forEach((c, i) => {
+                html += `<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">${i+1}</span><span class="instr-cat-name">${c.name}</span><div style="text-align:right"><div class="instr-cat-max">${c.maxTotal}</div><div class="instr-cat-max-label">макс. баллов</div></div></div><p class="instr-cat-desc">${c.desc}</p><div class="instr-cat-detail"><strong>Как начисляется:</strong> ${c.shortDesc}</div></div>`;
+            });
+            html += `</div>`;
+            html += `<div class="instr-card"><div class="instr-card-header"><h3>Итоговые оценки</h3><p>Шкала оценивания (в процентах от максимума ${maxT})</p></div><div class="final-grades">`;
+            html += `<div class="final-grade-row excellent"><span class="final-grade-range">≥90%</span><span class="final-grade-label">от максимума</span><span class="final-grade-badge">Отлично (5)</span></div>`;
+            html += `<div class="final-grade-row good"><span class="final-grade-range">75–89%</span><span class="final-grade-label">от максимума</span><span class="final-grade-badge">Хорошо (4)</span></div>`;
+            html += `<div class="final-grade-row satisfactory"><span class="final-grade-range">60–74%</span><span class="final-grade-label">от максимума</span><span class="final-grade-badge">Удовлетворительно (3)</span></div>`;
+            html += `<div class="final-grade-row fail"><span class="final-grade-range">&lt; 60%</span><span class="final-grade-label">от максимума</span><span class="final-grade-badge">Неудовлетворительно (2)</span></div>`;
+            html += `</div></div>`;
+            html += `<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>`;
+            html += `<li>Регулярно посещайте занятия и ведите конспекты — до ${categories[0].maxTotal} баллов</li>`;
+            html += `<li>Своевременно выполняйте и защищайте практические работы — до ${categories[1].maxTotal} баллов</li>`;
+            html += `<li>Подготовьте и выступите с докладами по темам курса — до ${categories[2].maxTotal} баллов</li>`;
+            html += `<li>Проявляйте дополнительную активность — преподаватель может начислить до ${categories[3].maxTotal} дополнительных баллов</li>`;
+            html += `</ul></div>`;
+            html += `<div class="info-box"><h3>⚠️ Важная информация</h3><ul><li>Студенты, набравшие менее 60% от максимального количества баллов, допускаются к пересдаче</li><li>Баллы начисляются накопительно в течение всего семестра</li><li>Вы можете отслеживать свой рейтинг в любой момент на данной странице</li><li>При возникновении вопросов по начислению баллов обращайтесь к преподавателю</li><li>Максимальное количество баллов по каждой категории устанавливается преподавателем</li></ul></div>`;
+            container.innerHTML = html;
+        }
+    }
+
+    // ===== WEIGHTS =====
+    function toggleWeights() {
+        const panel = document.getElementById('weightsPanel');
+        panel.style.display = panel.style.display === 'none' ? '' : 'none';
+        renderWeightsPanel();
+    }
+    function renderWeightsPanel() {
+        const grid = document.getElementById('weightsGrid');
+        document.getElementById('weightsTotal').textContent = getMaxTotal();
+        let html = '';
+        categories.forEach(c => {
+            html += `<div class="weight-item"><label>${c.name}</label><div class="weight-input-row"><input type="number" class="weight-input" min="0" max="100" value="${c.maxTotal}" onchange="updateWeight('${c.key}', parseInt(this.value)||0)"><span style="font-size:0.85rem;color:#6b7280;white-space:nowrap">баллов</span></div><p class="weight-desc">${c.shortDesc}</p></div>`;
         });
-        html += `</div>`;
-
-        html += `<div class="instr-card"><div class="instr-card-header"><h3>Соответствие оценок и баллов</h3><p>За ответы на занятиях</p></div><div style="padding:24px"><div class="grade-mapping"><div class="grade-mapping-card g5"><div class="grade-mapping-num">5</div><div class="grade-mapping-text">→ ${gradeMapping.grade5} баллов</div><div style="font-size:0.7rem;color:#166534;margin-top:4px">за каждый ответ</div></div><div class="grade-mapping-card g4"><div class="grade-mapping-num">4</div><div class="grade-mapping-text">→ ${gradeMapping.grade4} балла</div><div style="font-size:0.7rem;color:#1e40af;margin-top:4px">за каждый ответ</div></div><div class="grade-mapping-card g3"><div class="grade-mapping-num">3</div><div class="grade-mapping-text">→ ${gradeMapping.grade3} балл</div><div style="font-size:0.7rem;color:#854d0e;margin-top:4px">за каждый ответ</div></div></div></div></div>`;
-
-        html += `<div class="instr-card"><div class="instr-card-header"><h3>Итоговые оценки</h3><p>Шкала оценивания</p></div><div class="final-grades">`;
-        html += `<div class="final-grade-row excellent"><span class="final-grade-range">90–100</span><span class="final-grade-label">баллов</span><span class="final-grade-badge">Отлично (5)</span></div>`;
-        html += `<div class="final-grade-row good"><span class="final-grade-range">75–89</span><span class="final-grade-label">баллов</span><span class="final-grade-badge">Хорошо (4)</span></div>`;
-        html += `<div class="final-grade-row satisfactory"><span class="final-grade-range">60–74</span><span class="final-grade-label">баллов</span><span class="final-grade-badge">Удовлетворительно (3)</span></div>`;
-        html += `<div class="final-grade-row fail"><span class="final-grade-range">&lt; 60</span><span class="final-grade-label">баллов</span><span class="final-grade-badge">Неудовлетворительно (2)</span></div>`;
-        html += `</div></div>`;
-
-        html += `<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>`;
-        html += `<li>Регулярно посещайте занятия и ведите конспекты — это гарантирует до ${categories[0].maxTotal} баллов</li>`;
-        html += `<li>Своевременно выполняйте и защищайте практические работы — до ${categories[1].maxTotal} баллов</li>`;
-        html += `<li>Подготовьте и выступите с докладами по темам курса — до ${categories[2].maxTotal} баллов</li>`;
-        html += `<li>Активно отвечайте на занятиях — каждая оценка «5» приносит ${gradeMapping.grade5} баллов</li>`;
-        html += `<li>Проявляйте дополнительную активность — преподаватель может начислить до ${categories[4].maxTotal} дополнительных баллов</li>`;
-        html += `</ul></div>`;
-
-        html += `<div class="info-box"><h3>⚠️ Важная информация</h3><ul><li>Студенты, набравшие менее 60 баллов, допускаются к пересдаче</li><li>Баллы начисляются накопительно в течение всего семестра</li><li>Вы можете отслеживать свой рейтинг в любой момент на данной странице</li><li>При возникновении вопросов по начислению баллов обращайтесь к преподавателю</li></ul></div>`;
-
-        container.innerHTML = html;
+        grid.innerHTML = html;
+    }
+    function updateWeight(key, val) {
+        categories = categories.map(c => c.key === key ? { ...c, maxTotal: Math.max(0, val) } : c);
+        document.getElementById('weightsTotal').textContent = getMaxTotal();
+        renderAll();
     }
 
     // ===== TABS =====
@@ -537,10 +604,10 @@
             if (gm) { group = gm[1].trim(); return; }
             const csv = line.match(/^(.+?)\s*[;,]\s*(.+)$/);
             if (csv && csv[2].trim().length <= 20 && !csv[2].includes('.')) {
-                result.push({ id, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, grades:0, bonus:0 });
+                result.push({ id, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, bonus:0 });
                 id++; return;
             }
-            if (group) { result.push({ id, fullName: line, group, notes:0, practice:0, reports:0, grades:0, bonus:0 }); id++; }
+            if (group) { result.push({ id, fullName: line, group, notes:0, practice:0, reports:0, bonus:0 }); id++; }
         });
         return result;
     }
@@ -572,6 +639,7 @@
 
     // ===== MODAL =====
     function openEditModal(id) {
+        if (role !== 'teacher') return;
         editingStudent = students.find(s => s.id === id);
         if (!editingStudent) return;
         modalFormData = { ...editingStudent };
@@ -580,11 +648,11 @@
         document.getElementById('scoreModal').style.display = '';
     }
     function openAddModal() {
+        if (role !== 'teacher') return;
         const maxId = students.reduce((m, s) => Math.max(m, s.id), 0);
-        editingStudent = { id: maxId + 1, fullName: '', group: '', notes:0, practice:0, reports:0, grades:0, bonus:0 };
+        editingStudent = { id: maxId + 1, fullName: '', group: '', notes:0, practice:0, reports:0, bonus:0 };
         modalFormData = { ...editingStudent };
         modalActiveCategory = 'notes';
-        // Show name/group inputs first
         const name = prompt('ФИО студента:');
         if (!name) return;
         const group = prompt('Номер группы:');
@@ -602,18 +670,18 @@
     function renderModal() {
         if (!modalFormData) return;
         const total = calcTotal(modalFormData);
+        const maxT = getMaxTotal();
         document.getElementById('modalStudentName').textContent = modalFormData.fullName;
         document.getElementById('modalStudentGroup').textContent = 'Группа: ' + modalFormData.group;
         document.getElementById('modalTotalScore').textContent = total;
+        document.getElementById('modalMaxLabel').textContent = `из ${maxT} баллов`;
 
-        // Tabs
         let tabsHtml = '';
         categories.forEach(c => {
             tabsHtml += `<button class="modal-tab ${modalActiveCategory===c.key?'active':''}" onclick="switchModalCategory('${c.key}')">${c.name}<span class="badge">${modalFormData[c.key]}/${c.maxTotal}</span></button>`;
         });
         document.getElementById('modalTabs').innerHTML = tabsHtml;
 
-        // Body
         const cat = categories.find(c => c.key === modalActiveCategory);
         const val = modalFormData[cat.key];
         const pct = (val / cat.maxTotal) * 100;
@@ -621,15 +689,7 @@
         bodyHtml += `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>`;
         bodyHtml += `<p style="font-size:0.85rem;color:#6b7280">Текущие баллы: <strong>${val}</strong> / ${cat.maxTotal}</p>`;
 
-        if (cat.key === 'grades') {
-            bodyHtml += `<p style="font-size:0.85rem;color:#6b7280;margin-top:4px">Соответствие: 5→${gradeMapping.grade5}б, 4→${gradeMapping.grade4}б, 3→${gradeMapping.grade3}б</p>`;
-            bodyHtml += `<div class="grade-buttons">`;
-            bodyHtml += `<button class="grade-btn grade-btn-5" onclick="addGradeScore(5)">+ Оценка «5»<br><small>+${gradeMapping.grade5}б</small></button>`;
-            bodyHtml += `<button class="grade-btn grade-btn-4" onclick="addGradeScore(4)">+ Оценка «4»<br><small>+${gradeMapping.grade4}б</small></button>`;
-            bodyHtml += `<button class="grade-btn grade-btn-3" onclick="addGradeScore(3)">+ Оценка «3»<br><small>+${gradeMapping.grade3}б</small></button>`;
-            bodyHtml += `</div>`;
-            bodyHtml += `<div class="score-buttons"><button class="score-btn score-btn-sub" onclick="undoGradeScore()">↩ Отменить</button><button class="score-btn score-btn-sub" onclick="setCategoryScore('grades',0)">✕ Сбросить</button></div>`;
-        } else if (cat.key === 'bonus') {
+        if (cat.key === 'bonus') {
             bodyHtml += `<div class="manual-input"><input type="number" min="0" max="${cat.maxTotal}" value="${val}" onchange="setCategoryScore('bonus',parseInt(this.value)||0)"><span style="color:#6b7280">/ ${cat.maxTotal} баллов</span></div>`;
             bodyHtml += `<div class="score-buttons">`;
             [1,2,3,5,10].forEach(v => { bodyHtml += `<button class="score-btn score-btn-set" onclick="setCategoryScore('bonus',${v})">Установить ${v}б</button>`; });
@@ -646,8 +706,7 @@
         bodyHtml += `</div>`;
         document.getElementById('modalBody').innerHTML = bodyHtml;
 
-        // Summary
-        document.getElementById('modalSummary').textContent = `Сумма: ${modalFormData.notes} + ${modalFormData.practice} + ${modalFormData.reports} + ${modalFormData.grades} + ${modalFormData.bonus} = ${total}`;
+        document.getElementById('modalSummary').textContent = `Сумма: ${modalFormData.notes} + ${modalFormData.practice} + ${modalFormData.reports} + ${modalFormData.bonus} = ${total}`;
     }
 
     function switchModalCategory(key) { modalActiveCategory = key; renderModal(); }
@@ -661,21 +720,6 @@
     function setCategoryScore(key, val) {
         const cat = categories.find(c => c.key === key);
         modalFormData[key] = Math.max(0, Math.min(val, cat.maxTotal));
-        renderModal();
-    }
-    function addGradeScore(grade) {
-        let pts = 0;
-        if (grade === 5) pts = gradeMapping.grade5;
-        else if (grade === 4) pts = gradeMapping.grade4;
-        else if (grade === 3) pts = gradeMapping.grade3;
-        const cat = categories.find(c => c.key === 'grades');
-        modalFormData.grades = Math.min(modalFormData.grades + pts, cat.maxTotal);
-        renderModal();
-    }
-    function undoGradeScore() {
-        // Remove last added grade (approximate)
-        const pts = gradeMapping.grade5; // assume last was a 5
-        modalFormData.grades = Math.max(0, modalFormData.grades - pts);
         renderModal();
     }
 
