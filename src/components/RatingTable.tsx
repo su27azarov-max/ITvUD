@@ -1,11 +1,13 @@
-import { Student, calculateTotal, getGrade, getGradeColor } from '../data/students';
+import { Student, CategoryConfig, calculateTotal, getGrade, getGradeColor } from '../data/students';
 
 interface RatingTableProps {
   students: Student[];
+  categories: CategoryConfig[];
   title?: string;
+  onEditStudent?: (student: Student) => void;
 }
 
-export default function RatingTable({ students, title }: RatingTableProps) {
+export default function RatingTable({ students, categories, title, onEditStudent }: RatingTableProps) {
   const sorted = [...students].sort((a, b) => calculateTotal(b) - calculateTotal(a));
 
   return (
@@ -22,13 +24,20 @@ export default function RatingTable({ students, title }: RatingTableProps) {
             <tr className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
               <th className="px-3 py-3 text-left font-medium">№</th>
               <th className="px-3 py-3 text-left font-medium">ФИО студента</th>
-              <th className="px-3 py-3 text-center font-medium">Посещаемость<br/><span className="text-xs opacity-80">(макс. 30)</span></th>
-              <th className="px-3 py-3 text-center font-medium">Дом. задания<br/><span className="text-xs opacity-80">(макс. 30)</span></th>
-              <th className="px-3 py-3 text-center font-medium">Тест 1<br/><span className="text-xs opacity-80">(макс. 20)</span></th>
-              <th className="px-3 py-3 text-center font-medium">Тест 2<br/><span className="text-xs opacity-80">(макс. 20)</span></th>
-              <th className="px-3 py-3 text-center font-medium">Проект<br/><span className="text-xs opacity-80">(макс. 10)</span></th>
-              <th className="px-3 py-3 text-center font-medium">Итого<br/><span className="text-xs opacity-80">(макс. 100)</span></th>
+              {categories.map(cat => (
+                <th key={cat.key} className="px-3 py-3 text-center font-medium">
+                  {cat.name}
+                  <span className="block text-xs opacity-80 font-normal">(макс. {cat.maxTotal})</span>
+                </th>
+              ))}
+              <th className="px-3 py-3 text-center font-medium">
+                Итого
+                <span className="block text-xs opacity-80 font-normal">(макс. 100)</span>
+              </th>
               <th className="px-3 py-3 text-center font-medium">Оценка</th>
+              {onEditStudent && (
+                <th className="px-3 py-3 text-center font-medium">Действия</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -43,11 +52,11 @@ export default function RatingTable({ students, title }: RatingTableProps) {
                 >
                   <td className="px-3 py-3 text-center font-medium text-gray-500">{index + 1}</td>
                   <td className="px-3 py-3 font-medium text-gray-800">{student.fullName}</td>
-                  <td className="px-3 py-3 text-center">{student.attendance}</td>
-                  <td className="px-3 py-3 text-center">{student.homework}</td>
-                  <td className="px-3 py-3 text-center">{student.test1}</td>
-                  <td className="px-3 py-3 text-center">{student.test2}</td>
-                  <td className="px-3 py-3 text-center">{student.project}</td>
+                  {categories.map(cat => (
+                    <td key={cat.key} className="px-3 py-3 text-center">
+                      <span className="font-medium text-gray-700">{student[cat.key]}</span>
+                    </td>
+                  ))}
                   <td className="px-3 py-3 text-center">
                     <span className="font-bold text-indigo-700 text-base">{total}</span>
                   </td>
@@ -56,6 +65,16 @@ export default function RatingTable({ students, title }: RatingTableProps) {
                       {getGrade(total)}
                     </span>
                   </td>
+                  {onEditStudent && (
+                    <td className="px-3 py-3 text-center">
+                      <button
+                        onClick={() => onEditStudent(student)}
+                        className="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-xs font-medium hover:bg-indigo-200 transition-colors"
+                      >
+                        ✏️ Баллы
+                      </button>
+                    </td>
+                  )}
                 </tr>
               );
             })}

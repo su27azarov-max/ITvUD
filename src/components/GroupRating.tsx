@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Student, getGroups } from '../data/students';
+import { Student, CategoryConfig, getGroups, calculateTotal } from '../data/students';
 import RatingTable from './RatingTable';
 
 interface GroupRatingProps {
   students: Student[];
+  categories: CategoryConfig[];
+  onEditStudent?: (student: Student) => void;
 }
 
-export default function GroupRating({ students }: GroupRatingProps) {
+export default function GroupRating({ students, categories, onEditStudent }: GroupRatingProps) {
   const groups = getGroups(students);
   const [selectedGroup, setSelectedGroup] = useState<string>(groups[0] || '');
 
@@ -42,17 +44,17 @@ export default function GroupRating({ students }: GroupRatingProps) {
             Студентов: {filteredStudents.length}
           </span>
         </div>
-        <RatingTable students={filteredStudents} />
+        <RatingTable students={filteredStudents} categories={categories} onEditStudent={onEditStudent} />
       </div>
 
       {/* Summary cards for each group */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         {groups.map(group => {
           const groupStudents = students.filter(s => s.group === group);
-          const totals = groupStudents.map(s => s.attendance + s.homework + s.test1 + s.test2 + s.project);
-          const avg = totals.reduce((a, b) => a + b, 0) / totals.length;
-          const max = Math.max(...totals);
-          const min = Math.min(...totals);
+          const totals = groupStudents.map(s => calculateTotal(s));
+          const avg = totals.length > 0 ? totals.reduce((a, b) => a + b, 0) / totals.length : 0;
+          const max = totals.length > 0 ? Math.max(...totals) : 0;
+          const min = totals.length > 0 ? Math.min(...totals) : 0;
 
           return (
             <div
