@@ -6,6 +6,9 @@ export interface Student {
   practice: number;    // Защита практических работ
   reports: number;     // Выступления с докладами
   bonus: number;       // Дополнительные баллы
+  // Оценки для подсчета
+  practiceGrades: { '3': number; '4': number; '5': number }; // Количество оценок за практики
+  reportsGrades: { '3': number; '4': number; '5': number };  // Количество оценок за доклады
 }
 
 export interface CategoryConfig {
@@ -83,7 +86,17 @@ export function getGroups(students: Student[]): string[] {
 }
 
 export function createEmptyStudent(id: number, fullName: string, group: string): Student {
-  return { id, fullName, group, notes: 0, practice: 0, reports: 0, bonus: 0 };
+  return { 
+    id, 
+    fullName, 
+    group, 
+    notes: 0, 
+    practice: 0, 
+    reports: 0, 
+    bonus: 0,
+    practiceGrades: { '3': 0, '4': 0, '5': 0 },
+    reportsGrades: { '3': 0, '4': 0, '5': 0 }
+  };
 }
 
 export function parseImportText(text: string): Student[] {
@@ -117,4 +130,13 @@ export function parseImportText(text: string): Student[] {
   }
 
   return students;
+}
+
+// Функции для подсчета баллов по оценкам
+export function calculatePracticeScore(grades: { '3': number; '4': number; '5': number }): number {
+  return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10;
+}
+
+export function calculateReportsScore(grades: { '3': number; '4': number; '5': number }): number {
+  return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8;
 }

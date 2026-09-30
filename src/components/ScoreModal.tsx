@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Student, CategoryConfig, calculateMaxTotal } from '../data/students';
+import { Student, CategoryConfig, calculateMaxTotal, calculatePracticeScore, calculateReportsScore } from '../data/students';
 
 interface ScoreModalProps {
   student: Student;
@@ -27,6 +27,44 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
     if (!cat) return;
     const clamped = Math.max(0, Math.min(value, cat.maxTotal));
     setFormData({ ...formData, [categoryKey]: clamped });
+  };
+
+  const handleAddPracticeGrade = (grade: '3' | '4' | '5') => {
+    const newGrades = { ...formData.practiceGrades };
+    newGrades[grade]++;
+    const practiceScore = calculatePracticeScore(newGrades);
+    const cat = categories.find(c => c.key === 'practice');
+    if (cat && practiceScore <= cat.maxTotal) {
+      setFormData({ ...formData, practiceGrades: newGrades, practice: practiceScore });
+    }
+  };
+
+  const handleRemovePracticeGrade = (grade: '3' | '4' | '5') => {
+    const newGrades = { ...formData.practiceGrades };
+    if (newGrades[grade] > 0) {
+      newGrades[grade]--;
+      const practiceScore = calculatePracticeScore(newGrades);
+      setFormData({ ...formData, practiceGrades: newGrades, practice: practiceScore });
+    }
+  };
+
+  const handleAddReportsGrade = (grade: '3' | '4' | '5') => {
+    const newGrades = { ...formData.reportsGrades };
+    newGrades[grade]++;
+    const reportsScore = calculateReportsScore(newGrades);
+    const cat = categories.find(c => c.key === 'reports');
+    if (cat && reportsScore <= cat.maxTotal) {
+      setFormData({ ...formData, reportsGrades: newGrades, reports: reportsScore });
+    }
+  };
+
+  const handleRemoveReportsGrade = (grade: '3' | '4' | '5') => {
+    const newGrades = { ...formData.reportsGrades };
+    if (newGrades[grade] > 0) {
+      newGrades[grade]--;
+      const reportsScore = calculateReportsScore(newGrades);
+      setFormData({ ...formData, reportsGrades: newGrades, reports: reportsScore });
+    }
   };
 
   const total = formData.notes + formData.practice + formData.reports + formData.bonus;
@@ -87,7 +125,155 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                   </div>
                 </div>
 
-                {cat.key === 'bonus' ? (
+                {cat.key === 'practice' ? (
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-600">
+                      Оценки за практические работы: <strong>{formData.practice}</strong> / {cat.maxTotal} баллов
+                    </p>
+                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                      <div className="grid grid-cols-3 gap-2 text-center text-sm">
+                        <div>
+                          <div className="font-bold text-yellow-600">{formData.practiceGrades['3']}</div>
+                          <div className="text-xs text-gray-500">оценки «3»</div>
+                          <div className="text-xs text-gray-400">× 3 балла</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-blue-600">{formData.practiceGrades['4']}</div>
+                          <div className="text-xs text-gray-500">оценки «4»</div>
+                          <div className="text-xs text-gray-400">× 7 баллов</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-green-600">{formData.practiceGrades['5']}</div>
+                          <div className="text-xs text-gray-500">оценки «5»</div>
+                          <div className="text-xs text-gray-400">× 10 баллов</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleAddPracticeGrade('3')}
+                        className="px-4 py-2.5 bg-yellow-100 text-yellow-700 rounded-xl font-medium hover:bg-yellow-200 transition-colors"
+                      >
+                        + Оценка «3» (3б)
+                      </button>
+                      <button
+                        onClick={() => handleAddPracticeGrade('4')}
+                        className="px-4 py-2.5 bg-blue-100 text-blue-700 rounded-xl font-medium hover:bg-blue-200 transition-colors"
+                      >
+                        + Оценка «4» (7б)
+                      </button>
+                      <button
+                        onClick={() => handleAddPracticeGrade('5')}
+                        className="px-4 py-2.5 bg-green-100 text-green-700 rounded-xl font-medium hover:bg-green-200 transition-colors"
+                      >
+                        + Оценка «5» (10б)
+                      </button>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleRemovePracticeGrade('3')}
+                        disabled={formData.practiceGrades['3'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «3»
+                      </button>
+                      <button
+                        onClick={() => handleRemovePracticeGrade('4')}
+                        disabled={formData.practiceGrades['4'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «4»
+                      </button>
+                      <button
+                        onClick={() => handleRemovePracticeGrade('5')}
+                        disabled={formData.practiceGrades['5'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «5»
+                      </button>
+                      <button
+                        onClick={() => setFormData({ ...formData, practiceGrades: { '3': 0, '4': 0, '5': 0 }, practice: 0 })}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                      >
+                        Сбросить все
+                      </button>
+                    </div>
+                  </div>
+                ) : cat.key === 'reports' ? (
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-600">
+                      Оценки за доклады: <strong>{formData.reports}</strong> / {cat.maxTotal} баллов
+                    </p>
+                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                      <div className="grid grid-cols-3 gap-2 text-center text-sm">
+                        <div>
+                          <div className="font-bold text-yellow-600">{formData.reportsGrades['3']}</div>
+                          <div className="text-xs text-gray-500">оценки «3»</div>
+                          <div className="text-xs text-gray-400">× 3 балла</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-blue-600">{formData.reportsGrades['4']}</div>
+                          <div className="text-xs text-gray-500">оценки «4»</div>
+                          <div className="text-xs text-gray-400">× 6 баллов</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-green-600">{formData.reportsGrades['5']}</div>
+                          <div className="text-xs text-gray-500">оценки «5»</div>
+                          <div className="text-xs text-gray-400">× 8 баллов</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleAddReportsGrade('3')}
+                        className="px-4 py-2.5 bg-yellow-100 text-yellow-700 rounded-xl font-medium hover:bg-yellow-200 transition-colors"
+                      >
+                        + Оценка «3» (3б)
+                      </button>
+                      <button
+                        onClick={() => handleAddReportsGrade('4')}
+                        className="px-4 py-2.5 bg-blue-100 text-blue-700 rounded-xl font-medium hover:bg-blue-200 transition-colors"
+                      >
+                        + Оценка «4» (6б)
+                      </button>
+                      <button
+                        onClick={() => handleAddReportsGrade('5')}
+                        className="px-4 py-2.5 bg-green-100 text-green-700 rounded-xl font-medium hover:bg-green-200 transition-colors"
+                      >
+                        + Оценка «5» (8б)
+                      </button>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleRemoveReportsGrade('3')}
+                        disabled={formData.reportsGrades['3'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «3»
+                      </button>
+                      <button
+                        onClick={() => handleRemoveReportsGrade('4')}
+                        disabled={formData.reportsGrades['4'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «4»
+                      </button>
+                      <button
+                        onClick={() => handleRemoveReportsGrade('5')}
+                        disabled={formData.reportsGrades['5'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «5»
+                      </button>
+                      <button
+                        onClick={() => setFormData({ ...formData, reportsGrades: { '3': 0, '4': 0, '5': 0 }, reports: 0 })}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                      >
+                        Сбросить все
+                      </button>
+                    </div>
+                  </div>
+                ) : cat.key === 'bonus' ? (
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600">
                       Текущие баллы: <strong>{formData.bonus}</strong> / {cat.maxTotal}

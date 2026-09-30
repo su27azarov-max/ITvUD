@@ -21,35 +21,49 @@ const TEACHER_PASSWORD = 'teacher123';
 
 // Демо-данные
 const demoStudents: Student[] = [
-  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, bonus: 5 },
-  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, bonus: 8 },
-  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, bonus: 2 },
-  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, bonus: 4 },
-  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, bonus: 0 },
-  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, bonus: 6 },
-  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, bonus: 3 },
-  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, bonus: 5 },
-  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, bonus: 1 },
-  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, bonus: 4 },
-  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, bonus: 10 },
-  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, bonus: 2 },
-  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, bonus: 0 },
-  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, bonus: 7 },
-  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, bonus: 1 },
+  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
+  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, bonus: 8, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 2 } },
+  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, bonus: 2, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
+  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, bonus: 0, practiceGrades: { '3': 1, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, bonus: 6, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 0, '5': 1 } },
+  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, bonus: 3, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
+  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
+  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, bonus: 1, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
+  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, bonus: 10, practiceGrades: { '3': 0, '4': 0, '5': 3 }, reportsGrades: { '3': 0, '4': 0, '5': 2 } },
+  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, bonus: 2, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
+  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, bonus: 0, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, bonus: 7, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 1 } },
+  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, bonus: 1, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
 ];
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('general');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [students, setStudents] = useState<Student[]>(demoStudents);
-  const [categories, setCategories] = useState<CategoryConfig[]>(defaultCategories);
+  const [students, setStudents] = useState<Student[]>(() => {
+    const saved = localStorage.getItem('students');
+    return saved ? JSON.parse(saved) : demoStudents;
+  });
+  const [categories, setCategories] = useState<CategoryConfig[]>(() => {
+    const saved = localStorage.getItem('categories');
+    return saved ? JSON.parse(saved) : defaultCategories;
+  });
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [showImport, setShowImport] = useState(false);
   const [showWeights, setShowWeights] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
   const isTeacher = isAuthenticated;
   const maxTotal = calculateMaxTotal(categories);
+
+  const handleSaveChanges = () => {
+    localStorage.setItem('students', JSON.stringify(students));
+    localStorage.setItem('categories', JSON.stringify(categories));
+    setHasChanges(false);
+    alert('Изменения успешно сохранены!');
+  };
 
   const handleLogin = (password: string): boolean => {
     if (password === TEACHER_PASSWORD) {
@@ -78,22 +92,26 @@ function App() {
     const maxId = students.reduce((max, s) => Math.max(max, s.id), 0);
     const withNewIds = imported.map((s, i) => ({ ...s, id: maxId + i + 1 }));
     setStudents([...students, ...withNewIds]);
+    setHasChanges(true);
     setShowImport(false);
   };
 
   const handleSaveStudent = (updated: Student) => {
     setStudents(students.map(s => (s.id === updated.id ? updated : s)));
+    setHasChanges(true);
     setEditingStudent(null);
   };
 
   const handleClearAll = () => {
     if (confirm('Вы уверены, что хотите удалить всех студентов?')) {
       setStudents([]);
+      setHasChanges(true);
     }
   };
 
   const handleUpdateWeight = (key: string, newMax: number) => {
     setCategories(categories.map(c => (c.key === key ? { ...c, maxTotal: Math.max(0, newMax) } : c)));
+    setHasChanges(true);
   };
 
   const totalStudents = students.length;
@@ -222,6 +240,14 @@ function App() {
                       className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-medium hover:bg-red-100 transition-colors"
                     >
                       🗑️ Очистить
+                    </button>
+                  )}
+                  {hasChanges && (
+                    <button
+                      onClick={handleSaveChanges}
+                      className="px-4 py-2 bg-green-500 text-white border border-green-600 rounded-xl text-sm font-medium hover:bg-green-600 transition-colors flex items-center gap-2 shadow-md"
+                    >
+                      💾 Сохранить изменения
                     </button>
                   )}
                 </div>
