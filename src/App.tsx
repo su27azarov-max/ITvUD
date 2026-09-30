@@ -13,9 +13,11 @@ import GroupRating from './components/GroupRating';
 import ImportStudents from './components/ImportStudents';
 import ScoreModal from './components/ScoreModal';
 import StudentInstructions from './components/StudentInstructions';
+import LoginModal from './components/LoginModal';
 
 type TabType = 'general' | 'groups' | 'instructions';
-type RoleType = 'teacher' | 'student';
+
+const TEACHER_PASSWORD = 'teacher123';
 
 // Демо-данные
 const demoStudents: Student[] = [
@@ -38,21 +40,39 @@ const demoStudents: Student[] = [
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('general');
-  const [role, setRole] = useState<RoleType>('teacher');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [students, setStudents] = useState<Student[]>(demoStudents);
   const [categories, setCategories] = useState<CategoryConfig[]>(defaultCategories);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [showImport, setShowImport] = useState(false);
   const [showWeights, setShowWeights] = useState(false);
 
-  const isTeacher = role === 'teacher';
+  const isTeacher = isAuthenticated;
   const maxTotal = calculateMaxTotal(categories);
+
+  const handleLogin = (password: string): boolean => {
+    if (password === TEACHER_PASSWORD) {
+      setIsAuthenticated(true);
+      setShowLoginModal(false);
+      return true;
+    }
+    return false;
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: 'general', label: 'Общий рейтинг', icon: '📊' },
     { id: 'groups', label: 'Рейтинг по группам', icon: '👥' },
     { id: 'instructions', label: isTeacher ? 'Инструкция' : 'Для обучающихся', icon: '📋' },
   ];
+
+  const handleTabChange = (tabId: TabType) => {
+    setActiveTab(tabId);
+  };
 
   const handleImport = (imported: Student[]) => {
     const maxId = students.reduce((max, s) => Math.max(max, s.id), 0);
@@ -99,29 +119,24 @@ function App() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              {/* Role Switcher */}
-              <div className="flex items-center bg-gray-100 rounded-xl p-1">
+              {/* Login/Logout Button */}
+              {isTeacher ? (
                 <button
-                  onClick={() => setRole('teacher')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    isTeacher
-                      ? 'bg-white text-indigo-700 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
+                  onClick={handleLogout}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-all flex items-center gap-1.5"
                 >
-                  👨‍🏫 Преподаватель
+                  <span>🚪</span>
+                  <span>Выйти</span>
                 </button>
+              ) : (
                 <button
-                  onClick={() => setRole('student')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    !isTeacher
-                      ? 'bg-white text-indigo-700 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
+                  onClick={() => setShowLoginModal(true)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-50 text-indigo-600 border border-indigo-200 hover:bg-indigo-100 transition-all flex items-center gap-1.5"
                 >
-                  👨‍🎓 Обучающийся
+                  <span>🔐</span>
+                  <span>Вход для преподавателя</span>
                 </button>
-              </div>
+              )}
               <div className="hidden sm:flex items-center gap-4 text-sm">
                 <div className="text-center">
                   <div className="font-bold text-indigo-600">{totalStudents}</div>
@@ -330,6 +345,14 @@ function App() {
           </div>
         )}
       </main>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <LoginModal
+          onLogin={handleLogin}
+          onClose={() => setShowLoginModal(false)}
+        />
+      )}
 
       {/* Score Modal (teacher only) */}
       {editingStudent && isTeacher && (
