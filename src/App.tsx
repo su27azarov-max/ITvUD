@@ -58,11 +58,18 @@ function App() {
   const isTeacher = isAuthenticated;
   const maxTotal = calculateMaxTotal(categories);
 
+  const [showNotification, setShowNotification] = useState(false);
+
   const handleSaveChanges = () => {
-    localStorage.setItem('students', JSON.stringify(students));
-    localStorage.setItem('categories', JSON.stringify(categories));
-    setHasChanges(false);
-    alert('Изменения успешно сохранены!');
+    try {
+      localStorage.setItem('students', JSON.stringify(students));
+      localStorage.setItem('categories', JSON.stringify(categories));
+      setHasChanges(false);
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+    } catch (e) {
+      alert('Ошибка при сохранении: ' + (e as Error).message);
+    }
   };
 
   const handleLogin = (password: string): boolean => {
@@ -245,7 +252,7 @@ function App() {
                   {hasChanges && (
                     <button
                       onClick={handleSaveChanges}
-                      className="px-4 py-2 bg-green-500 text-white border border-green-600 rounded-xl text-sm font-medium hover:bg-green-600 transition-colors flex items-center gap-2 shadow-md"
+                      className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white border border-green-600 rounded-xl text-sm font-bold hover:from-emerald-600 hover:to-green-700 transition-all flex items-center gap-2 shadow-lg shadow-green-200 animate-pulse"
                     >
                       💾 Сохранить изменения
                     </button>
@@ -388,6 +395,14 @@ function App() {
           onSave={handleSaveStudent}
           onClose={() => setEditingStudent(null)}
         />
+      )}
+
+      {/* Save Notification */}
+      {showNotification && (
+        <div className="fixed top-20 right-5 z-50 bg-gradient-to-r from-emerald-500 to-green-600 text-white px-5 py-3 rounded-xl shadow-lg shadow-green-200 flex items-center gap-2 animate-bounce">
+          <span>✅</span>
+          <span className="font-medium">Изменения успешно сохранены!</span>
+        </div>
       )}
 
       {/* Footer */}

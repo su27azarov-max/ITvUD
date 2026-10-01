@@ -57,6 +57,10 @@
         .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
         .btn-secondary { background: white; color: #374151; border: 1px solid #e5e7eb; }
         .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .btn-save { background: #10b981; color: white; border: 1px solid #059669; font-weight: 600; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+        .btn-save:hover { background: #059669; box-shadow: 0 6px 16px rgba(16,185,129,0.4); transform: translateY(-1px); }
+        .save-notification { position: fixed; top: 80px; right: 20px; background: #10b981; color: white; padding: 12px 20px; border-radius: 12px; font-size: 0.875rem; font-weight: 500; box-shadow: 0 4px 12px rgba(16,185,129,0.3); z-index: 1000; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .btn-edit { background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; cursor: pointer; border: none; }
         .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1rem; }
         .toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -199,6 +203,7 @@
                         <button class="btn btn-secondary" onclick="toggleImport()">📥 Импорт</button>
                         <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
                         <button class="btn btn-danger" onclick="clearAll()" id="clearBtn">🗑️ Очистить</button>
+                        <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить изменения</button>
                     </div>
                 </div>
                 <div id="weightsPanel" class="weights-panel hidden"></div>
@@ -551,6 +556,7 @@
             if (group) students.push({ id: nextId++, fullName: line, group, notes:0, practice:0, reports:0, bonus:0 });
         });
         toggleImport();
+        markAsChanged();
         renderAll();
     }
 
@@ -574,6 +580,7 @@
     }
     function updateWeight(key, val) {
         categories = categories.map(c => c.key === key ? {...c, maxTotal: Math.max(0,val)} : c);
+        markAsChanged();
         renderWeightsPanel();
         renderAll();
     }
@@ -661,14 +668,64 @@
         const idx = students.findIndex(s => s.id === modalFormData.id);
         if (idx >= 0) students[idx] = {...modalFormData};
         else students.push({...modalFormData});
+        markAsChanged();
         closeScoreModal();
         renderAll();
     }
     function clearAll() {
-        if (confirm('Удалить всех студентов?')) { students = []; renderAll(); }
+        if (confirm('Удалить всех студентов?')) { 
+            students = []; 
+            markAsChanged();
+            renderAll(); 
+        }
+    }
+
+    // ===== SAVE CHANGES =====
+    let hasChanges = false;
+
+    function markAsChanged() {
+        hasChanges = true;
+        const saveBtn = document.getElementById('saveBtn');
+        if (saveBtn) saveBtn.style.display = '';
+    }
+
+    function saveAllChanges() {
+        try {
+            localStorage.setItem('students', JSON.stringify(students));
+            localStorage.setItem('categories', JSON.stringify(categories));
+            hasChanges = false;
+            document.getElementById('saveBtn').style.display = 'none';
+            showNotification('✅ Изменения успешно сохранены!');
+        } catch (e) {
+            showNotification('❌ Ошибка при сохранении: ' + e.message);
+        }
+    }
+
+    function showNotification(message) {
+        const notif = document.createElement('div');
+        notif.className = 'save-notification';
+        notif.textContent = message;
+        document.body.appendChild(notif);
+        setTimeout(() => {
+            notif.style.transition = 'opacity 0.3s';
+            notif.style.opacity = '0';
+            setTimeout(() => notif.remove(), 300);
+        }, 2500);
+    }
+
+    function loadSavedData() {
+        try {
+            const savedStudents = localStorage.getItem('students');
+            const savedCategories = localStorage.getItem('categories');
+            if (savedStudents) students = JSON.parse(savedStudents);
+            if (savedCategories) categories = JSON.parse(savedCategories);
+        } catch (e) {
+            console.error('Ошибка загрузки данных:', e);
+        }
     }
 
     // Init
+    loadSavedData();
     updateAuthUI();
     renderAll();
     </script>
