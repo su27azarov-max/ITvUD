@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рейтинг обучающихся по дисциплине</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #eef2ff 100%); min-height: 100vh; color: #1f2937; }
+        .header { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50; padding: 0 1.5rem; }
+        .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-icon { width: 42px; height: 42px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+        .header-title { font-size: 1.15rem; font-weight: 700; color: #111827; }
+        .header-subtitle { font-size: 0.75rem; color: #6b7280; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .auth-btn { padding: 6px 14px; border-radius: 10px; border: 1px solid; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .auth-btn-login { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
+        .auth-btn-login:hover { background: #e0e7ff; }
+        .auth-btn-logout { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+        .auth-btn-logout:hover { background: #fee2e2; }
+        .header-stats { display: flex; align-items: center; gap: 16px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-weight: 700; color: #4f46e5; font-size: 1rem; }
+        .stat-label { font-size: 0.7rem; color: #6b7280; }
+        .stat-divider { width: 1px; height: 32px; background: #e5e7eb; }
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        .tabs-container { background: white; border-radius: 16px; padding: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; display: flex; gap: 8px; flex-wrap: wrap; }
+        .tab-btn { flex: 1; min-width: 140px; padding: 12px 16px; border-radius: 12px; border: none; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #4b5563; }
+        .tab-btn:hover { background: #f3f4f6; color: #1f2937; }
+        .tab-btn.active { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+        .content-section { margin-top: 1.5rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #111827; }
+        .section-desc { font-size: 0.875rem; color: #6b7280; margin-top: 4px; }
+        .table-wrapper { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        thead tr { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        thead th { padding: 10px 8px; text-align: left; font-weight: 500; white-space: nowrap; }
+        thead th.center { text-align: center; }
+        thead th .sub-text { font-size: 0.65rem; opacity: 0.8; display: block; }
+        tbody tr { border-bottom: 1px solid #f3f4f6; }
+        tbody tr:nth-child(even) { background: #fafafa; }
+        tbody tr:hover { background: #eef2ff; }
+        tbody td { padding: 10px 8px; }
+        tbody td.center { text-align: center; }
+        .student-name { font-weight: 500; color: #1f2937; }
+        .total-score { font-weight: 700; color: #4f46e5; }
+        .grade-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+        .grade-excellent { background: #dcfce7; color: #166534; }
+        .grade-good { background: #dbeafe; color: #1e40af; }
+        .grade-satisfactory { background: #fef9c3; color: #854d0e; }
+        .grade-fail { background: #fee2e2; color: #991b1b; }
+        .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; font-size: 0.75rem; color: #6b7280; }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid; }
+        .btn { padding: 8px 16px; border-radius: 10px; border: none; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .btn-secondary { background: white; color: #374151; border: 1px solid #e5e7eb; }
+        .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .btn-save { background: #10b981; color: white; border: 1px solid #059669; font-weight: 600; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+        .btn-save:hover { background: #059669; box-shadow: 0 6px 16px rgba(16,185,129,0.4); transform: translateY(-1px); }
+        .save-notification { position: fixed; top: 80px; right: 20px; background: #10b981; color: white; padding: 12px 20px; border-radius: 12px; font-size: 0.875rem; font-weight: 500; box-shadow: 0 4px 12px rgba(16,185,129,0.3); z-index: 1000; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .btn-edit { background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; cursor: pointer; border: none; }
+        .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1rem; }
+        .toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .group-selector { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+        .group-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+        .group-btn { padding: 8px 16px; border-radius: 10px; border: 1px solid #e5e7eb; background: white; color: #4b5563; font-size: 0.85rem; font-weight: 500; cursor: pointer; }
+        .group-btn.active { background: #4f46e5; color: white; border-color: #4f46e5; }
+        .group-info { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid #f3f4f6; }
+        .group-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 2rem; }
+        .group-card { padding: 16px; border-radius: 12px; border: 2px solid #f3f4f6; background: white; cursor: pointer; }
+        .group-card.active { border-color: #818cf8; background: #eef2ff; }
+        .import-panel, .weights-panel { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid #f3f4f6; margin-bottom: 1.5rem; }
+        .import-panel textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 12px; font-family: monospace; font-size: 0.85rem; resize: vertical; }
+        .weights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+        .weight-item { background: #f9fafb; border-radius: 12px; padding: 16px; }
+        .weight-input { width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; font-weight: 700; }
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+        .modal { background: white; border-radius: 20px; width: 100%; max-width: 420px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .modal-header { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 24px; color: white; }
+        .modal-body { padding: 24px; }
+        .modal-footer { padding: 0 24px 24px; display: flex; gap: 8px; }
+        .form-input { width: 100%; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 12px; font-size: 0.95rem; outline: none; }
+        .form-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+        .form-error { color: #dc2626; font-size: 0.85rem; margin-top: 8px; }
+        .form-hint { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px; font-size: 0.75rem; color: #1e40af; margin-top: 12px; }
+        .form-hint code { background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+        /* Score Modal */
+        .score-modal { max-width: 600px; }
+        .score-modal .modal-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .score-display { font-size: 2rem; font-weight: 700; text-align: right; }
+        .modal-tabs { display: flex; border-bottom: 1px solid #e5e7eb; overflow-x: auto; }
+        .modal-tab { padding: 12px 16px; font-size: 0.8rem; font-weight: 500; cursor: pointer; border: none; background: none; color: #6b7280; border-bottom: 2px solid transparent; white-space: nowrap; }
+        .modal-tab.active { color: #4f46e5; border-bottom-color: #4f46e5; }
+        .modal-tab .badge { margin-left: 6px; background: #f3f4f6; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; }
+        .modal-body-content { padding: 20px; max-height: 50vh; overflow-y: auto; }
+        .modal-footer-bar { border-top: 1px solid #e5e7eb; padding: 16px 20px; display: flex; justify-content: space-between; background: #f9fafb; }
+        .progress-bar { width: 100%; background: #f3f4f6; border-radius: 8px; height: 10px; margin: 12px 0; }
+        .progress-fill { background: linear-gradient(90deg, #6366f1, #8b5cf6); height: 100%; border-radius: 8px; transition: width 0.3s; }
+        .score-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .score-btn { padding: 8px 14px; border-radius: 10px; border: none; font-size: 0.8rem; font-weight: 500; cursor: pointer; }
+        .score-btn-add { background: #dcfce7; color: #166534; }
+        .score-btn-half { background: #fef9c3; color: #854d0e; }
+        .score-btn-sub { background: #fef2f2; color: #dc2626; }
+        .score-btn-set { background: #f3e8ff; color: #6b21a8; }
+        .manual-input { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+        .manual-input input { width: 80px; padding: 8px; border: 1px solid #e5e7eb; border-radius: 10px; text-align: center; font-weight: 700; }
+        /* Instructions */
+        .overview-box { background: linear-gradient(135deg, #eef2ff, #faf5ff); border: 1px solid #c7d2fe; border-radius: 12px; padding: 20px; margin-bottom: 1.5rem; }
+        .overview-box h3 { font-size: 1.1rem; font-weight: 700; color: #3730a3; margin-bottom: 8px; }
+        .overview-box p { font-size: 0.875rem; color: #4338ca; line-height: 1.6; }
+        .instr-card { background: white; border-radius: 16px; border: 1px solid #f3f4f6; overflow: hidden; margin-bottom: 1.5rem; }
+        .instr-card-header { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 16px 24px; color: white; }
+        .instr-category { padding: 20px 24px; border-bottom: 1px solid #f3f4f6; }
+        .instr-category:last-child { border-bottom: none; }
+        .instr-cat-header { display: flex; align-items: center; margin-bottom: 8px; }
+        .instr-cat-num { width: 32px; height: 32px; border-radius: 8px; background: #eef2ff; display: flex; align-items: center; justify-content: center; color: #4f46e5; font-weight: 700; font-size: 0.85rem; }
+        .instr-cat-name { font-weight: 700; color: #1f2937; margin-left: 12px; flex: 1; }
+        .instr-cat-max { font-size: 1.5rem; font-weight: 700; color: #4f46e5; }
+        .instr-cat-desc { font-size: 0.85rem; color: #6b7280; margin-left: 44px; }
+        .instr-cat-detail { margin-top: 10px; margin-left: 44px; background: #f9fafb; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; }
+        .final-grade-row { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; border: 1px solid; }
+        .final-grade-row.excellent { background: #f0fdf4; border-color: #bbf7d0; }
+        .final-grade-row.good { background: #eff6ff; border-color: #bfdbfe; }
+        .final-grade-row.satisfactory { background: #fefce8; border-color: #fef08a; }
+        .final-grade-row.fail { background: #fef2f2; border-color: #fecaca; }
+        .final-grade-range { width: 80px; text-align: center; font-weight: 700; font-size: 1.1rem; }
+        .final-grade-badge { margin-left: auto; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+        .tips-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; }
+        .tips-box h3 { font-weight: 700; color: #92400e; margin-bottom: 12px; }
+        .tips-box li { font-size: 0.85rem; color: #92400e; padding: 4px 0 4px 16px; position: relative; list-style: none; }
+        .tips-box li::before { content: '•'; position: absolute; left: 0; color: #d97706; }
+        .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; margin-top: 1.5rem; }
+        .info-box h3 { font-weight: 700; color: #1e40af; margin-bottom: 12px; }
+        .info-box li { font-size: 0.85rem; color: #1e40af; padding: 4px 0 4px 16px; position: relative; list-style: none; }
+        .info-box li::before { content: '•'; position: absolute; left: 0; color: #3b82f6; }
+        .teacher-notice { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 1.5rem; }
+        .teacher-section { background: white; border-radius: 16px; border: 1px solid #f3f4f6; padding: 24px; margin-bottom: 16px; }
+        .teacher-section h3 { font-weight: 700; margin-bottom: 12px; }
+        .teacher-section pre { background: #f9fafb; border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 0.75rem; overflow-x: auto; }
+        .empty-state { background: white; border-radius: 16px; padding: 48px; border: 1px solid #f3f4f6; text-align: center; }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 16px; }
+        .footer { border-top: 1px solid #e5e7eb; background: rgba(255,255,255,0.5); margin-top: 3rem; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .hidden { display: none !important; }
+        @media (max-width: 768px) {
+            .header-stats { display: none; }
+            .tabs-container { flex-direction: column; }
+            .group-cards { grid-template-columns: 1fr; }
+            .toolbar { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <div class="header-left">
+                <div class="header-icon">🎓</div>
+                <div>
+                    <div class="header-title">Рейтинг обучающихся</div>
+                    <div class="header-subtitle">Накопительная система оценивания</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="auth-btn auth-btn-login" id="loginBtn" onclick="showLoginModal()">
+                    🔐 <span>Вход для преподавателя</span>
+                </button>
+                <button class="auth-btn auth-btn-logout hidden" id="logoutBtn" onclick="doLogout()">
+                    🚪 <span>Выйти</span>
+                </button>
+                <div class="header-stats">
+                    <div class="stat-item"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Студентов</div></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Групп</div></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item"><div class="stat-value" id="avgRating">0</div><div class="stat-label">Ср. балл</div></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('general')"><span>📊</span><span>Общий рейтинг</span></button>
+            <button class="tab-btn" onclick="switchTab('groups')"><span>👥</span><span>Рейтинг по группам</span></button>
+            <button class="tab-btn" onclick="switchTab('instructions')"><span>📋</span><span id="instrTabLabel">Для обучающихся</span></button>
+        </div>
+
+        <div id="tab-general" class="tab-content active">
+            <div class="content-section">
+                <div class="toolbar">
+                    <div>
+                        <h2 class="section-title">Общий рейтинг</h2>
+                        <p class="section-desc" id="generalDesc"></p>
+                    </div>
+                    <div class="toolbar-actions hidden" id="teacherActions">
+                        <button class="btn btn-secondary" onclick="toggleWeights()">⚖️ Веса категорий</button>
+                        <button class="btn btn-secondary" onclick="toggleImport()">📥 Импорт</button>
+                        <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
+                        <button class="btn btn-danger" onclick="clearAll()" id="clearBtn">🗑️ Очистить</button>
+                        <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить изменения</button>
+                    </div>
+                </div>
+                <div id="weightsPanel" class="weights-panel hidden"></div>
+                <div id="importPanel" class="import-panel hidden"></div>
+                <div id="ratingTableContainer"></div>
+            </div>
+        </div>
+
+        <div id="tab-groups" class="tab-content">
+            <div class="content-section">
+                <div style="margin-bottom:1rem">
+                    <h2 class="section-title">Рейтинг по группам</h2>
+                    <p class="section-desc" id="groupsDesc"></p>
+                </div>
+                <div id="groupContent"></div>
+            </div>
+        </div>
+
+        <div id="tab-instructions" class="tab-content">
+            <div class="content-section">
+                <div style="margin-bottom:1rem">
+                    <h2 class="section-title" id="instrTitle">Инструкция для обучающихся</h2>
+                    <p class="section-desc" id="instrDesc">Какие баллы и за что можно получить</p>
+                </div>
+                <div id="instructionsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal-overlay hidden" onclick="if(event.target===this)closeLoginModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px">🔐</div>
+                    <div>
+                        <h3 style="font-size:1.2rem;font-weight:700">Вход для преподавателя</h3>
+                        <p style="font-size:0.85rem;opacity:0.8">Введите пароль для доступа</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleLogin(event)">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:8px">Пароль преподавателя</label>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Введите пароль" autofocus>
+                    <div id="loginError" class="form-error hidden">⚠️ Неверный пароль</div>
+                    <div class="form-hint">💡 Подсказка: пароль по умолчанию — <code>teacher123</code></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" style="flex:1" onclick="closeLoginModal()">Отмена</button>
+                <button class="btn btn-primary" style="flex:1" onclick="handleLogin(event)">Войти</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Modal -->
+    <div id="scoreModal" class="modal-overlay hidden" onclick="if(event.target===this)closeScoreModal()">
+        <div class="modal score-modal">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modalStudentName" style="font-size:1.1rem;font-weight:700"></h3>
+                    <p id="modalStudentGroup" style="font-size:0.85rem;opacity:0.8"></p>
+                </div>
+                <div style="text-align:right">
+                    <div class="score-display" id="modalTotalScore">0</div>
+                    <div style="font-size:0.75rem;opacity:0.8" id="modalMaxLabel"></div>
+                </div>
+            </div>
+            <div class="modal-tabs" id="modalTabs"></div>
+            <div class="modal-body-content" id="modalBody"></div>
+            <div class="modal-footer-bar">
+                <div style="font-size:0.8rem;color:#6b7280" id="modalSummary"></div>
+                <div style="display:flex;gap:8px">
+                    <button class="btn btn-secondary" onclick="closeScoreModal()">Отмена</button>
+                    <button class="btn btn-primary" onclick="saveScoreModal()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <p style="font-size:0.875rem;color:#6b7280">© 2026 Система рейтинга обучающихся</p>
+            <div style="display:flex;align-items:center;gap:16px;font-size:0.875rem;color:#6b7280">
+                <span>Дисциплина: Программирование</span>
+                <span style="width:4px;height:4px;border-radius:50%;background:#d1d5db"></span>
+                <span>Семестр: Весна 2026</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    const TEACHER_PASSWORD = 'teacher123';
+
+    let categories = [
+        { key: 'notes', name: 'Конспекты', maxPerItem: 2, maxTotal: 30, desc: 'Наличие конспектов на занятиях', shortDesc: '2 балла за занятие' },
+        { key: 'practice', name: 'Практические работы', maxPerItem: 10, maxTotal: 30, desc: 'Защита практических работ', shortDesc: 'Оценка 3→3б, 4→7б, 5→10б', useGrades: true, gradeMapping: { grade3: 3, grade4: 7, grade5: 10 } },
+        { key: 'reports', name: 'Доклады', maxPerItem: 8, maxTotal: 20, desc: 'Выступление с докладами', shortDesc: 'Оценка 3→3б, 4→6б, 5→8б', useGrades: true, gradeMapping: { grade3: 3, grade4: 6, grade5: 8 } },
+        { key: 'bonus', name: 'Дополнительные баллы', maxPerItem: 5, maxTotal: 10, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя' }
+    ];
+
+    let students = [
+        { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, bonus:5 },
+        { id:2, fullName:'Петрова Анна Михайловна', group:'ИТ-201', notes:28, practice:25, reports:20, bonus:8 },
+        { id:3, fullName:'Сидоров Алексей Дмитриевич', group:'ИТ-201', notes:16, practice:10, reports:0, bonus:2 },
+        { id:4, fullName:'Козлова Мария Андреевна', group:'ИТ-201', notes:22, practice:20, reports:10, bonus:4 },
+        { id:5, fullName:'Новиков Дмитрий Павлович', group:'ИТ-201', notes:10, practice:5, reports:0, bonus:0 },
+        { id:6, fullName:'Морозова Елена Викторовна', group:'ИТ-202', notes:26, practice:25, reports:15, bonus:6 },
+        { id:7, fullName:'Волков Артём Николаевич', group:'ИТ-202', notes:20, practice:15, reports:10, bonus:3 },
+        { id:8, fullName:'Соколова Дарья Олеговна', group:'ИТ-202', notes:24, practice:22, reports:10, bonus:5 },
+        { id:9, fullName:'Лебедев Максим Игоревич', group:'ИТ-202', notes:14, practice:10, reports:0, bonus:1 },
+        { id:10, fullName:'Кузнецова Ольга Романовна', group:'ИТ-202', notes:22, practice:20, reports:10, bonus:4 },
+        { id:11, fullName:'Попов Никита Александрович', group:'ИТ-203', notes:30, practice:30, reports:20, bonus:10 },
+        { id:12, fullName:'Васильева Татьяна Петровна', group:'ИТ-203', notes:18, practice:15, reports:10, bonus:2 },
+        { id:13, fullName:'Зайцев Роман Владимирович', group:'ИТ-203', notes:12, practice:10, reports:0, bonus:0 },
+        { id:14, fullName:'Павлова Наталья Сергеевна', group:'ИТ-203', notes:26, practice:24, reports:15, bonus:7 },
+        { id:15, fullName:'Семёнов Кирилл Олегович', group:'ИТ-203', notes:16, practice:12, reports:0, bonus:1 }
+    ];
+
+    let isAuthenticated = false;
+    let currentGroup = '';
+    let editingStudent = null;
+    let modalActiveCategory = 'notes';
+    let modalFormData = null;
+
+    function calcTotal(s) { return s.notes + s.practice + s.reports + s.bonus; }
+    function getMaxTotal() { return categories.reduce((s,c) => s + c.maxTotal, 0); }
+    function getGrade(total) {
+        const pct = (total / getMaxTotal()) * 100;
+        if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
+        if (pct >= 75) return { text:'Хорошо', cls:'grade-good' };
+        if (pct >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
+        return { text:'Неудовлетворительно', cls:'grade-fail' };
+    }
+    function getGroups() { return [...new Set(students.map(s => s.group))].sort(); }
+
+    // ===== AUTH =====
+    function showLoginModal() {
+        document.getElementById('loginModal').classList.remove('hidden');
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginError').classList.add('hidden');
+        setTimeout(() => document.getElementById('loginPassword').focus(), 100);
+    }
+    function closeLoginModal() {
+        document.getElementById('loginModal').classList.add('hidden');
+    }
+    function handleLogin(e) {
+        if (e) e.preventDefault();
+        const pwd = document.getElementById('loginPassword').value;
+        if (pwd === TEACHER_PASSWORD) {
+            isAuthenticated = true;
+            closeLoginModal();
+            updateAuthUI();
+            renderAll();
+        } else {
+            document.getElementById('loginError').classList.remove('hidden');
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginPassword').focus();
+        }
+    }
+    function doLogout() {
+        isAuthenticated = false;
+        updateAuthUI();
+        renderAll();
+    }
+    function updateAuthUI() {
+        document.getElementById('loginBtn').classList.toggle('hidden', isAuthenticated);
+        document.getElementById('logoutBtn').classList.toggle('hidden', !isAuthenticated);
+        document.getElementById('teacherActions').classList.toggle('hidden', !isAuthenticated);
+        document.getElementById('instrTabLabel').textContent = isAuthenticated ? 'Инструкция' : 'Для обучающихся';
+    }
+
+    // ===== RENDERING =====
+    function renderAll() {
+        const maxT = getMaxTotal();
+        document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся (макс. ${maxT} баллов)`;
+        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по группам (макс. ${maxT} баллов)`;
+        if (isAuthenticated) {
+            document.getElementById('instrTitle').textContent = 'Инструкция';
+            document.getElementById('instrDesc').textContent = 'Руководство по работе с системой рейтинга';
+        } else {
+            document.getElementById('instrTitle').textContent = 'Инструкция для обучающихся';
+            document.getElementById('instrDesc').textContent = 'Какие баллы и за что можно получить в рамках дисциплины';
+        }
+        renderGeneralTable();
+        renderGroupTab();
+        renderInstructions();
+        updateHeaderStats();
+    }
+
+    function updateHeaderStats() {
+        document.getElementById('totalStudents').textContent = students.length;
+        document.getElementById('totalGroups').textContent = getGroups().length;
+        const avg = students.length > 0 ? (students.reduce((s,st) => s + calcTotal(st), 0) / students.length).toFixed(1) : '0';
+        document.getElementById('avgRating').textContent = avg;
+    }
+
+    function renderGeneralTable() {
+        const container = document.getElementById('ratingTableContainer');
+        if (students.length === 0) {
+            const msg = isAuthenticated ? 'Импортируйте студентов или добавьте их вручную' : 'Преподаватель ещё не загрузил данные';
+            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Список студентов пуст</h3><p>${msg}</p></div>`;
+            return;
+        }
+        const sorted = [...students].sort((a,b) => calcTotal(b) - calcTotal(a));
+        let html = `<div class="table-wrapper"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
+        categories.forEach(c => { html += `<th class="center">${c.name}<span class="sub-text">(макс. ${c.maxTotal})</span></th>`; });
+        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th>`;
+        if (isAuthenticated) html += `<th class="center">Действия</th>`;
+        html += `</tr></thead><tbody>`;
+        sorted.forEach((s, i) => {
+            const total = calcTotal(s);
+            const grade = getGrade(total);
+            html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
+            categories.forEach(c => { html += `<td class="center">${s[c.key]}</td>`; });
+            html += `<td class="center"><span class="total-score">${total}</span></td>`;
+            html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
+            if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
+            html += `</tr>`;
+        });
+        html += `</tbody></table></div>`;
+        html += `<div class="legend"><span class="legend-item"><span class="legend-dot" style="background:#dcfce7;border-color:#86efac"></span> Отлично (≥90%)</span><span class="legend-item"><span class="legend-dot" style="background:#dbeafe;border-color:#93c5fd"></span> Хорошо (75-89%)</span><span class="legend-item"><span class="legend-dot" style="background:#fef9c3;border-color:#fde047"></span> Удовл. (60-74%)</span><span class="legend-item"><span class="legend-dot" style="background:#fee2e2;border-color:#fca5a5"></span> Неудовл. (&lt;60%)</span></div>`;
+        container.innerHTML = html;
+    }
+
+    function renderGroupTab() {
+        const container = document.getElementById('groupContent');
+        if (students.length === 0) {
+            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Нет данных</h3><p>Преподаватель ещё не загрузил данные</p></div>`;
+            return;
+        }
+        const groups = getGroups();
+        if (!currentGroup || !groups.includes(currentGroup)) currentGroup = groups[0];
+        const filtered = students.filter(s => s.group === currentGroup).sort((a,b) => calcTotal(b) - calcTotal(a));
+
+        let html = `<div class="group-selector"><label style="font-weight:500">Выберите группу:</label><div class="group-buttons">`;
+        groups.forEach(g => { html += `<button class="group-btn ${g===currentGroup?'active':''}" onclick="selectGroup('${g}')">${g}</button>`; });
+        html += `</div></div>`;
+
+        html += `<div class="group-info"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem"><h3 style="font-size:1.25rem;font-weight:700">Группа <span style="color:#4f46e5">${currentGroup}</span></h3><span style="font-size:0.8rem;color:#6b7280;background:#f3f4f6;padding:4px 12px;border-radius:20px">Студентов: ${filtered.length}</span></div>`;
+        html += `<div style="overflow-x:auto"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
+        categories.forEach(c => { html += `<th class="center">${c.name}<span class="sub-text">(макс. ${c.maxTotal})</span></th>`; });
+        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th>`;
+        if (isAuthenticated) html += `<th class="center">Действия</th>`;
+        html += `</tr></thead><tbody>`;
+        filtered.forEach((s, i) => {
+            const total = calcTotal(s);
+            const grade = getGrade(total);
+            html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
+            categories.forEach(c => { html += `<td class="center">${s[c.key]}</td>`; });
+            html += `<td class="center"><span class="total-score">${total}</span></td>`;
+            html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
+            if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
+            html += `</tr>`;
+        });
+        html += `</tbody></table></div></div>`;
+
+        html += `<div class="group-cards">`;
+        groups.forEach(g => {
+            const gs = students.filter(s => s.group === g);
+            const totals = gs.map(s => calcTotal(s));
+            const avg = totals.length ? (totals.reduce((a,b)=>a+b,0)/totals.length).toFixed(1) : 0;
+            const max = totals.length ? Math.max(...totals) : 0;
+            const min = totals.length ? Math.min(...totals) : 0;
+            html += `<div class="group-card ${g===currentGroup?'active':''}" onclick="selectGroup('${g}')"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-weight:700">${g}</span><span style="font-size:0.75rem;color:#6b7280">${gs.length} чел.</span></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center"><div><div style="font-size:1.1rem;font-weight:700;color:#4f46e5">${avg}</div><div style="font-size:0.7rem;color:#6b7280">Средний</div></div><div><div style="font-size:1.1rem;font-weight:700;color:#16a34a">${max}</div><div style="font-size:0.7rem;color:#6b7280">Макс.</div></div><div><div style="font-size:1.1rem;font-weight:700;color:#ea580c">${min}</div><div style="font-size:0.7rem;color:#6b7280">Мин.</div></div></div></div>`;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+
+    function renderInstructions() {
+        const container = document.getElementById('instructionsContent');
+        const maxT = getMaxTotal();
+        if (isAuthenticated) {
+            let html = `<div class="teacher-notice"><p style="color:#92400e;font-size:0.875rem"><strong>📌 Режим преподавателя:</strong> Вы можете импортировать студентов, начислять баллы и настраивать веса категорий.</p></div>`;
+            html += `<div class="teacher-section"><h3>📥 Импорт студентов</h3><p style="font-size:0.875rem;color:#4b5563">Используйте кнопку «Импорт» для загрузки списка. Форматы:</p><pre># Группа ИТ-201
+Иванов Иван Сергеевич
+Петрова Анна Михайловна
+
+Или CSV:
+Иванов Иван Сергеевич;ИТ-201</pre></div>`;
+            html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p style="font-size:0.875rem;color:#4b5563">Нажмите «Баллы» рядом с именем студента. Категории:</p><ul style="list-style:none;margin-top:8px"><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — за наличие конспектов</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — за защиту работ</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — за выступления</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li></ul></div>`;
+            html += `<div class="teacher-section"><h3>⚖️ Веса категорий</h3><p style="font-size:0.875rem;color:#4b5563">Настройте максимальное количество баллов по каждой категории. Оценка рассчитывается в процентах от суммы весов: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%.</p></div>`;
+            container.innerHTML = html;
+        } else {
+            let html = `<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе. Максимальный рейтинг — <strong>${maxT} баллов</strong>. Оценка выставляется автоматически в процентах от максимума.</p></div>`;
+            html += `<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Категории оценивания</h3><p style="font-size:0.85rem;opacity:0.8">За что можно получить баллы</p></div>`;
+            categories.forEach((c, i) => {
+                let detailHtml = '';
+                if (c.useGrades && c.gradeMapping) {
+                    detailHtml = `<div class="instr-cat-detail"><strong>Система оценивания:</strong><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px"><div style="background:#fef9c3;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#854d0e">Оценка «3»</div><div style="font-size:0.75rem;color:#92400e">${c.gradeMapping.grade3} балла</div></div><div style="background:#dbeafe;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#1e40af">Оценка «4»</div><div style="font-size:0.75rem;color:#1e3a8a">${c.gradeMapping.grade4} балла</div></div><div style="background:#dcfce7;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#166534">Оценка «5»</div><div style="font-size:0.75rem;color:#14532d">${c.gradeMapping.grade5} баллов</div></div></div></div>`;
+                } else {
+                    detailHtml = `<div class="instr-cat-detail"><strong>Как начисляется:</strong> ${c.shortDesc}</div>`;
+                }
+                html += `<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">${i+1}</span><span class="instr-cat-name">${c.name}</span><div style="text-align:right;margin-left:auto"><div class="instr-cat-max">${c.maxTotal}</div><div style="font-size:0.7rem;color:#6b7280">макс. баллов</div></div></div><p class="instr-cat-desc">${c.desc}</p>${detailHtml}</div>`;
+            });
+            html += `</div>`;
+            html += `<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Итоговые оценки</h3><p style="font-size:0.85rem;opacity:0.8">Шкала (в % от максимума ${maxT})</p></div><div style="padding:24px">`;
+            html += `<div class="final-grade-row excellent"><span class="final-grade-range" style="color:#166534">≥90%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#dcfce7;color:#166534">Отлично (5)</span></div>`;
+            html += `<div class="final-grade-row good"><span class="final-grade-range" style="color:#1e40af">75–89%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#dbeafe;color:#1e40af">Хорошо (4)</span></div>`;
+            html += `<div class="final-grade-row satisfactory"><span class="final-grade-range" style="color:#854d0e">60–74%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#fef9c3;color:#854d0e">Удовлетворительно (3)</span></div>`;
+            html += `<div class="final-grade-row fail"><span class="final-grade-range" style="color:#991b1b">&lt; 60%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#fee2e2;color:#991b1b">Неудовлетворительно (2)</span></div>`;
+            html += `</div></div>`;
+            html += `<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>`;
+            html += `<li>Регулярно посещайте занятия и ведите конспекты — до ${categories[0].maxTotal} баллов</li>`;
+            html += `<li>Своевременно защищайте практические работы — до ${categories[1].maxTotal} баллов</li>`;
+            html += `<li>Подготовьте и выступите с докладами — до ${categories[2].maxTotal} баллов</li>`;
+            html += `<li>Проявляйте активность — преподаватель может начислить до ${categories[3].maxTotal} доп. баллов</li>`;
+            html += `</ul></div>`;
+            html += `<div class="info-box"><h3>⚠️ Важная информация</h3><ul><li>Студенты с результатом менее 60% допускаются к пересдаче</li><li>Баллы начисляются накопительно в течение семестра</li><li>Отслеживайте свой рейтинг на данной странице</li><li>По вопросам начисления баллов обращайтесь к преподавателю</li><li>Максимальные баллы по категориям устанавливает преподаватель</li></ul></div>`;
+            container.innerHTML = html;
+        }
+    }
+
+    // ===== TABS =====
+    function switchTab(name) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        const idx = { general:0, groups:1, instructions:2 };
+        document.querySelectorAll('.tab-btn')[idx[name]].classList.add('active');
+    }
+    function selectGroup(g) { currentGroup = g; renderGroupTab(); }
+
+    // ===== IMPORT & WEIGHTS =====
+    function toggleImport() {
+        const panel = document.getElementById('importPanel');
+        if (panel.classList.contains('hidden')) {
+            panel.classList.remove('hidden');
+            panel.innerHTML = `<h3 style="font-weight:700;margin-bottom:12px">📥 Импорт обучающихся</h3><textarea id="importText" placeholder="# Группа ИТ-201&#10;Иванов Иван Сергеевич&#10;Петрова Анна Михайловна"></textarea><div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-secondary" onclick="doImport()">Импортировать</button><button class="btn btn-secondary" onclick="toggleImport()">Закрыть</button></div><div style="margin-top:8px;font-size:0.75rem;color:#6b7280">Формат: # Группа ИТ-201 (для заголовка группы) или ФИО;Группа (CSV)</div>`;
+        } else {
+            panel.classList.add('hidden');
+        }
+    }
+    function doImport() {
+        const text = document.getElementById('importText').value;
+        if (!text.trim()) return;
+        let group = ''; let nextId = students.length > 0 ? Math.max(...students.map(s=>s.id)) + 1 : 1;
+        text.split('\n').forEach(line => {
+            line = line.trim();
+            if (!line) return;
+            const gm = line.match(/^(?:#\s*Группа\s*|Группа\s*[:\-]?\s*)(.+)$/i);
+            if (gm) { group = gm[1].trim(); return; }
+            const csv = line.match(/^(.+?)\s*[;,]\s*(.+)$/);
+            if (csv && csv[2].trim().length <= 20) {
+                students.push({ id: nextId++, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, bonus:0 });
+                return;
+            }
+            if (group) students.push({ id: nextId++, fullName: line, group, notes:0, practice:0, reports:0, bonus:0 });
+        });
+        toggleImport();
+        markAsChanged();
+        renderAll();
+    }
+
+    function toggleWeights() {
+        const panel = document.getElementById('weightsPanel');
+        if (panel.classList.contains('hidden')) {
+            panel.classList.remove('hidden');
+            renderWeightsPanel();
+        } else {
+            panel.classList.add('hidden');
+        }
+    }
+    function renderWeightsPanel() {
+        const panel = document.getElementById('weightsPanel');
+        let html = `<h3 style="font-weight:700;margin-bottom:4px">⚖️ Настройка весов категорий</h3><p style="font-size:0.85rem;color:#6b7280">Итого: <strong style="color:#4f46e5">${getMaxTotal()}</strong> баллов</p><div class="weights-grid">`;
+        categories.forEach(c => {
+            html += `<div class="weight-item"><label style="display:block;font-size:0.85rem;font-weight:500;margin-bottom:4px">${c.name}</label><div style="display:flex;align-items:center;gap:8px"><input type="number" class="weight-input" min="0" max="100" value="${c.maxTotal}" onchange="updateWeight('${c.key}',parseInt(this.value)||0)"><span style="font-size:0.85rem;color:#6b7280">баллов</span></div><p style="font-size:0.7rem;color:#9ca3af;margin-top:4px">${c.shortDesc}</p></div>`;
+        });
+        html += `</div><div style="margin-top:16px;padding:12px;background:#eef2ff;border-radius:8px;font-size:0.85rem;color:#3730a3">💡 Шкала: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%</div><div style="margin-top:8px"><button class="btn btn-secondary" onclick="toggleWeights()">Закрыть</button></div>`;
+        panel.innerHTML = html;
+    }
+    function updateWeight(key, val) {
+        categories = categories.map(c => c.key === key ? {...c, maxTotal: Math.max(0,val)} : c);
+        markAsChanged();
+        renderWeightsPanel();
+        renderAll();
+    }
+
+    // ===== SCORE MODAL =====
+    function openEditModal(id) {
+        if (!isAuthenticated) return;
+        editingStudent = students.find(s => s.id === id);
+        if (!editingStudent) return;
+        modalFormData = {...editingStudent};
+        modalActiveCategory = 'notes';
+        renderScoreModal();
+        document.getElementById('scoreModal').classList.remove('hidden');
+    }
+    function openAddModal() {
+        if (!isAuthenticated) return;
+        const name = prompt('ФИО студента:');
+        if (!name) return;
+        const group = prompt('Номер группы:');
+        if (!group) return;
+        const maxId = students.length > 0 ? Math.max(...students.map(s=>s.id)) : 0;
+        editingStudent = { id: maxId + 1, fullName: name, group, notes:0, practice:0, reports:0, bonus:0 };
+        modalFormData = {...editingStudent};
+        modalActiveCategory = 'notes';
+        renderScoreModal();
+        document.getElementById('scoreModal').classList.remove('hidden');
+    }
+    function closeScoreModal() {
+        document.getElementById('scoreModal').classList.add('hidden');
+        editingStudent = null;
+        modalFormData = null;
+    }
+    function renderScoreModal() {
+        if (!modalFormData) return;
+        const total = calcTotal(modalFormData);
+        document.getElementById('modalStudentName').textContent = modalFormData.fullName;
+        document.getElementById('modalStudentGroup').textContent = 'Группа: ' + modalFormData.group;
+        document.getElementById('modalTotalScore').textContent = total;
+        document.getElementById('modalMaxLabel').textContent = `из ${getMaxTotal()} баллов`;
+
+        let tabsHtml = '';
+        categories.forEach(c => {
+            tabsHtml += `<button class="modal-tab ${modalActiveCategory===c.key?'active':''}" onclick="switchModalCat('${c.key}')">${c.name}<span class="badge">${modalFormData[c.key]}/${c.maxTotal}</span></button>`;
+        });
+        document.getElementById('modalTabs').innerHTML = tabsHtml;
+
+        const cat = categories.find(c => c.key === modalActiveCategory);
+        const val = modalFormData[cat.key];
+        const pct = (val / cat.maxTotal) * 100;
+        let body = `<div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:500">${cat.name}</span><span style="font-size:0.85rem;color:#6b7280">${cat.shortDesc}</span></div>`;
+        body += `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>`;
+        body += `<p style="font-size:0.85rem;color:#6b7280">Баллы: <strong>${val}</strong> / ${cat.maxTotal}</p>`;
+
+        if (cat.key === 'bonus') {
+            body += `<div class="manual-input"><input type="number" min="0" max="${cat.maxTotal}" value="${val}" onchange="setCatScore('bonus',parseInt(this.value)||0)"><span style="color:#6b7280">/ ${cat.maxTotal}</span></div>`;
+            body += `<div class="score-buttons">`;
+            [1,2,3,5,10].forEach(v => { body += `<button class="score-btn score-btn-set" onclick="setCatScore('bonus',${v})">${v}б</button>`; });
+            body += `</div>`;
+        } else {
+            body += `<div class="score-buttons">`;
+            body += `<button class="score-btn score-btn-add" onclick="addCatScore('${cat.key}',${cat.maxPerItem})">+${cat.maxPerItem}</button>`;
+            body += `<button class="score-btn score-btn-half" onclick="addCatScore('${cat.key}',${Math.ceil(cat.maxPerItem/2)})">+${Math.ceil(cat.maxPerItem/2)}</button>`;
+            body += `<button class="score-btn score-btn-sub" onclick="addCatScore('${cat.key}',-${cat.maxPerItem})">-${cat.maxPerItem}</button>`;
+            body += `<button class="score-btn score-btn-sub" onclick="setCatScore('${cat.key}',0)">Сброс</button>`;
+            body += `</div>`;
+            body += `<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Вручную:</label><input type="number" min="0" max="${cat.maxTotal}" value="${val}" onchange="setCatScore('${cat.key}',parseInt(this.value)||0)"></div>`;
+        }
+        body += `</div>`;
+        document.getElementById('modalBody').innerHTML = body;
+        document.getElementById('modalSummary').textContent = `${modalFormData.notes}+${modalFormData.practice}+${modalFormData.reports}+${modalFormData.bonus} = ${total}`;
+    }
+    function switchModalCat(key) { modalActiveCategory = key; renderScoreModal(); }
+    function addCatScore(key, amount) {
+        const cat = categories.find(c => c.key === key);
+        modalFormData[key] = Math.max(0, Math.min(modalFormData[key] + amount, cat.maxTotal));
+        renderScoreModal();
+    }
+    function setCatScore(key, val) {
+        const cat = categories.find(c => c.key === key);
+        modalFormData[key] = Math.max(0, Math.min(val, cat.maxTotal));
+        renderScoreModal();
+    }
+    function saveScoreModal() {
+        if (!modalFormData || !modalFormData.fullName || !modalFormData.group) { alert('Заполните ФИО и группу'); return; }
+        const idx = students.findIndex(s => s.id === modalFormData.id);
+        if (idx >= 0) students[idx] = {...modalFormData};
+        else students.push({...modalFormData});
+        markAsChanged();
+        closeScoreModal();
+        renderAll();
+    }
+    function clearAll() {
+        if (confirm('Удалить всех студентов?')) { 
+            students = []; 
+            markAsChanged();
+            renderAll(); 
+        }
+    }
+
+    // ===== SAVE CHANGES =====
+    let hasChanges = false;
+
+    function markAsChanged() {
+        hasChanges = true;
+        const saveBtn = document.getElementById('saveBtn');
+        if (saveBtn) saveBtn.style.display = '';
+    }
+
+    function saveAllChanges() {
+        try {
+            localStorage.setItem('students', JSON.stringify(students));
+            localStorage.setItem('categories', JSON.stringify(categories));
+            hasChanges = false;
+            document.getElementById('saveBtn').style.display = 'none';
+            showNotification('✅ Изменения успешно сохранены!');
+        } catch (e) {
+            showNotification('❌ Ошибка при сохранении: ' + e.message);
+        }
+    }
+
+    function showNotification(message) {
+        const notif = document.createElement('div');
+        notif.className = 'save-notification';
+        notif.textContent = message;
+        document.body.appendChild(notif);
+        setTimeout(() => {
+            notif.style.transition = 'opacity 0.3s';
+            notif.style.opacity = '0';
+            setTimeout(() => notif.remove(), 300);
+        }, 2500);
+    }
+
+    function loadSavedData() {
+        try {
+            const savedStudents = localStorage.getItem('students');
+            const savedCategories = localStorage.getItem('categories');
+            if (savedStudents) students = JSON.parse(savedStudents);
+            if (savedCategories) categories = JSON.parse(savedCategories);
+        } catch (e) {
+            console.error('Ошибка загрузки данных:', e);
+        }
+    }
+
+    // Init
+    loadSavedData();
+    updateAuthUI();
+    renderAll();
+    </script>
+</body>
+</html>
