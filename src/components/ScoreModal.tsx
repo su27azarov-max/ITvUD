@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Student, CategoryConfig, calculateMaxTotal, calculateNotesScore, calculatePracticeScore, calculateReportsScore } from '../data/students';
+import { Student, CategoryConfig, calculateMaxTotal, calculatePracticeScore, calculateReportsScore } from '../data/students';
 
 interface ScoreModalProps {
   student: Student;
@@ -27,25 +27,6 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
     if (!cat) return;
     const clamped = Math.max(0, Math.min(value, cat.maxTotal));
     setFormData({ ...formData, [categoryKey]: clamped });
-  };
-
-  const handleAddNotesGrade = (grade: '3' | '4' | '5') => {
-    const newGrades = { ...formData.notesGrades };
-    newGrades[grade]++;
-    const notesScore = calculateNotesScore(newGrades);
-    const cat = categories.find(c => c.key === 'notes');
-    if (cat && notesScore <= cat.maxTotal) {
-      setFormData({ ...formData, notesGrades: newGrades, notes: notesScore });
-    }
-  };
-
-  const handleRemoveNotesGrade = (grade: '3' | '4' | '5') => {
-    const newGrades = { ...formData.notesGrades };
-    if (newGrades[grade] > 0) {
-      newGrades[grade]--;
-      const notesScore = calculateNotesScore(newGrades);
-      setFormData({ ...formData, notesGrades: newGrades, notes: notesScore });
-    }
   };
 
   const handleAddPracticeGrade = (grade: '3' | '4' | '5') => {
@@ -147,75 +128,42 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                 {cat.key === 'notes' ? (
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600">
-                      Оценки за конспекты: <strong>{formData.notes}</strong> / {cat.maxTotal} баллов
+                      Конспекты: <strong>{formData.notes}</strong> / {cat.maxTotal} баллов
                     </p>
-                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                      <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                        <div>
-                          <div className="font-bold text-yellow-600">{formData.notesGrades['3']}</div>
-                          <div className="text-xs text-gray-500">оценки «3»</div>
-                          <div className="text-xs text-gray-400">× 2 балла</div>
-                        </div>
-                        <div>
-                          <div className="font-bold text-blue-600">{formData.notesGrades['4']}</div>
-                          <div className="text-xs text-gray-500">оценки «4»</div>
-                          <div className="text-xs text-gray-400">× 3 балла</div>
-                        </div>
-                        <div>
-                          <div className="font-bold text-green-600">{formData.notesGrades['5']}</div>
-                          <div className="text-xs text-gray-500">оценки «5»</div>
-                          <div className="text-xs text-gray-400">× 5 баллов</div>
-                        </div>
-                      </div>
-                    </div>
+                    <p className="text-sm text-gray-500">
+                      2 балла за каждый конспект лекции
+                    </p>
                     <div className="flex gap-2 flex-wrap">
                       <button
-                        onClick={() => handleAddNotesGrade('3')}
-                        className="px-4 py-2.5 bg-yellow-100 text-yellow-700 rounded-xl font-medium hover:bg-yellow-200 transition-colors"
-                      >
-                        + Оценка «3» (2б)
-                      </button>
-                      <button
-                        onClick={() => handleAddNotesGrade('4')}
-                        className="px-4 py-2.5 bg-blue-100 text-blue-700 rounded-xl font-medium hover:bg-blue-200 transition-colors"
-                      >
-                        + Оценка «4» (3б)
-                      </button>
-                      <button
-                        onClick={() => handleAddNotesGrade('5')}
+                        onClick={() => handleAddScore('notes', 2)}
                         className="px-4 py-2.5 bg-green-100 text-green-700 rounded-xl font-medium hover:bg-green-200 transition-colors"
                       >
-                        + Оценка «5» (5б)
+                        + Конспект (2б)
                       </button>
-                    </div>
-                    <div className="flex gap-2 flex-wrap">
                       <button
-                        onClick={() => handleRemoveNotesGrade('3')}
-                        disabled={formData.notesGrades['3'] === 0}
-                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={() => handleAddScore('notes', -2)}
+                        disabled={formData.notes < 2}
+                        className="px-4 py-2.5 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        − «3»
+                        − Конспект (2б)
                       </button>
                       <button
-                        onClick={() => handleRemoveNotesGrade('4')}
-                        disabled={formData.notesGrades['4'] === 0}
-                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        − «4»
-                      </button>
-                      <button
-                        onClick={() => handleRemoveNotesGrade('5')}
-                        disabled={formData.notesGrades['5'] === 0}
-                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        − «5»
-                      </button>
-                      <button
-                        onClick={() => setFormData({ ...formData, notesGrades: { '3': 0, '4': 0, '5': 0 }, notes: 0 })}
-                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                        onClick={() => handleSetScore('notes', 0)}
+                        className="px-4 py-2.5 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors"
                       >
                         Сбросить все
                       </button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <label className="text-sm text-gray-600">Или введите вручную:</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max={cat.maxTotal}
+                        value={formData.notes}
+                        onChange={(e) => handleSetScore('notes', parseInt(e.target.value) || 0)}
+                        className="w-20 px-3 py-2 border border-gray-200 rounded-xl text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
                     </div>
                   </div>
                 ) : cat.key === 'practice' ? (

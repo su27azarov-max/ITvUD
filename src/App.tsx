@@ -466,12 +466,7 @@ function TeacherInstructions() {
           Баллы можно добавлять кнопками или вводить вручную.
         </p>
         <ul className="space-y-2 text-sm text-gray-600">
-          <li>
-            <strong>Конспекты</strong> — система оценок:
-            <div className="mt-1 ml-4 text-xs text-gray-500">
-              Оценка «3» → 2 балла | Оценка «4» → 3 балла | Оценка «5» → 5 баллов (макс. 500)
-            </div>
-          </li>
+          <li>• <strong>Конспекты</strong> — 2 балла за каждый конспект лекции (макс. 500)</li>
           <li>
             <strong>Практические работы</strong> — система оценок:
             <div className="mt-1 ml-4 text-xs text-gray-500">

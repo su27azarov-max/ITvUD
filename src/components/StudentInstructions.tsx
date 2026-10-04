@@ -14,8 +14,7 @@ export default function StudentInstructions({ categories }: StudentInstructionsP
         <h3 className="text-lg font-bold text-indigo-800 mb-2">📊 Система рейтинга</h3>
         <p className="text-indigo-700 text-sm leading-relaxed">
           Рейтинг формируется по накопительной системе в течение семестра. 
-          Максимальный рейтинг — <strong>{maxTotal} баллов</strong>. 
-          Итоговая оценка выставляется автоматически на основе процента от максимального количества баллов.
+          Итоговая оценка выставляется автоматически на основе набранных баллов.
         </p>
       </div>
 
@@ -45,23 +44,9 @@ export default function StudentInstructions({ categories }: StudentInstructionsP
               </div>
               <div className="mt-3 ml-11 bg-gray-50 rounded-lg p-3">
                 {cat.key === 'notes' ? (
-                  <div className="text-sm text-gray-700">
-                    <strong>Система оценивания:</strong>
-                    <div className="mt-2 grid grid-cols-3 gap-2">
-                      <div className="bg-yellow-50 p-2 rounded text-center">
-                        <div className="font-bold text-yellow-700">Оценка «3»</div>
-                        <div className="text-xs text-gray-600">2 балла</div>
-                      </div>
-                      <div className="bg-blue-50 p-2 rounded text-center">
-                        <div className="font-bold text-blue-700">Оценка «4»</div>
-                        <div className="text-xs text-gray-600">3 балла</div>
-                      </div>
-                      <div className="bg-green-50 p-2 rounded text-center">
-                        <div className="font-bold text-green-700">Оценка «5»</div>
-                        <div className="text-xs text-gray-600">5 баллов</div>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-sm text-gray-700">
+                    <strong>Как начисляется:</strong> 2 балла за каждый конспект лекции
+                  </p>
                 ) : cat.key === 'practice' ? (
                   <div className="text-sm text-gray-700">
                     <strong>Система оценивания:</strong>

@@ -33,12 +33,10 @@ export const defaultCategories: CategoryConfig[] = [
   {
     key: 'notes',
     name: 'Конспекты',
-    maxPerItem: 5,
+    maxPerItem: 2,
     maxTotal: 500,
     description: 'Наличие конспектов на занятиях',
-    shortDesc: 'Оценка 3→2б, 4→3б, 5→5б',
-    useGrades: true,
-    gradeMapping: { grade3: 2, grade4: 3, grade5: 5 },
+    shortDesc: '2 балла за конспект лекции',
   },
   {
     key: 'practice',
@@ -149,10 +147,6 @@ export function parseImportText(text: string): Student[] {
 }
 
 // Функции для подсчета баллов по оценкам
-export function calculateNotesScore(grades: { '3': number; '4': number; '5': number }): number {
-  return grades['3'] * 2 + grades['4'] * 3 + grades['5'] * 5;
-}
-
 export function calculatePracticeScore(grades: { '3': number; '4': number; '5': number }): number {
   return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10;
 }
