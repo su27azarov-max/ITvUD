@@ -394,8 +394,8 @@
     // ===== RENDERING =====
     function renderAll() {
         const maxT = getMaxTotal();
-        document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся (макс. ${maxT} баллов)`;
-        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по группам (макс. ${maxT} баллов)`;
+        document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся`;
+        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по взводам`;
         if (isAuthenticated) {
             document.getElementById('instrTitle').textContent = 'Инструкция';
             document.getElementById('instrDesc').textContent = 'Руководство по работе с системой рейтинга';
