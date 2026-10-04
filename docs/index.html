@@ -602,7 +602,13 @@
         if (!isAuthenticated) return;
         editingStudent = students.find(s => s.id === id);
         if (!editingStudent) return;
-        modalFormData = {...editingStudent};
+        // Инициализация недостающих полей
+        modalFormData = {
+            ...editingStudent,
+            notesGrades: editingStudent.notesGrades || {'3':0,'4':0,'5':0},
+            practiceGrades: editingStudent.practiceGrades || {'3':0,'4':0,'5':0},
+            reportsGrades: editingStudent.reportsGrades || {'3':0,'4':0,'5':0}
+        };
         modalActiveCategory = 'notes';
         renderScoreModal();
         document.getElementById('scoreModal').classList.remove('hidden');
@@ -799,7 +805,16 @@
         try {
             const savedStudents = localStorage.getItem('students');
             const savedCategories = localStorage.getItem('categories');
-            if (savedStudents) students = JSON.parse(savedStudents);
+            if (savedStudents) {
+                students = JSON.parse(savedStudents);
+                // Инициализация недостающих полей для оценок
+                students = students.map(s => ({
+                    ...s,
+                    notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
+                    practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
+                    reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0}
+                }));
+            }
             if (savedCategories) categories = JSON.parse(savedCategories);
         } catch (e) {
             console.error('Ошибка загрузки данных:', e);

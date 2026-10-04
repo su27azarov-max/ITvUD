@@ -44,7 +44,17 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [students, setStudents] = useState<Student[]>(() => {
     const saved = localStorage.getItem('students');
-    return saved ? JSON.parse(saved) : demoStudents;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Инициализация недостающих полей для оценок
+      return parsed.map((s: Student) => ({
+        ...s,
+        notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
+        practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
+        reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0}
+      }));
+    }
+    return demoStudents;
   });
   const [categories, setCategories] = useState<CategoryConfig[]>(() => {
     const saved = localStorage.getItem('categories');
