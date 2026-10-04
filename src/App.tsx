@@ -17,7 +17,7 @@ import LoginModal from './components/LoginModal';
 
 type TabType = 'general' | 'groups' | 'instructions';
 
-const TEACHER_PASSWORD = 'teacher123';
+const TEACHER_PASSWORD = '05072020';
 
 // Демо-данные
 const demoStudents: Student[] = [

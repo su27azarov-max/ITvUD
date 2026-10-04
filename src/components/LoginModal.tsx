@@ -85,11 +85,7 @@ export default function LoginModal({ onLogin, onClose }: LoginModalProps) {
             </button>
           </div>
 
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs text-blue-800">
-              <strong>💡 Подсказка:</strong> Пароль по умолчанию: <code className="bg-blue-100 px-1.5 py-0.5 rounded font-mono">teacher123</code>
-            </p>
-          </div>
+
         </form>
       </div>
     </div>
