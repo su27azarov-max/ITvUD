@@ -72,8 +72,19 @@ export function calculateTotal(student: Student): number {
   return (student.notes || 0) + (student.practice || 0) + (student.reports || 0) + (student.bonus || 0);
 }
 
-export function calculateMaxTotal(categories: CategoryConfig[]): number {
-  // Игнорируем категории с maxTotal = 0
+export function calculateMaxTotal(categories: CategoryConfig[], student?: Student): number {
+  // Если передан студент, учитываем дополнительные баллы только если они есть
+  if (student) {
+    return categories.reduce((sum, c) => {
+      if (c.maxTotal <= 0) return sum;
+      // Для категории bonus учитываем только если у студента есть эти баллы
+      if (c.key === 'bonus') {
+        return sum + ((student.bonus || 0) > 0 ? c.maxTotal : 0);
+      }
+      return sum + c.maxTotal;
+    }, 0);
+  }
+  // Если студент не передан, игнорируем категории с нулевым максимумом
   return categories.reduce((sum, c) => sum + (c.maxTotal > 0 ? c.maxTotal : 0), 0);
 }
 

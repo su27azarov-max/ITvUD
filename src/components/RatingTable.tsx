@@ -10,7 +10,6 @@ interface RatingTableProps {
 
 export default function RatingTable({ students, categories, title, onEditStudent, isTeacher = false }: RatingTableProps) {
   const sorted = [...students].sort((a, b) => calculateTotal(b) - calculateTotal(a));
-  const maxTotal = calculateMaxTotal(categories);
   // Фильтруем категории с нулевым максимумом
   const activeCategories = categories.filter(cat => cat.maxTotal > 0);
 
@@ -36,7 +35,6 @@ export default function RatingTable({ students, categories, title, onEditStudent
               ))}
               <th className="px-3 py-3 text-center font-medium">
                 Итого
-                {isTeacher && <span className="block text-xs opacity-80 font-normal">(макс. {maxTotal})</span>}
               </th>
               <th className="px-3 py-3 text-center font-medium">Оценка</th>
               {onEditStudent && (
@@ -47,6 +45,7 @@ export default function RatingTable({ students, categories, title, onEditStudent
           <tbody>
             {sorted.map((student, index) => {
               const total = calculateTotal(student);
+              const studentMaxTotal = calculateMaxTotal(categories, student);
               return (
                 <tr
                   key={student.id}
@@ -65,8 +64,8 @@ export default function RatingTable({ students, categories, title, onEditStudent
                     <span className="font-bold text-indigo-700 text-base">{total}</span>
                   </td>
                   <td className="px-3 py-3 text-center">
-                    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${getGradeColor(total, maxTotal)}`}>
-                      {getGrade(total, maxTotal)}
+                    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${getGradeColor(total, studentMaxTotal)}`}>
+                      {getGrade(total, studentMaxTotal)}
                     </span>
                   </td>
                   {onEditStudent && (

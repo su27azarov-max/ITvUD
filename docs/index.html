@@ -331,11 +331,25 @@
     let modalFormData = null;
 
     function calcTotal(s) { return (s.notes || 0) + (s.practice || 0) + (s.reports || 0) + (s.bonus || 0); }
-    function getMaxTotal() { return categories.reduce((s,c) => s + (c.maxTotal > 0 ? c.maxTotal : 0), 0); }
+    function getMaxTotal(student) { 
+        // Если передан студент, учитываем дополнительные баллы только если они есть
+        if (student) {
+            return categories.reduce((sum, c) => {
+                if (c.maxTotal <= 0) return sum;
+                // Для категории bonus учитываем только если у студента есть эти баллы
+                if (c.key === 'bonus') {
+                    return sum + ((student.bonus || 0) > 0 ? c.maxTotal : 0);
+                }
+                return sum + c.maxTotal;
+            }, 0);
+        }
+        // Если студент не передан, игнорируем категории с нулевым максимумом
+        return categories.reduce((s,c) => s + (c.maxTotal > 0 ? c.maxTotal : 0), 0); 
+    }
     function calcPracticeScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
     function calcReportsScore(grades) { return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8; }
-    function getGrade(total) {
-        const pct = (total / getMaxTotal()) * 100;
+    function getGrade(total, maxTotal) {
+        const pct = (total / maxTotal) * 100;
         if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
         if (pct >= 75) return { text:'Хорошо', cls:'grade-good' };
         if (pct >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
@@ -419,13 +433,13 @@
             const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
             html += `<th class="center">${c.name}${maxText}</th>`; 
         });
-        const totalMaxText = isAuthenticated ? `<span class="sub-text">(макс. ${getMaxTotal()})</span>` : '';
-        html += `<th class="center">Итого${totalMaxText}</th><th class="center">Оценка</th>`;
+        html += `<th class="center">Итого</th><th class="center">Оценка</th>`;
         if (isAuthenticated) html += `<th class="center">Действия</th>`;
         html += `</tr></thead><tbody>`;
         sorted.forEach((s, i) => {
             const total = calcTotal(s);
-            const grade = getGrade(total);
+            const studentMaxTotal = getMaxTotal(s);
+            const grade = getGrade(total, studentMaxTotal);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
             activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
@@ -460,13 +474,13 @@
             const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
             html += `<th class="center">${c.name}${maxText}</th>`; 
         });
-        const totalMaxText = isAuthenticated ? `<span class="sub-text">(макс. ${getMaxTotal()})</span>` : '';
-        html += `<th class="center">Итого${totalMaxText}</th><th class="center">Оценка</th>`;
+        html += `<th class="center">Итого</th><th class="center">Оценка</th>`;
         if (isAuthenticated) html += `<th class="center">Действия</th>`;
         html += `</tr></thead><tbody>`;
         filtered.forEach((s, i) => {
             const total = calcTotal(s);
-            const grade = getGrade(total);
+            const studentMaxTotal = getMaxTotal(s);
+            const grade = getGrade(total, studentMaxTotal);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
             activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
