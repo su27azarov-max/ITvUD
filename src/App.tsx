@@ -46,9 +46,13 @@ function App() {
     const saved = localStorage.getItem('students');
     if (saved) {
       const parsed = JSON.parse(saved);
-      // Инициализация недостающих полей для оценок
+      // Инициализация недостающих полей
       return parsed.map((s: Student) => ({
         ...s,
+        notes: s.notes || 0,
+        practice: s.practice || 0,
+        reports: s.reports || 0,
+        bonus: s.bonus || 0,
         notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
         practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
         reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0}

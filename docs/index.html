@@ -330,8 +330,8 @@
     let modalActiveCategory = 'notes';
     let modalFormData = null;
 
-    function calcTotal(s) { return s.notes + s.practice + s.reports + s.bonus; }
-    function getMaxTotal() { return categories.reduce((s,c) => s + c.maxTotal, 0); }
+    function calcTotal(s) { return (s.notes || 0) + (s.practice || 0) + (s.reports || 0) + (s.bonus || 0); }
+    function getMaxTotal() { return categories.reduce((s,c) => s + (c.maxTotal > 0 ? c.maxTotal : 0), 0); }
     function calcPracticeScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
     function calcReportsScore(grades) { return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8; }
     function getGrade(total) {
@@ -412,8 +412,10 @@
             return;
         }
         const sorted = [...students].sort((a,b) => calcTotal(b) - calcTotal(a));
+        // Фильтруем категории с нулевым максимумом
+        const activeCategories = categories.filter(c => c.maxTotal > 0);
         let html = `<div class="table-wrapper"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
-        categories.forEach(c => { 
+        activeCategories.forEach(c => { 
             const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
             html += `<th class="center">${c.name}${maxText}</th>`; 
         });
@@ -425,7 +427,7 @@
             const total = calcTotal(s);
             const grade = getGrade(total);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
-            categories.forEach(c => { html += `<td class="center">${s[c.key]}</td>`; });
+            activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
             html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
             if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
@@ -445,6 +447,8 @@
         const groups = getGroups();
         if (!currentGroup || !groups.includes(currentGroup)) currentGroup = groups[0];
         const filtered = students.filter(s => s.group === currentGroup).sort((a,b) => calcTotal(b) - calcTotal(a));
+        // Фильтруем категории с нулевым максимумом
+        const activeCategories = categories.filter(c => c.maxTotal > 0);
 
         let html = `<div class="group-selector"><label style="font-weight:500">Выберите группу:</label><div class="group-buttons">`;
         groups.forEach(g => { html += `<button class="group-btn ${g===currentGroup?'active':''}" onclick="selectGroup('${g}')">${g}</button>`; });
@@ -452,7 +456,7 @@
 
         html += `<div class="group-info"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem"><h3 style="font-size:1.25rem;font-weight:700">Группа <span style="color:#4f46e5">${currentGroup}</span></h3><span style="font-size:0.8rem;color:#6b7280;background:#f3f4f6;padding:4px 12px;border-radius:20px">Студентов: ${filtered.length}</span></div>`;
         html += `<div style="overflow-x:auto"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
-        categories.forEach(c => { 
+        activeCategories.forEach(c => { 
             const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
             html += `<th class="center">${c.name}${maxText}</th>`; 
         });
@@ -464,7 +468,7 @@
             const total = calcTotal(s);
             const grade = getGrade(total);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
-            categories.forEach(c => { html += `<td class="center">${s[c.key]}</td>`; });
+            activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
             html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
             if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
@@ -807,9 +811,13 @@
             const savedCategories = localStorage.getItem('categories');
             if (savedStudents) {
                 students = JSON.parse(savedStudents);
-                // Инициализация недостающих полей для оценок
+                // Инициализация недостающих полей
                 students = students.map(s => ({
                     ...s,
+                    notes: s.notes || 0,
+                    practice: s.practice || 0,
+                    reports: s.reports || 0,
+                    bonus: s.bonus || 0,
                     notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
                     practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
                     reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0}

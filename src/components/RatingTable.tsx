@@ -11,6 +11,8 @@ interface RatingTableProps {
 export default function RatingTable({ students, categories, title, onEditStudent, isTeacher = false }: RatingTableProps) {
   const sorted = [...students].sort((a, b) => calculateTotal(b) - calculateTotal(a));
   const maxTotal = calculateMaxTotal(categories);
+  // Фильтруем категории с нулевым максимумом
+  const activeCategories = categories.filter(cat => cat.maxTotal > 0);
 
   return (
     <div>
@@ -26,7 +28,7 @@ export default function RatingTable({ students, categories, title, onEditStudent
             <tr className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
               <th className="px-3 py-3 text-left font-medium">№</th>
               <th className="px-3 py-3 text-left font-medium">ФИО студента</th>
-              {categories.map(cat => (
+              {activeCategories.map(cat => (
                 <th key={cat.key} className="px-3 py-3 text-center font-medium">
                   {cat.name}
                   {isTeacher && <span className="block text-xs opacity-80 font-normal">(макс. {cat.maxTotal})</span>}
@@ -54,7 +56,7 @@ export default function RatingTable({ students, categories, title, onEditStudent
                 >
                   <td className="px-3 py-3 text-center font-medium text-gray-500">{index + 1}</td>
                   <td className="px-3 py-3 font-medium text-gray-800">{student.fullName}</td>
-                  {categories.map(cat => (
+                  {activeCategories.map(cat => (
                     <td key={cat.key} className="px-3 py-3 text-center">
                       <span className="font-medium text-gray-700">{student[cat.key]}</span>
                     </td>

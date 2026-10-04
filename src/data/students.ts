@@ -69,11 +69,12 @@ export const defaultCategories: CategoryConfig[] = [
 ];
 
 export function calculateTotal(student: Student): number {
-  return student.notes + student.practice + student.reports + student.bonus;
+  return (student.notes || 0) + (student.practice || 0) + (student.reports || 0) + (student.bonus || 0);
 }
 
 export function calculateMaxTotal(categories: CategoryConfig[]): number {
-  return categories.reduce((sum, c) => sum + c.maxTotal, 0);
+  // Игнорируем категории с maxTotal = 0
+  return categories.reduce((sum, c) => sum + (c.maxTotal > 0 ? c.maxTotal : 0), 0);
 }
 
 export function getGrade(total: number, maxTotal: number): string {
