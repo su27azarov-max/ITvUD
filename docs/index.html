@@ -300,28 +300,28 @@
     const TEACHER_PASSWORD = '05072020';
 
     let categories = [
-        { key: 'notes', name: 'Конспекты', maxPerItem: 2, maxTotal: 30, desc: 'Наличие конспектов на занятиях', shortDesc: '2 балла за занятие' },
-        { key: 'practice', name: 'Практические работы', maxPerItem: 10, maxTotal: 30, desc: 'Защита практических работ', shortDesc: 'Оценка 3→3б, 4→7б, 5→10б', useGrades: true, gradeMapping: { grade3: 3, grade4: 7, grade5: 10 } },
-        { key: 'reports', name: 'Доклады', maxPerItem: 8, maxTotal: 20, desc: 'Выступление с докладами', shortDesc: 'Оценка 3→3б, 4→6б, 5→8б', useGrades: true, gradeMapping: { grade3: 3, grade4: 6, grade5: 8 } },
-        { key: 'bonus', name: 'Дополнительные баллы', maxPerItem: 5, maxTotal: 10, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя' }
+        { key: 'notes', name: 'Конспекты', maxPerItem: 5, maxTotal: 500, desc: 'Наличие конспектов на занятиях', shortDesc: 'Оценка 3→2б, 4→3б, 5→5б', useGrades: true, gradeMapping: { grade3: 2, grade4: 3, grade5: 5 } },
+        { key: 'practice', name: 'Практические работы', maxPerItem: 10, maxTotal: 500, desc: 'Защита практических работ', shortDesc: 'Оценка 3→3б, 4→7б, 5→10б', useGrades: true, gradeMapping: { grade3: 3, grade4: 7, grade5: 10 } },
+        { key: 'reports', name: 'Доклады', maxPerItem: 8, maxTotal: 500, desc: 'Выступление с докладами', shortDesc: 'Оценка 3→3б, 4→6б, 5→8б', useGrades: true, gradeMapping: { grade3: 3, grade4: 6, grade5: 8 } },
+        { key: 'bonus', name: 'Дополнительные баллы', maxPerItem: 50, maxTotal: 500, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя' }
     ];
 
     let students = [
-        { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, bonus:5 },
-        { id:2, fullName:'Петрова Анна Михайловна', group:'ИТ-201', notes:28, practice:25, reports:20, bonus:8 },
-        { id:3, fullName:'Сидоров Алексей Дмитриевич', group:'ИТ-201', notes:16, practice:10, reports:0, bonus:2 },
-        { id:4, fullName:'Козлова Мария Андреевна', group:'ИТ-201', notes:22, practice:20, reports:10, bonus:4 },
-        { id:5, fullName:'Новиков Дмитрий Павлович', group:'ИТ-201', notes:10, practice:5, reports:0, bonus:0 },
-        { id:6, fullName:'Морозова Елена Викторовна', group:'ИТ-202', notes:26, practice:25, reports:15, bonus:6 },
-        { id:7, fullName:'Волков Артём Николаевич', group:'ИТ-202', notes:20, practice:15, reports:10, bonus:3 },
-        { id:8, fullName:'Соколова Дарья Олеговна', group:'ИТ-202', notes:24, practice:22, reports:10, bonus:5 },
-        { id:9, fullName:'Лебедев Максим Игоревич', group:'ИТ-202', notes:14, practice:10, reports:0, bonus:1 },
-        { id:10, fullName:'Кузнецова Ольга Романовна', group:'ИТ-202', notes:22, practice:20, reports:10, bonus:4 },
-        { id:11, fullName:'Попов Никита Александрович', group:'ИТ-203', notes:30, practice:30, reports:20, bonus:10 },
-        { id:12, fullName:'Васильева Татьяна Петровна', group:'ИТ-203', notes:18, practice:15, reports:10, bonus:2 },
-        { id:13, fullName:'Зайцев Роман Владимирович', group:'ИТ-203', notes:12, practice:10, reports:0, bonus:0 },
-        { id:14, fullName:'Павлова Наталья Сергеевна', group:'ИТ-203', notes:26, practice:24, reports:15, bonus:7 },
-        { id:15, fullName:'Семёнов Кирилл Олегович', group:'ИТ-203', notes:16, practice:12, reports:0, bonus:1 }
+        { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, bonus:5, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':1,'5':0} },
+        { id:2, fullName:'Петрова Анна Михайловна', group:'ИТ-201', notes:28, practice:25, reports:20, bonus:8, notesGrades:{'3':0,'4':0,'5':2}, practiceGrades:{'3':0,'4':0,'5':2}, reportsGrades:{'3':0,'4':0,'5':2} },
+        { id:3, fullName:'Сидоров Алексей Дмитриевич', group:'ИТ-201', notes:16, practice:10, reports:0, bonus:2, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
+        { id:4, fullName:'Козлова Мария Андреевна', group:'ИТ-201', notes:22, practice:20, reports:10, bonus:4, notesGrades:{'3':0,'4':2,'5':0}, practiceGrades:{'3':0,'4':2,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
+        { id:5, fullName:'Новиков Дмитрий Павлович', group:'ИТ-201', notes:10, practice:5, reports:0, bonus:0, notesGrades:{'3':1,'4':0,'5':0}, practiceGrades:{'3':1,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
+        { id:6, fullName:'Морозова Елена Викторовна', group:'ИТ-202', notes:26, practice:25, reports:15, bonus:6, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':0,'5':1} },
+        { id:7, fullName:'Волков Артём Николаевич', group:'ИТ-202', notes:20, practice:15, reports:10, bonus:3, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
+        { id:8, fullName:'Соколова Дарья Олеговна', group:'ИТ-202', notes:24, practice:22, reports:10, bonus:5, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':1,'5':0} },
+        { id:9, fullName:'Лебедев Максим Игоревич', group:'ИТ-202', notes:14, practice:10, reports:0, bonus:1, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
+        { id:10, fullName:'Кузнецова Ольга Романовна', group:'ИТ-202', notes:22, practice:20, reports:10, bonus:4, notesGrades:{'3':0,'4':2,'5':0}, practiceGrades:{'3':0,'4':2,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
+        { id:11, fullName:'Попов Никита Александрович', group:'ИТ-203', notes:30, practice:30, reports:20, bonus:10, notesGrades:{'3':0,'4':0,'5':3}, practiceGrades:{'3':0,'4':0,'5':3}, reportsGrades:{'3':0,'4':0,'5':2} },
+        { id:12, fullName:'Васильева Татьяна Петровна', group:'ИТ-203', notes:18, practice:15, reports:10, bonus:2, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
+        { id:13, fullName:'Зайцев Роман Владимирович', group:'ИТ-203', notes:12, practice:10, reports:0, bonus:0, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
+        { id:14, fullName:'Павлова Наталья Сергеевна', group:'ИТ-203', notes:26, practice:24, reports:15, bonus:7, notesGrades:{'3':0,'4':0,'5':2}, practiceGrades:{'3':0,'4':0,'5':2}, reportsGrades:{'3':0,'4':0,'5':1} },
+        { id:15, fullName:'Семёнов Кирилл Олегович', group:'ИТ-203', notes:16, practice:12, reports:0, bonus:1, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} }
     ];
 
     let isAuthenticated = false;
@@ -332,6 +332,9 @@
 
     function calcTotal(s) { return s.notes + s.practice + s.reports + s.bonus; }
     function getMaxTotal() { return categories.reduce((s,c) => s + c.maxTotal, 0); }
+    function calcNotesScore(grades) { return grades['3'] * 2 + grades['4'] * 3 + grades['5'] * 5; }
+    function calcPracticeScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
+    function calcReportsScore(grades) { return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8; }
     function getGrade(total) {
         const pct = (total / getMaxTotal()) * 100;
         if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
@@ -411,8 +414,12 @@
         }
         const sorted = [...students].sort((a,b) => calcTotal(b) - calcTotal(a));
         let html = `<div class="table-wrapper"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
-        categories.forEach(c => { html += `<th class="center">${c.name}<span class="sub-text">(макс. ${c.maxTotal})</span></th>`; });
-        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th>`;
+        categories.forEach(c => { 
+            const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
+            html += `<th class="center">${c.name}${maxText}</th>`; 
+        });
+        const totalMaxText = isAuthenticated ? `<span class="sub-text">(макс. ${getMaxTotal()})</span>` : '';
+        html += `<th class="center">Итого${totalMaxText}</th><th class="center">Оценка</th>`;
         if (isAuthenticated) html += `<th class="center">Действия</th>`;
         html += `</tr></thead><tbody>`;
         sorted.forEach((s, i) => {
@@ -446,8 +453,12 @@
 
         html += `<div class="group-info"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem"><h3 style="font-size:1.25rem;font-weight:700">Группа <span style="color:#4f46e5">${currentGroup}</span></h3><span style="font-size:0.8rem;color:#6b7280;background:#f3f4f6;padding:4px 12px;border-radius:20px">Студентов: ${filtered.length}</span></div>`;
         html += `<div style="overflow-x:auto"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
-        categories.forEach(c => { html += `<th class="center">${c.name}<span class="sub-text">(макс. ${c.maxTotal})</span></th>`; });
-        html += `<th class="center">Итого<span class="sub-text">(макс. ${getMaxTotal()})</span></th><th class="center">Оценка</th>`;
+        categories.forEach(c => { 
+            const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
+            html += `<th class="center">${c.name}${maxText}</th>`; 
+        });
+        const totalMaxText = isAuthenticated ? `<span class="sub-text">(макс. ${getMaxTotal()})</span>` : '';
+        html += `<th class="center">Итого${totalMaxText}</th><th class="center">Оценка</th>`;
         if (isAuthenticated) html += `<th class="center">Действия</th>`;
         html += `</tr></thead><tbody>`;
         filtered.forEach((s, i) => {
@@ -486,7 +497,7 @@
 
 Или CSV:
 Иванов Иван Сергеевич;ИТ-201</pre></div>`;
-            html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p style="font-size:0.875rem;color:#4b5563">Нажмите «Баллы» рядом с именем студента. Категории:</p><ul style="list-style:none;margin-top:8px"><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — за наличие конспектов</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — за защиту работ</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — за выступления</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li></ul></div>`;
+            html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p style="font-size:0.875rem;color:#4b5563">Нажмите «Баллы» рядом с именем студента. Выберите критерий и введите оценку:</p><ul style="list-style:none;margin-top:8px"><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — оценка 3→2б, 4→3б, 5→5б (макс. 500)</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — оценка 3→3б, 4→7б, 5→10б (макс. 500)</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — оценка 3→3б, 4→6б, 5→8б (макс. 500)</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя (макс. 500)</li></ul></div>`;
             html += `<div class="teacher-section"><h3>⚖️ Веса категорий</h3><p style="font-size:0.875rem;color:#4b5563">Настройте максимальное количество баллов по каждой категории. Оценка рассчитывается в процентах от суммы весов: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%.</p></div>`;
             container.innerHTML = html;
         } else {
@@ -499,7 +510,7 @@
                 } else {
                     detailHtml = `<div class="instr-cat-detail"><strong>Как начисляется:</strong> ${c.shortDesc}</div>`;
                 }
-                html += `<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">${i+1}</span><span class="instr-cat-name">${c.name}</span><div style="text-align:right;margin-left:auto"><div class="instr-cat-max">${c.maxTotal}</div><div style="font-size:0.7rem;color:#6b7280">макс. баллов</div></div></div><p class="instr-cat-desc">${c.desc}</p>${detailHtml}</div>`;
+                html += `<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">${i+1}</span><span class="instr-cat-name">${c.name}</span><div style="text-align:right;margin-left:auto"><div class="instr-cat-max">∞</div><div style="font-size:0.7rem;color:#6b7280">баллов</div></div></div><p class="instr-cat-desc">${c.desc}</p>${detailHtml}</div>`;
             });
             html += `</div>`;
             html += `<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Итоговые оценки</h3><p style="font-size:0.85rem;opacity:0.8">Шкала (в % от максимума ${maxT})</p></div><div style="padding:24px">`;
@@ -550,10 +561,10 @@
             if (gm) { group = gm[1].trim(); return; }
             const csv = line.match(/^(.+?)\s*[;,]\s*(.+)$/);
             if (csv && csv[2].trim().length <= 20) {
-                students.push({ id: nextId++, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, bonus:0 });
+                students.push({ id: nextId++, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, bonus:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} });
                 return;
             }
-            if (group) students.push({ id: nextId++, fullName: line, group, notes:0, practice:0, reports:0, bonus:0 });
+            if (group) students.push({ id: nextId++, fullName: line, group, notes:0, practice:0, reports:0, bonus:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} });
         });
         toggleImport();
         markAsChanged();
@@ -602,7 +613,7 @@
         const group = prompt('Номер группы:');
         if (!group) return;
         const maxId = students.length > 0 ? Math.max(...students.map(s=>s.id)) : 0;
-        editingStudent = { id: maxId + 1, fullName: name, group, notes:0, practice:0, reports:0, bonus:0 };
+        editingStudent = { id: maxId + 1, fullName: name, group, notes:0, practice:0, reports:0, bonus:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} };
         modalFormData = {...editingStudent};
         modalActiveCategory = 'notes';
         renderScoreModal();
@@ -634,10 +645,33 @@
         body += `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>`;
         body += `<p style="font-size:0.85rem;color:#6b7280">Баллы: <strong>${val}</strong> / ${cat.maxTotal}</p>`;
 
-        if (cat.key === 'bonus') {
+        if (cat.useGrades && cat.gradeMapping) {
+            const gradesKey = cat.key + 'Grades';
+            const grades = modalFormData[gradesKey];
+            const calcFn = cat.key === 'notes' ? calcNotesScore : cat.key === 'practice' ? calcPracticeScore : calcReportsScore;
+            
+            body += `<div style="background:#f9fafb;border-radius:8px;padding:12px;margin:12px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:0.85rem">`;
+            body += `<div><div style="font-weight:700;color:#ca8a04">${grades['3']}</div><div style="font-size:0.7rem;color:#6b7280">оценки «3»</div><div style="font-size:0.7rem;color:#9ca3af">× ${cat.gradeMapping.grade3}б</div></div>`;
+            body += `<div><div style="font-weight:700;color:#2563eb">${grades['4']}</div><div style="font-size:0.7rem;color:#6b7280">оценки «4»</div><div style="font-size:0.7rem;color:#9ca3af">× ${cat.gradeMapping.grade4}б</div></div>`;
+            body += `<div><div style="font-weight:700;color:#16a34a">${grades['5']}</div><div style="font-size:0.7rem;color:#6b7280">оценки «5»</div><div style="font-size:0.7rem;color:#9ca3af">× ${cat.gradeMapping.grade5}б</div></div>`;
+            body += `</div></div>`;
+            
+            body += `<div class="score-buttons">`;
+            body += `<button class="score-btn" style="background:#fef9c3;color:#854d0e" onclick="addGrade('${cat.key}','3')">+ Оценка «3» (${cat.gradeMapping.grade3}б)</button>`;
+            body += `<button class="score-btn" style="background:#dbeafe;color:#1e40af" onclick="addGrade('${cat.key}','4')">+ Оценка «4» (${cat.gradeMapping.grade4}б)</button>`;
+            body += `<button class="score-btn" style="background:#dcfce7;color:#166534" onclick="addGrade('${cat.key}','5')">+ Оценка «5» (${cat.gradeMapping.grade5}б)</button>`;
+            body += `</div>`;
+            
+            body += `<div class="score-buttons" style="margin-top:8px">`;
+            body += `<button class="score-btn score-btn-sub" onclick="removeGrade('${cat.key}','3')">− «3»</button>`;
+            body += `<button class="score-btn score-btn-sub" onclick="removeGrade('${cat.key}','4')">− «4»</button>`;
+            body += `<button class="score-btn score-btn-sub" onclick="removeGrade('${cat.key}','5')">− «5»</button>`;
+            body += `<button class="score-btn score-btn-sub" onclick="resetGrades('${cat.key}')">Сбросить все</button>`;
+            body += `</div>`;
+        } else if (cat.key === 'bonus') {
             body += `<div class="manual-input"><input type="number" min="0" max="${cat.maxTotal}" value="${val}" onchange="setCatScore('bonus',parseInt(this.value)||0)"><span style="color:#6b7280">/ ${cat.maxTotal}</span></div>`;
             body += `<div class="score-buttons">`;
-            [1,2,3,5,10].forEach(v => { body += `<button class="score-btn score-btn-set" onclick="setCatScore('bonus',${v})">${v}б</button>`; });
+            [10,20,30,50,100].forEach(v => { body += `<button class="score-btn score-btn-set" onclick="setCatScore('bonus',${v})">${v}б</button>`; });
             body += `</div>`;
         } else {
             body += `<div class="score-buttons">`;
@@ -661,6 +695,41 @@
     function setCatScore(key, val) {
         const cat = categories.find(c => c.key === key);
         modalFormData[key] = Math.max(0, Math.min(val, cat.maxTotal));
+        renderScoreModal();
+    }
+    function addGrade(catKey, grade) {
+        const cat = categories.find(c => c.key === catKey);
+        if (!cat || !cat.gradeMapping) return;
+        const gradesKey = catKey + 'Grades';
+        const newGrades = {...modalFormData[gradesKey]};
+        newGrades[grade]++;
+        const calcFn = catKey === 'notes' ? calcNotesScore : catKey === 'practice' ? calcPracticeScore : calcReportsScore;
+        const newScore = calcFn(newGrades);
+        if (newScore <= cat.maxTotal) {
+            modalFormData[gradesKey] = newGrades;
+            modalFormData[catKey] = newScore;
+            renderScoreModal();
+        }
+    }
+    function removeGrade(catKey, grade) {
+        const cat = categories.find(c => c.key === catKey);
+        if (!cat || !cat.gradeMapping) return;
+        const gradesKey = catKey + 'Grades';
+        const newGrades = {...modalFormData[gradesKey]};
+        if (newGrades[grade] > 0) {
+            newGrades[grade]--;
+            const calcFn = catKey === 'notes' ? calcNotesScore : catKey === 'practice' ? calcPracticeScore : calcReportsScore;
+            modalFormData[gradesKey] = newGrades;
+            modalFormData[catKey] = calcFn(newGrades);
+            renderScoreModal();
+        }
+    }
+    function resetGrades(catKey) {
+        const cat = categories.find(c => c.key === catKey);
+        if (!cat) return;
+        const gradesKey = catKey + 'Grades';
+        modalFormData[gradesKey] = {'3':0,'4':0,'5':0};
+        modalFormData[catKey] = 0;
         renderScoreModal();
     }
     function saveScoreModal() {

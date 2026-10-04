@@ -9,6 +9,7 @@ export interface Student {
   // Оценки для подсчета
   practiceGrades: { '3': number; '4': number; '5': number }; // Количество оценок за практики
   reportsGrades: { '3': number; '4': number; '5': number };  // Количество оценок за доклады
+  notesGrades: { '3': number; '4': number; '5': number };    // Количество оценок за конспекты
 }
 
 export interface GradeToPoints {
@@ -32,16 +33,18 @@ export const defaultCategories: CategoryConfig[] = [
   {
     key: 'notes',
     name: 'Конспекты',
-    maxPerItem: 2,
-    maxTotal: 30,
+    maxPerItem: 5,
+    maxTotal: 500,
     description: 'Наличие конспектов на занятиях',
-    shortDesc: '2 балла за занятие',
+    shortDesc: 'Оценка 3→2б, 4→3б, 5→5б',
+    useGrades: true,
+    gradeMapping: { grade3: 2, grade4: 3, grade5: 5 },
   },
   {
     key: 'practice',
     name: 'Практические работы',
     maxPerItem: 10,
-    maxTotal: 30,
+    maxTotal: 500,
     description: 'Защита практических работ',
     shortDesc: 'Оценка 3→3б, 4→7б, 5→10б',
     useGrades: true,
@@ -51,7 +54,7 @@ export const defaultCategories: CategoryConfig[] = [
     key: 'reports',
     name: 'Доклады',
     maxPerItem: 8,
-    maxTotal: 20,
+    maxTotal: 500,
     description: 'Выступление с докладами',
     shortDesc: 'Оценка 3→3б, 4→6б, 5→8б',
     useGrades: true,
@@ -60,8 +63,8 @@ export const defaultCategories: CategoryConfig[] = [
   {
     key: 'bonus',
     name: 'Дополнительные баллы',
-    maxPerItem: 5,
-    maxTotal: 10,
+    maxPerItem: 50,
+    maxTotal: 500,
     description: 'Дополнительные баллы от преподавателя',
     shortDesc: 'На усмотрение преподавателя',
   },
@@ -107,7 +110,8 @@ export function createEmptyStudent(id: number, fullName: string, group: string):
     reports: 0, 
     bonus: 0,
     practiceGrades: { '3': 0, '4': 0, '5': 0 },
-    reportsGrades: { '3': 0, '4': 0, '5': 0 }
+    reportsGrades: { '3': 0, '4': 0, '5': 0 },
+    notesGrades: { '3': 0, '4': 0, '5': 0 }
   };
 }
 
@@ -145,6 +149,10 @@ export function parseImportText(text: string): Student[] {
 }
 
 // Функции для подсчета баллов по оценкам
+export function calculateNotesScore(grades: { '3': number; '4': number; '5': number }): number {
+  return grades['3'] * 2 + grades['4'] * 3 + grades['5'] * 5;
+}
+
 export function calculatePracticeScore(grades: { '3': number; '4': number; '5': number }): number {
   return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10;
 }

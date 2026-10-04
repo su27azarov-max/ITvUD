@@ -5,9 +5,10 @@ interface RatingTableProps {
   categories: CategoryConfig[];
   title?: string;
   onEditStudent?: (student: Student) => void;
+  isTeacher?: boolean;
 }
 
-export default function RatingTable({ students, categories, title, onEditStudent }: RatingTableProps) {
+export default function RatingTable({ students, categories, title, onEditStudent, isTeacher = false }: RatingTableProps) {
   const sorted = [...students].sort((a, b) => calculateTotal(b) - calculateTotal(a));
   const maxTotal = calculateMaxTotal(categories);
 
@@ -28,12 +29,12 @@ export default function RatingTable({ students, categories, title, onEditStudent
               {categories.map(cat => (
                 <th key={cat.key} className="px-3 py-3 text-center font-medium">
                   {cat.name}
-                  <span className="block text-xs opacity-80 font-normal">(макс. {cat.maxTotal})</span>
+                  {isTeacher && <span className="block text-xs opacity-80 font-normal">(макс. {cat.maxTotal})</span>}
                 </th>
               ))}
               <th className="px-3 py-3 text-center font-medium">
                 Итого
-                <span className="block text-xs opacity-80 font-normal">(макс. {maxTotal})</span>
+                {isTeacher && <span className="block text-xs opacity-80 font-normal">(макс. {maxTotal})</span>}
               </th>
               <th className="px-3 py-3 text-center font-medium">Оценка</th>
               {onEditStudent && (

@@ -21,21 +21,21 @@ const TEACHER_PASSWORD = '05072020';
 
 // Демо-данные
 const demoStudents: Student[] = [
-  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
-  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, bonus: 8, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 2 } },
-  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, bonus: 2, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
-  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
-  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, bonus: 0, practiceGrades: { '3': 1, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
-  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, bonus: 6, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 0, '5': 1 } },
-  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, bonus: 3, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
-  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
-  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, bonus: 1, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
-  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
-  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, bonus: 10, practiceGrades: { '3': 0, '4': 0, '5': 3 }, reportsGrades: { '3': 0, '4': 0, '5': 2 } },
-  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, bonus: 2, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 } },
-  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, bonus: 0, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
-  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, bonus: 7, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 1 } },
-  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, bonus: 1, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 1, '5': 1 } },
+  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, bonus: 8, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 2 }, notesGrades: { '3': 0, '4': 0, '5': 2 } },
+  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, bonus: 2, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 } },
+  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 2, '5': 0 } },
+  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, bonus: 0, practiceGrades: { '3': 1, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 1, '4': 0, '5': 0 } },
+  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, bonus: 6, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 0, '5': 1 }, notesGrades: { '3': 0, '4': 1, '5': 1 } },
+  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, bonus: 3, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 } },
+  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 1, '5': 1 } },
+  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, bonus: 1, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 } },
+  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 2, '5': 0 } },
+  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, bonus: 10, practiceGrades: { '3': 0, '4': 0, '5': 3 }, reportsGrades: { '3': 0, '4': 0, '5': 2 }, notesGrades: { '3': 0, '4': 0, '5': 3 } },
+  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, bonus: 2, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 } },
+  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, bonus: 0, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 } },
+  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, bonus: 7, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 1 }, notesGrades: { '3': 0, '4': 0, '5': 2 } },
+  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, bonus: 1, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 } },
 ];
 
 function App() {
@@ -308,6 +308,7 @@ function App() {
                   students={students}
                   categories={categories}
                   onEditStudent={isTeacher ? setEditingStudent : undefined}
+                  isTeacher={isTeacher}
                 />
               </div>
             ) : (
@@ -344,6 +345,7 @@ function App() {
                 students={students}
                 categories={categories}
                 onEditStudent={isTeacher ? setEditingStudent : undefined}
+                isTeacher={isTeacher}
               />
             ) : (
               <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 text-center">
@@ -464,20 +466,25 @@ function TeacherInstructions() {
           Баллы можно добавлять кнопками или вводить вручную.
         </p>
         <ul className="space-y-2 text-sm text-gray-600">
-          <li>• <strong>Конспекты</strong> — 2 балла за занятие (макс. 30)</li>
+          <li>
+            <strong>Конспекты</strong> — система оценок:
+            <div className="mt-1 ml-4 text-xs text-gray-500">
+              Оценка «3» → 2 балла | Оценка «4» → 3 балла | Оценка «5» → 5 баллов (макс. 500)
+            </div>
+          </li>
           <li>
             <strong>Практические работы</strong> — система оценок:
             <div className="mt-1 ml-4 text-xs text-gray-500">
-              Оценка «3» → 3 балла | Оценка «4» → 7 баллов | Оценка «5» → 10 баллов (макс. 30)
+              Оценка «3» → 3 балла | Оценка «4» → 7 баллов | Оценка «5» → 10 баллов (макс. 500)
             </div>
           </li>
           <li>
             <strong>Доклады</strong> — система оценок:
             <div className="mt-1 ml-4 text-xs text-gray-500">
-              Оценка «3» → 3 балла | Оценка «4» → 6 баллов | Оценка «5» → 8 баллов (макс. 20)
+              Оценка «3» → 3 балла | Оценка «4» → 6 баллов | Оценка «5» → 8 баллов (макс. 500)
             </div>
           </li>
-          <li>• <strong>Дополнительные баллы</strong> — на усмотрение преподавателя (макс. 10)</li>
+          <li>• <strong>Дополнительные баллы</strong> — на усмотрение преподавателя (макс. 500)</li>
         </ul>
       </div>
 

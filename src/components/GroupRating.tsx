@@ -6,9 +6,10 @@ interface GroupRatingProps {
   students: Student[];
   categories: CategoryConfig[];
   onEditStudent?: (student: Student) => void;
+  isTeacher?: boolean;
 }
 
-export default function GroupRating({ students, categories, onEditStudent }: GroupRatingProps) {
+export default function GroupRating({ students, categories, onEditStudent, isTeacher = false }: GroupRatingProps) {
   const groups = getGroups(students);
   const [selectedGroup, setSelectedGroup] = useState<string>(groups[0] || '');
 
@@ -44,7 +45,7 @@ export default function GroupRating({ students, categories, onEditStudent }: Gro
             Студентов: {filteredStudents.length}
           </span>
         </div>
-        <RatingTable students={filteredStudents} categories={categories} onEditStudent={onEditStudent} />
+        <RatingTable students={filteredStudents} categories={categories} onEditStudent={onEditStudent} isTeacher={isTeacher} />
       </div>
 
       {/* Summary cards for each group */}

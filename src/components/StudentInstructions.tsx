@@ -39,12 +39,30 @@ export default function StudentInstructions({ categories }: StudentInstructionsP
                   <p className="text-sm text-gray-600 ml-11">{cat.description}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-2xl font-bold text-indigo-600">{cat.maxTotal}</div>
-                  <div className="text-xs text-gray-500">макс. баллов</div>
+                  <div className="text-2xl font-bold text-indigo-600">∞</div>
+                  <div className="text-xs text-gray-500">баллов</div>
                 </div>
               </div>
               <div className="mt-3 ml-11 bg-gray-50 rounded-lg p-3">
-                {cat.key === 'practice' ? (
+                {cat.key === 'notes' ? (
+                  <div className="text-sm text-gray-700">
+                    <strong>Система оценивания:</strong>
+                    <div className="mt-2 grid grid-cols-3 gap-2">
+                      <div className="bg-yellow-50 p-2 rounded text-center">
+                        <div className="font-bold text-yellow-700">Оценка «3»</div>
+                        <div className="text-xs text-gray-600">2 балла</div>
+                      </div>
+                      <div className="bg-blue-50 p-2 rounded text-center">
+                        <div className="font-bold text-blue-700">Оценка «4»</div>
+                        <div className="text-xs text-gray-600">3 балла</div>
+                      </div>
+                      <div className="bg-green-50 p-2 rounded text-center">
+                        <div className="font-bold text-green-700">Оценка «5»</div>
+                        <div className="text-xs text-gray-600">5 баллов</div>
+                      </div>
+                    </div>
+                  </div>
+                ) : cat.key === 'practice' ? (
                   <div className="text-sm text-gray-700">
                     <strong>Система оценивания:</strong>
                     <div className="mt-2 grid grid-cols-3 gap-2">
