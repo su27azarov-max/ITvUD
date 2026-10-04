@@ -101,27 +101,27 @@ export default function StudentInstructions({ categories }: StudentInstructionsP
           Итоговые оценки
         </h3>
         <p className="text-sm text-gray-500 mb-4">
-          Оценка определяется как процент от максимального количества баллов ({maxTotal})
+          Оценка определяется на основе итогового количества баллов по фиксированной шкале
         </p>
         <div className="space-y-3">
           <div className="flex items-center gap-4 p-3 bg-green-50 rounded-xl border border-green-100">
-            <span className="w-20 text-center font-bold text-green-700 text-lg">≥90%</span>
-            <span className="text-sm text-gray-600">от максимума</span>
+            <span className="w-20 text-center font-bold text-green-700 text-lg">≥90</span>
+            <span className="text-sm text-gray-600">баллов</span>
             <span className="ml-auto px-4 py-1.5 bg-green-100 text-green-700 rounded-full font-bold text-sm">Отлично (5)</span>
           </div>
           <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
-            <span className="w-20 text-center font-bold text-blue-700 text-lg">75–89%</span>
-            <span className="text-sm text-gray-600">от максимума</span>
+            <span className="w-20 text-center font-bold text-blue-700 text-lg">75–89</span>
+            <span className="text-sm text-gray-600">баллов</span>
             <span className="ml-auto px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full font-bold text-sm">Хорошо (4)</span>
           </div>
           <div className="flex items-center gap-4 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
-            <span className="w-20 text-center font-bold text-yellow-700 text-lg">60–74%</span>
-            <span className="text-sm text-gray-600">от максимума</span>
+            <span className="w-20 text-center font-bold text-yellow-700 text-lg">60–74</span>
+            <span className="text-sm text-gray-600">баллов</span>
             <span className="ml-auto px-4 py-1.5 bg-yellow-100 text-yellow-700 rounded-full font-bold text-sm">Удовлетворительно (3)</span>
           </div>
           <div className="flex items-center gap-4 p-3 bg-red-50 rounded-xl border border-red-100">
-            <span className="w-20 text-center font-bold text-red-700 text-lg">&lt; 60%</span>
-            <span className="text-sm text-gray-600">от максимума</span>
+            <span className="w-20 text-center font-bold text-red-700 text-lg">&lt; 60</span>
+            <span className="text-sm text-gray-600">баллов</span>
             <span className="ml-auto px-4 py-1.5 bg-red-100 text-red-700 rounded-full font-bold text-sm">Неудовлетворительно (2)</span>
           </div>
         </div>

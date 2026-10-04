@@ -88,20 +88,19 @@ export function calculateMaxTotal(categories: CategoryConfig[], student?: Studen
   return categories.reduce((sum, c) => sum + (c.maxTotal > 0 ? c.maxTotal : 0), 0);
 }
 
-export function getGrade(total: number, maxTotal: number): string {
-  // Шкала в процентах от максимума
-  const pct = (total / maxTotal) * 100;
-  if (pct >= 90) return 'Отлично';
-  if (pct >= 75) return 'Хорошо';
-  if (pct >= 60) return 'Удовлетворительно';
+export function getGrade(total: number): string {
+  // Фиксированная абсолютная шкала (не зависит от установленных максимумов)
+  if (total >= 90) return 'Отлично';
+  if (total >= 75) return 'Хорошо';
+  if (total >= 60) return 'Удовлетворительно';
   return 'Неудовлетворительно';
 }
 
-export function getGradeColor(total: number, maxTotal: number): string {
-  const pct = (total / maxTotal) * 100;
-  if (pct >= 90) return 'text-green-700 bg-green-100';
-  if (pct >= 75) return 'text-blue-700 bg-blue-100';
-  if (pct >= 60) return 'text-yellow-700 bg-yellow-100';
+export function getGradeColor(total: number): string {
+  // Фиксированная абсолютная шкала
+  if (total >= 90) return 'text-green-700 bg-green-100';
+  if (total >= 75) return 'text-blue-700 bg-blue-100';
+  if (total >= 60) return 'text-yellow-700 bg-yellow-100';
   return 'text-red-700 bg-red-100';
 }
 

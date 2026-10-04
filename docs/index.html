@@ -348,11 +348,11 @@
     }
     function calcPracticeScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
     function calcReportsScore(grades) { return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8; }
-    function getGrade(total, maxTotal) {
-        const pct = (total / maxTotal) * 100;
-        if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
-        if (pct >= 75) return { text:'Хорошо', cls:'grade-good' };
-        if (pct >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
+    function getGrade(total) {
+        // Фиксированная абсолютная шкала (не зависит от установленных максимумов)
+        if (total >= 90) return { text:'Отлично', cls:'grade-excellent' };
+        if (total >= 75) return { text:'Хорошо', cls:'grade-good' };
+        if (total >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
         return { text:'Неудовлетворительно', cls:'grade-fail' };
     }
     function getGroups() { return [...new Set(students.map(s => s.group))].sort(); }
@@ -438,8 +438,7 @@
         html += `</tr></thead><tbody>`;
         sorted.forEach((s, i) => {
             const total = calcTotal(s);
-            const studentMaxTotal = getMaxTotal(s);
-            const grade = getGrade(total, studentMaxTotal);
+            const grade = getGrade(total);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
             activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
@@ -479,8 +478,7 @@
         html += `</tr></thead><tbody>`;
         filtered.forEach((s, i) => {
             const total = calcTotal(s);
-            const studentMaxTotal = getMaxTotal(s);
-            const grade = getGrade(total, studentMaxTotal);
+            const grade = getGrade(total);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
             activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
             html += `<td class="center"><span class="total-score">${total}</span></td>`;
@@ -515,7 +513,7 @@
 Или CSV:
 Иванов Иван Сергеевич;ИТ-201</pre></div>`;
             html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p style="font-size:0.875rem;color:#4b5563">Нажмите «Баллы» рядом с именем студента. Выберите критерий и введите оценку:</p><ul style="list-style:none;margin-top:8px"><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — 2 балла за конспект лекции</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — оценка 3→3б, 4→7б, 5→10б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — оценка 3→3б, 4→6б, 5→8б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li></ul></div>`;
-            html += `<div class="teacher-section"><h3>⚖️ Веса категорий</h3><p style="font-size:0.875rem;color:#4b5563">Настройте максимальное количество баллов по каждой категории. Оценка рассчитывается в процентах от суммы весов: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%.</p></div>`;
+            html += `<div class="teacher-section"><h3>⚖️ Веса категорий</h3><p style="font-size:0.875rem;color:#4b5563">Настройте максимальное количество баллов по каждой категории. Оценка рассчитывается по фиксированной шкале: Отлично ≥90 баллов, Хорошо 75-89 баллов, Удовл. 60-74 баллов, Неудовл. &lt;60 баллов.</p></div>`;
             container.innerHTML = html;
         } else {
             let html = `<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе. Оценка выставляется автоматически на основе набранных баллов.</p></div>`;
@@ -530,11 +528,11 @@
                 html += `<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">${i+1}</span><span class="instr-cat-name">${c.name}</span><div style="text-align:right;margin-left:auto"><div class="instr-cat-max">∞</div><div style="font-size:0.7rem;color:#6b7280">баллов</div></div></div><p class="instr-cat-desc">${c.desc}</p>${detailHtml}</div>`;
             });
             html += `</div>`;
-            html += `<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Итоговые оценки</h3><p style="font-size:0.85rem;opacity:0.8">Шкала (в % от максимума ${maxT})</p></div><div style="padding:24px">`;
-            html += `<div class="final-grade-row excellent"><span class="final-grade-range" style="color:#166534">≥90%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#dcfce7;color:#166534">Отлично (5)</span></div>`;
-            html += `<div class="final-grade-row good"><span class="final-grade-range" style="color:#1e40af">75–89%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#dbeafe;color:#1e40af">Хорошо (4)</span></div>`;
-            html += `<div class="final-grade-row satisfactory"><span class="final-grade-range" style="color:#854d0e">60–74%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#fef9c3;color:#854d0e">Удовлетворительно (3)</span></div>`;
-            html += `<div class="final-grade-row fail"><span class="final-grade-range" style="color:#991b1b">&lt; 60%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#fee2e2;color:#991b1b">Неудовлетворительно (2)</span></div>`;
+            html += `<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Итоговые оценки</h3><p style="font-size:0.85rem;opacity:0.8">Фиксированная шкала баллов</p></div><div style="padding:24px">`;
+            html += `<div class="final-grade-row excellent"><span class="final-grade-range" style="color:#166534">≥90</span><span style="font-size:0.85rem;color:#6b7280">баллов</span><span class="final-grade-badge" style="background:#dcfce7;color:#166534">Отлично (5)</span></div>`;
+            html += `<div class="final-grade-row good"><span class="final-grade-range" style="color:#1e40af">75–89</span><span style="font-size:0.85rem;color:#6b7280">баллов</span><span class="final-grade-badge" style="background:#dbeafe;color:#1e40af">Хорошо (4)</span></div>`;
+            html += `<div class="final-grade-row satisfactory"><span class="final-grade-range" style="color:#854d0e">60–74</span><span style="font-size:0.85rem;color:#6b7280">баллов</span><span class="final-grade-badge" style="background:#fef9c3;color:#854d0e">Удовлетворительно (3)</span></div>`;
+            html += `<div class="final-grade-row fail"><span class="final-grade-range" style="color:#991b1b">&lt; 60</span><span style="font-size:0.85rem;color:#6b7280">баллов</span><span class="final-grade-badge" style="background:#fee2e2;color:#991b1b">Неудовлетворительно (2)</span></div>`;
             html += `</div></div>`;
             html += `<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>`;
             html += `<li>Регулярно посещайте занятия и ведите конспекты — 2 балла за каждый конспект</li>`;
@@ -603,7 +601,7 @@
         categories.forEach(c => {
             html += `<div class="weight-item"><label style="display:block;font-size:0.85rem;font-weight:500;margin-bottom:4px">${c.name}</label><div style="display:flex;align-items:center;gap:8px"><input type="number" class="weight-input" min="1" max="1000" value="${c.maxTotal}" onchange="updateWeight('${c.key}',parseInt(this.value)||1)"><span style="font-size:0.85rem;color:#6b7280">баллов</span></div><p style="font-size:0.7rem;color:#9ca3af;margin-top:4px">${c.shortDesc}</p><p style="font-size:0.7rem;color:#d97706;margin-top:2px">Допустимо: 1–1000</p></div>`;
         });
-        html += `</div><div style="margin-top:16px;padding:12px;background:#eef2ff;border-radius:8px;font-size:0.85rem;color:#3730a3">💡 Шкала: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%</div><div style="margin-top:8px"><button class="btn btn-secondary" onclick="toggleWeights()">Закрыть</button></div>`;
+        html += `</div><div style="margin-top:16px;padding:12px;background:#eef2ff;border-radius:8px;font-size:0.85rem;color:#3730a3">💡 Шкала: Отлично ≥90 баллов, Хорошо 75-89 баллов, Удовл. 60-74 баллов, Неудовл. &lt;60 баллов</div><div style="margin-top:8px"><button class="btn btn-secondary" onclick="toggleWeights()">Закрыть</button></div>`;
         panel.innerHTML = html;
     }
     function updateWeight(key, val) {
