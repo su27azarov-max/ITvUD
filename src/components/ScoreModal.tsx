@@ -329,15 +329,37 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                       <span className="text-gray-500">баллов</span>
                     </div>
                     <div className="flex gap-2 flex-wrap">
-                      {[1, 2, 3, 5, 10].map(val => (
-                        <button
-                          key={val}
-                          onClick={() => handleSetScore('bonus', val)}
-                          className="px-3 py-2 bg-purple-50 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-100 transition-colors"
-                        >
-                          Установить {val}б
-                        </button>
-                      ))}
+                      <button
+                        onClick={() => handleAddScore('bonus', 1)}
+                        className="px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
+                      >
+                        +1 балл
+                      </button>
+                      <button
+                        onClick={() => handleAddScore('bonus', 5)}
+                        className="px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
+                      >
+                        +5 баллов
+                      </button>
+                      <button
+                        onClick={() => handleAddScore('bonus', 10)}
+                        className="px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
+                      >
+                        +10 баллов
+                      </button>
+                      <button
+                        onClick={() => handleAddScore('bonus', -1)}
+                        disabled={formData.bonus < 1}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        −1 балл
+                      </button>
+                      <button
+                        onClick={() => handleSetScore('bonus', 0)}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                      >
+                        Сбросить
+                      </button>
                     </div>
                   </div>
                 ) : (

@@ -680,7 +680,11 @@
         } else if (cat.key === 'bonus') {
             body += `<div class="manual-input"><input type="number" min="0" value="${val}" onchange="setCatScore('bonus',parseInt(this.value)||0)"><span style="color:#6b7280">баллов</span></div>`;
             body += `<div class="score-buttons">`;
-            [10,20,30,50,100].forEach(v => { body += `<button class="score-btn score-btn-set" onclick="setCatScore('bonus',${v})">${v}б</button>`; });
+            body += `<button class="score-btn score-btn-add" onclick="addCatScore('bonus',1)">+1 балл</button>`;
+            body += `<button class="score-btn score-btn-add" onclick="addCatScore('bonus',5)">+5 баллов</button>`;
+            body += `<button class="score-btn score-btn-add" onclick="addCatScore('bonus',10)">+10 баллов</button>`;
+            body += `<button class="score-btn score-btn-sub" onclick="addCatScore('bonus',-1)" ${val < 1 ? 'disabled' : ''}>−1 балл</button>`;
+            body += `<button class="score-btn score-btn-sub" onclick="setCatScore('bonus',0)">Сбросить</button>`;
             body += `</div>`;
         } else {
             body += `<div class="score-buttons">`;
