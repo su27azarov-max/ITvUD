@@ -117,7 +117,9 @@ function App() {
   };
 
   const handleUpdateWeight = (key: string, newMax: number) => {
-    setCategories(categories.map(c => (c.key === key ? { ...c, maxTotal: Math.max(0, newMax) } : c)));
+    // Ограничения: минимум 1 балл, максимум 1000 баллов
+    const clampedMax = Math.max(1, Math.min(1000, newMax));
+    setCategories(categories.map(c => (c.key === key ? { ...c, maxTotal: clampedMax } : c)));
     setHasChanges(true);
   };
 
@@ -268,7 +270,7 @@ function App() {
                   <span>⚖️</span> Настройка весов категорий
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  Установите максимальное количество баллов для каждой категории. Итого: <strong className="text-indigo-600">{maxTotal}</strong> баллов.
+                  Установите максимальное количество баллов для каждой категории (от 1 до 1000). Итого: <strong className="text-indigo-600">{maxTotal}</strong> баллов.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {categories.map(cat => (
@@ -279,15 +281,16 @@ function App() {
                       <div className="flex items-center gap-2">
                         <input
                           type="number"
-                          min="0"
-                          max="100"
+                          min="1"
+                          max="1000"
                           value={cat.maxTotal}
-                          onChange={(e) => handleUpdateWeight(cat.key, parseInt(e.target.value) || 0)}
+                          onChange={(e) => handleUpdateWeight(cat.key, parseInt(e.target.value) || 1)}
                           className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-center font-bold"
                         />
                         <span className="text-sm text-gray-500 whitespace-nowrap">баллов</span>
                       </div>
                       <p className="text-xs text-gray-400 mt-1">{cat.shortDesc}</p>
+                      <p className="text-xs text-amber-600 mt-1">Допустимо: 1–1000</p>
                     </div>
                   ))}
                 </div>

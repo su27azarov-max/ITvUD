@@ -581,15 +581,17 @@
     }
     function renderWeightsPanel() {
         const panel = document.getElementById('weightsPanel');
-        let html = `<h3 style="font-weight:700;margin-bottom:4px">⚖️ Настройка весов категорий</h3><p style="font-size:0.85rem;color:#6b7280">Итого: <strong style="color:#4f46e5">${getMaxTotal()}</strong> баллов</p><div class="weights-grid">`;
+        let html = `<h3 style="font-weight:700;margin-bottom:4px">⚖️ Настройка весов категорий</h3><p style="font-size:0.85rem;color:#6b7280">Установите максимум от 1 до 1000 баллов. Итого: <strong style="color:#4f46e5">${getMaxTotal()}</strong> баллов</p><div class="weights-grid">`;
         categories.forEach(c => {
-            html += `<div class="weight-item"><label style="display:block;font-size:0.85rem;font-weight:500;margin-bottom:4px">${c.name}</label><div style="display:flex;align-items:center;gap:8px"><input type="number" class="weight-input" min="0" max="100" value="${c.maxTotal}" onchange="updateWeight('${c.key}',parseInt(this.value)||0)"><span style="font-size:0.85rem;color:#6b7280">баллов</span></div><p style="font-size:0.7rem;color:#9ca3af;margin-top:4px">${c.shortDesc}</p></div>`;
+            html += `<div class="weight-item"><label style="display:block;font-size:0.85rem;font-weight:500;margin-bottom:4px">${c.name}</label><div style="display:flex;align-items:center;gap:8px"><input type="number" class="weight-input" min="1" max="1000" value="${c.maxTotal}" onchange="updateWeight('${c.key}',parseInt(this.value)||1)"><span style="font-size:0.85rem;color:#6b7280">баллов</span></div><p style="font-size:0.7rem;color:#9ca3af;margin-top:4px">${c.shortDesc}</p><p style="font-size:0.7rem;color:#d97706;margin-top:2px">Допустимо: 1–1000</p></div>`;
         });
         html += `</div><div style="margin-top:16px;padding:12px;background:#eef2ff;border-radius:8px;font-size:0.85rem;color:#3730a3">💡 Шкала: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60%</div><div style="margin-top:8px"><button class="btn btn-secondary" onclick="toggleWeights()">Закрыть</button></div>`;
         panel.innerHTML = html;
     }
     function updateWeight(key, val) {
-        categories = categories.map(c => c.key === key ? {...c, maxTotal: Math.max(0,val)} : c);
+        // Ограничения: минимум 1 балл, максимум 1000 баллов
+        const clampedVal = Math.max(1, Math.min(1000, val));
+        categories = categories.map(c => c.key === key ? {...c, maxTotal: clampedVal} : c);
         markAsChanged();
         renderWeightsPanel();
         renderAll();
