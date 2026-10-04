@@ -519,10 +519,10 @@
             html += `<div class="final-grade-row fail"><span class="final-grade-range" style="color:#991b1b">&lt; 60%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#fee2e2;color:#991b1b">Неудовлетворительно (2)</span></div>`;
             html += `</div></div>`;
             html += `<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>`;
-            html += `<li>Регулярно посещайте занятия и ведите конспекты — до ${categories[0].maxTotal} баллов</li>`;
-            html += `<li>Своевременно защищайте практические работы — до ${categories[1].maxTotal} баллов</li>`;
-            html += `<li>Подготовьте и выступите с докладами — до ${categories[2].maxTotal} баллов</li>`;
-            html += `<li>Проявляйте активность — преподаватель может начислить до ${categories[3].maxTotal} доп. баллов</li>`;
+            html += `<li>Регулярно посещайте занятия и ведите конспекты — 2 балла за каждый конспект</li>`;
+            html += `<li>Своевременно защищайте практические работы — оценки 3, 4, 5 дают соответствующие баллы</li>`;
+            html += `<li>Подготовьте и выступите с докладами — оценки 3, 4, 5 дают соответствующие баллы</li>`;
+            html += `<li>Проявляйте активность — преподаватель может начислить дополнительные баллы</li>`;
             html += `</ul></div>`;
             html += `<div class="info-box"><h3>⚠️ Важная информация</h3><ul><li>Студенты с результатом менее 60% допускаются к пересдаче</li><li>Баллы начисляются накопительно в течение семестра</li><li>Отслеживайте свой рейтинг на данной странице</li><li>По вопросам начисления баллов обращайтесь к преподавателю</li><li>Максимальные баллы по категориям устанавливает преподаватель</li></ul></div>`;
             container.innerHTML = html;
@@ -631,11 +631,11 @@
         document.getElementById('modalStudentName').textContent = modalFormData.fullName;
         document.getElementById('modalStudentGroup').textContent = 'Группа: ' + modalFormData.group;
         document.getElementById('modalTotalScore').textContent = total;
-        document.getElementById('modalMaxLabel').textContent = `из ${getMaxTotal()} баллов`;
+        document.getElementById('modalMaxLabel').textContent = `баллов`;
 
         let tabsHtml = '';
         categories.forEach(c => {
-            tabsHtml += `<button class="modal-tab ${modalActiveCategory===c.key?'active':''}" onclick="switchModalCat('${c.key}')">${c.name}<span class="badge">${modalFormData[c.key]}/${c.maxTotal}</span></button>`;
+            tabsHtml += `<button class="modal-tab ${modalActiveCategory===c.key?'active':''}" onclick="switchModalCat('${c.key}')">${c.name}<span class="badge">${modalFormData[c.key]}</span></button>`;
         });
         document.getElementById('modalTabs').innerHTML = tabsHtml;
 
@@ -644,7 +644,7 @@
         const pct = (val / cat.maxTotal) * 100;
         let body = `<div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:500">${cat.name}</span><span style="font-size:0.85rem;color:#6b7280">${cat.shortDesc}</span></div>`;
         body += `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>`;
-        body += `<p style="font-size:0.85rem;color:#6b7280">Баллы: <strong>${val}</strong> / ${cat.maxTotal}</p>`;
+        body += `<p style="font-size:0.85rem;color:#6b7280">Баллы: <strong>${val}</strong></p>`;
 
         if (cat.key === 'notes') {
             body += `<p style="font-size:0.85rem;color:#6b7280;margin:8px 0">2 балла за каждый конспект лекции</p>`;
@@ -653,7 +653,7 @@
             body += `<button class="score-btn score-btn-sub" onclick="addCatScore('notes',-2)">− Конспект (2б)</button>`;
             body += `<button class="score-btn score-btn-sub" onclick="setCatScore('notes',0)">Сбросить все</button>`;
             body += `</div>`;
-            body += `<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Или введите вручную:</label><input type="number" min="0" max="${cat.maxTotal}" value="${val}" onchange="setCatScore('notes',parseInt(this.value)||0)"></div>`;
+            body += `<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Или введите вручную:</label><input type="number" min="0" value="${val}" onchange="setCatScore('notes',parseInt(this.value)||0)"></div>`;
         } else if (cat.useGrades && cat.gradeMapping) {
             const gradesKey = cat.key + 'Grades';
             const grades = modalFormData[gradesKey];
@@ -678,7 +678,7 @@
             body += `<button class="score-btn score-btn-sub" onclick="resetGrades('${cat.key}')">Сбросить все</button>`;
             body += `</div>`;
         } else if (cat.key === 'bonus') {
-            body += `<div class="manual-input"><input type="number" min="0" max="${cat.maxTotal}" value="${val}" onchange="setCatScore('bonus',parseInt(this.value)||0)"><span style="color:#6b7280">/ ${cat.maxTotal}</span></div>`;
+            body += `<div class="manual-input"><input type="number" min="0" value="${val}" onchange="setCatScore('bonus',parseInt(this.value)||0)"><span style="color:#6b7280">баллов</span></div>`;
             body += `<div class="score-buttons">`;
             [10,20,30,50,100].forEach(v => { body += `<button class="score-btn score-btn-set" onclick="setCatScore('bonus',${v})">${v}б</button>`; });
             body += `</div>`;
@@ -689,7 +689,7 @@
             body += `<button class="score-btn score-btn-sub" onclick="addCatScore('${cat.key}',-${cat.maxPerItem})">-${cat.maxPerItem}</button>`;
             body += `<button class="score-btn score-btn-sub" onclick="setCatScore('${cat.key}',0)">Сброс</button>`;
             body += `</div>`;
-            body += `<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Вручную:</label><input type="number" min="0" max="${cat.maxTotal}" value="${val}" onchange="setCatScore('${cat.key}',parseInt(this.value)||0)"></div>`;
+            body += `<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Вручную:</label><input type="number" min="0" value="${val}" onchange="setCatScore('${cat.key}',parseInt(this.value)||0)"></div>`;
         }
         body += `</div>`;
         document.getElementById('modalBody').innerHTML = body;

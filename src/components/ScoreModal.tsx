@@ -81,7 +81,7 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
             </div>
             <div className="text-right">
               <div className="text-3xl font-bold">{total}</div>
-              <div className="text-xs opacity-80">из {maxTotal} баллов</div>
+              <div className="text-xs opacity-80">баллов</div>
             </div>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
             >
               {cat.name}
               <span className="ml-1.5 text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
-                {formData[cat.key]}/{cat.maxTotal}
+                {formData[cat.key]}
               </span>
             </button>
           ))}
@@ -128,7 +128,7 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                 {cat.key === 'notes' ? (
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600">
-                      Конспекты: <strong>{formData.notes}</strong> / {cat.maxTotal} баллов
+                      Конспекты: <strong>{formData.notes}</strong> баллов
                     </p>
                     <p className="text-sm text-gray-500">
                       2 балла за каждый конспект лекции
@@ -159,7 +159,6 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                       <input
                         type="number"
                         min="0"
-                        max={cat.maxTotal}
                         value={formData.notes}
                         onChange={(e) => handleSetScore('notes', parseInt(e.target.value) || 0)}
                         className="w-20 px-3 py-2 border border-gray-200 rounded-xl text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -169,7 +168,7 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                 ) : cat.key === 'practice' ? (
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600">
-                      Оценки за практические работы: <strong>{formData.practice}</strong> / {cat.maxTotal} баллов
+                      Оценки за практические работы: <strong>{formData.practice}</strong> баллов
                     </p>
                     <div className="bg-gray-50 rounded-lg p-3 mb-3">
                       <div className="grid grid-cols-3 gap-2 text-center text-sm">
@@ -243,7 +242,7 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                 ) : cat.key === 'reports' ? (
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600">
-                      Оценки за доклады: <strong>{formData.reports}</strong> / {cat.maxTotal} баллов
+                      Оценки за доклады: <strong>{formData.reports}</strong> баллов
                     </p>
                     <div className="bg-gray-50 rounded-lg p-3 mb-3">
                       <div className="grid grid-cols-3 gap-2 text-center text-sm">
@@ -317,18 +316,17 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                 ) : cat.key === 'bonus' ? (
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600">
-                      Текущие баллы: <strong>{formData.bonus}</strong> / {cat.maxTotal}
+                      Текущие баллы: <strong>{formData.bonus}</strong>
                     </p>
                     <div className="flex items-center gap-3">
                       <input
                         type="number"
                         min="0"
-                        max={cat.maxTotal}
                         value={formData.bonus}
                         onChange={(e) => handleSetScore('bonus', parseInt(e.target.value) || 0)}
                         className="w-24 px-3 py-2 border border-gray-200 rounded-xl text-center font-bold text-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
-                      <span className="text-gray-500">/ {cat.maxTotal} баллов</span>
+                      <span className="text-gray-500">баллов</span>
                     </div>
                     <div className="flex gap-2 flex-wrap">
                       {[1, 2, 3, 5, 10].map(val => (
@@ -345,7 +343,7 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                 ) : (
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600">
-                      Текущие баллы: <strong>{formData[cat.key]}</strong> / {cat.maxTotal}
+                      Текущие баллы: <strong>{formData[cat.key]}</strong>
                     </p>
                     <div className="flex gap-2 flex-wrap">
                       <button
@@ -378,7 +376,6 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                       <input
                         type="number"
                         min="0"
-                        max={cat.maxTotal}
                         value={formData[cat.key]}
                         onChange={(e) => handleSetScore(cat.key, parseInt(e.target.value) || 0)}
                         className="w-20 px-3 py-2 border border-gray-200 rounded-xl text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
