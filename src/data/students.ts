@@ -69,38 +69,33 @@ export const defaultCategories: CategoryConfig[] = [
 ];
 
 export function calculateTotal(student: Student): number {
+  // Итог включает все баллы, включая дополнительные (если они есть)
   return (student.notes || 0) + (student.practice || 0) + (student.reports || 0) + (student.bonus || 0);
 }
 
-export function calculateMaxTotal(categories: CategoryConfig[], student?: Student): number {
-  // Если передан студент, учитываем дополнительные баллы только если они есть
-  if (student) {
-    return categories.reduce((sum, c) => {
-      if (c.maxTotal <= 0) return sum;
-      // Для категории bonus учитываем только если у студента есть эти баллы
-      if (c.key === 'bonus') {
-        return sum + ((student.bonus || 0) > 0 ? c.maxTotal : 0);
-      }
-      return sum + c.maxTotal;
-    }, 0);
-  }
-  // Если студент не передан, игнорируем категории с нулевым максимумом
-  return categories.reduce((sum, c) => sum + (c.maxTotal > 0 ? c.maxTotal : 0), 0);
+export function calculateMaxTotal(categories: CategoryConfig[]): number {
+  // Максимум НЕ включает дополнительные баллы (они добавляются отдельно)
+  return categories.reduce((sum, c) => {
+    if (c.maxTotal <= 0) return sum;
+    if (c.key === 'bonus') return sum; // Исключаем bonus из максимума
+    return sum + c.maxTotal;
+  }, 0);
 }
 
-export function getGrade(total: number): string {
-  // Фиксированная абсолютная шкала (не зависит от установленных максимумов)
-  if (total >= 90) return 'Отлично';
-  if (total >= 75) return 'Хорошо';
-  if (total >= 60) return 'Удовлетворительно';
+export function getGrade(total: number, maxTotal: number): string {
+  // Процентная шкала от максимума (без учета бонусов)
+  const pct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
+  if (pct >= 90) return 'Отлично';
+  if (pct >= 75) return 'Хорошо';
+  if (pct >= 60) return 'Удовлетворительно';
   return 'Неудовлетворительно';
 }
 
-export function getGradeColor(total: number): string {
-  // Фиксированная абсолютная шкала
-  if (total >= 90) return 'text-green-700 bg-green-100';
-  if (total >= 75) return 'text-blue-700 bg-blue-100';
-  if (total >= 60) return 'text-yellow-700 bg-yellow-100';
+export function getGradeColor(total: number, maxTotal: number): string {
+  const pct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
+  if (pct >= 90) return 'text-green-700 bg-green-100';
+  if (pct >= 75) return 'text-blue-700 bg-blue-100';
+  if (pct >= 60) return 'text-yellow-700 bg-yellow-100';
   return 'text-red-700 bg-red-100';
 }
 
