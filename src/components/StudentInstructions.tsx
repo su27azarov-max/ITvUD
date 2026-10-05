@@ -169,7 +169,7 @@ export default function StudentInstructions({ categories }: StudentInstructionsP
         <ul className="space-y-2 text-sm text-blue-800">
           <li className="flex items-start gap-2">
             <span className="text-blue-500 mt-0.5">•</span>
-            <span>Студенты, набравшие менее 60% от максимального количества баллов, допускаются к пересдаче</span>
+            <span>Курсанты, набравшие менее 60% от максимального количества баллов, допускаются к пересдаче</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-blue-500 mt-0.5">•</span>

@@ -65,7 +65,7 @@ export default function ImportStudents({ onImport, existingCount }: ImportStuden
       <textarea
         value={text}
         onChange={(e) => { setText(e.target.value); setPreview([]); }}
-        placeholder={'Вставьте список студентов...\n\n# Группа ИТ-201\nИванов Иван Сергеевич\nПетрова Анна Михайловна'}
+        placeholder={'Вставьте список курсантов...\n\n# Группа ИТ-201\nИванов Иван Сергеевич\nПетрова Анна Михайловна'}
         className="w-full h-40 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none text-sm font-mono"
       />
 
@@ -102,7 +102,7 @@ export default function ImportStudents({ onImport, existingCount }: ImportStuden
       {preview.length > 0 && (
         <div className="mt-4 border border-gray-200 rounded-xl overflow-hidden">
           <div className="bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 border-b border-gray-200">
-            Будет импортировано: {preview.length} студентов из {new Set(preview.map(s => s.group)).size} групп
+            Будет импортировано: {preview.length} курсантов из {new Set(preview.map(s => s.group)).size} групп
           </div>
           <div className="max-h-48 overflow-y-auto">
             <table className="w-full text-sm">

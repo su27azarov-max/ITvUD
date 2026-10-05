@@ -42,7 +42,7 @@ export default function GroupRating({ students, categories, onEditStudent, isTea
             Группа <span className="text-indigo-600">{selectedGroup}</span>
           </h3>
           <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-            Студентов: {filteredStudents.length}
+            Курсантов: {filteredStudents.length}
           </span>
         </div>
         <RatingTable students={filteredStudents} categories={categories} onEditStudent={onEditStudent} isTeacher={isTeacher} />

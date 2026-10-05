@@ -160,7 +160,7 @@ function App() {
   };
 
   const handleClearAll = () => {
-    if (confirm('Вы уверены, что хотите удалить всех студентов?')) {
+    if (confirm('Вы уверены, что хотите удалить всех курсантов?')) {
       setStudents([]);
       setHasChanges(true);
     }
@@ -217,7 +217,7 @@ function App() {
               <div className="hidden sm:flex items-center gap-4 text-sm">
                 <div className="text-center">
                   <div className="font-bold text-indigo-600">{totalStudents}</div>
-                  <div className="text-xs text-gray-500">Студентов</div>
+                  <div className="text-xs text-gray-500">Курсантов</div>
                 </div>
                 <div className="w-px h-8 bg-gray-200"></div>
                 <div className="text-center">
@@ -382,16 +382,16 @@ function App() {
             ) : (
               <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 text-center">
                 <div className="text-5xl mb-4">📭</div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2">Список студентов пуст</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">Список курсантов пуст</h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  {isTeacher ? 'Импортируйте студентов или добавьте их вручную' : 'Преподаватель ещё не загрузил данные'}
+                  {isTeacher ? 'Импортируйте курсантов или добавьте их вручную' : 'Преподаватель ещё не загрузил данные'}
                 </p>
                 {isTeacher && (
                   <button
                     onClick={() => setShowImport(true)}
                     className="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl text-sm font-medium shadow-md"
                   >
-                    📥 Импортировать студентов
+                    📥 Импортировать курсантов
                   </button>
                 )}
               </div>
@@ -420,7 +420,7 @@ function App() {
                 <div className="text-5xl mb-4">📭</div>
                 <h3 className="text-lg font-bold text-gray-800 mb-2">Нет данных</h3>
                 <p className="text-sm text-gray-500">
-                  {isTeacher ? 'Сначала импортируйте студентов' : 'Преподаватель ещё не загрузил данные'}
+                  {isTeacher ? 'Сначала импортируйте курсантов' : 'Преподаватель ещё не загрузил данные'}
                 </p>
               </div>
             )}
@@ -483,9 +483,9 @@ function App() {
               © 2026 Система рейтинга обучающихся
             </p>
             <div className="flex items-center gap-4 text-sm text-gray-500">
-              <span>Дисциплина: Программирование</span>
+              <span>Дисциплина: Информационные технологии в юридической деятельности</span>
               <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-              <span>Семестр: Весна 2026</span>
+              <span>Семестр: Осень 2026-2027 уч. год</span>
             </div>
           </div>
         </div>
@@ -500,14 +500,14 @@ function TeacherInstructions() {
     <div className="space-y-4">
       <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4">
         <p className="text-amber-800 text-sm">
-          <strong>📌 Режим преподавателя:</strong> Вы можете импортировать студентов, начислять баллы и настраивать веса категорий.
+          <strong>📌 Режим преподавателя:</strong> Вы можете импортировать курсантов, начислять баллы и настраивать веса категорий.
         </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
-        <h3 className="font-bold text-gray-800 mb-4">📥 Импорт студентов</h3>
+        <h3 className="font-bold text-gray-800 mb-4">📥 Импорт курсантов</h3>
         <p className="text-sm text-gray-600 mb-3">
-          Используйте кнопку «Импорт» для загрузки списка студентов. Поддерживаются два формата:
+          Используйте кнопку «Импорт» для загрузки списка курсантов. Поддерживаются два формата:
         </p>
         <div className="space-y-3">
           <div className="bg-gray-50 rounded-lg p-3">
@@ -530,7 +530,7 @@ function TeacherInstructions() {
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h3 className="font-bold text-gray-800 mb-4">✏️ Начисление баллов</h3>
         <p className="text-sm text-gray-600 mb-3">
-          Нажмите кнопку «Баллы» рядом с именем студента для открытия окна начисления.
+          Нажмите кнопку «Баллы» рядом с именем курсанта для открытия окна начисления.
           Баллы можно добавлять кнопками или вводить вручную.
         </p>
         <ul className="space-y-2 text-sm text-gray-600">
@@ -554,7 +554,7 @@ function TeacherInstructions() {
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h3 className="font-bold text-gray-800 mb-4">💾 Сохранение изменений</h3>
         <p className="text-sm text-gray-600 mb-3">
-          После внесения изменений (импорт студентов, начисление баллов, настройка весов) 
+          После внесения изменений (импорт курсантов, начисление баллов, настройка весов)
           появится кнопка <strong>«💾 Сохранить изменения»</strong>. 
           Нажмите её для сохранения всех данных в браузере.
         </p>
@@ -567,7 +567,7 @@ function TeacherInstructions() {
             Для переноса данных между компьютерами используйте функции экспорта/импорта:
           </p>
           <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
-            <li><strong>💾 Экспорт данных</strong> — сохраняет все данные (студенты, категории, баллы) в JSON файл</li>
+            <li><strong>💾 Экспорт данных</strong> — сохраняет все данные (курсанты, категории, баллы) в JSON файл</li>
             <li><strong>📂 Импорт данных</strong> — загружает данные из ранее сохраненного JSON файла</li>
           </ul>
           <p className="text-sm text-blue-800 mt-2">

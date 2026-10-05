@@ -26,7 +26,7 @@ export default function RatingTable({ students, categories, title, onEditStudent
           <thead>
             <tr className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
               <th className="px-3 py-3 text-left font-medium">№</th>
-              <th className="px-3 py-3 text-left font-medium">ФИО студента</th>
+              <th className="px-3 py-3 text-left font-medium">ФИО курсанта</th>
               {activeCategories.map(cat => (
                 <th key={cat.key} className="px-3 py-3 text-center font-medium">
                   {cat.name}
