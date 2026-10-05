@@ -1028,11 +1028,11 @@
                         throw new Error(`Не удалось получить информацию о файле: ${getResponse.status}`);
                     }
                     
-                    // Формируем данные
+                    // Формируем данные в формате kursanty.json
                     const data = {
-                        students: students,
-                        categories: categories,
-                        lastUpdated: new Date().toISOString()
+                        kursanty: students,
+                        lastUpdated: new Date().toISOString(),
+                        version: "1.0"
                     };
                     
                     const jsonString = JSON.stringify(data, null, 2);
