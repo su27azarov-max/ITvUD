@@ -682,19 +682,21 @@
             try {
                 const data = JSON.parse(e.target.result);
                 // Поддержка обоих форматов: kursanty (новый) и students (старый)
+                let kursantyList = null;
                 if (data.kursanty && Array.isArray(data.kursanty)) {
-                    students = data.kursanty.map(s => ensureStudent(s));
-                    markAsChanged();
-                    renderAll();
-                    alert('✅ Данные успешно импортированы из kursanty.json!');
+                    kursantyList = data.kursanty;
                 } else if (data.students && Array.isArray(data.students)) {
-                    students = data.students.map(s => ensureStudent(s));
+                    kursantyList = data.students;
+                }
+                
+                if (kursantyList) {
+                    students = kursantyList.map(s => ensureStudent(s));
                     if (data.categories && Array.isArray(data.categories)) {
                         categories = data.categories;
                     }
                     markAsChanged();
                     renderAll();
-                    alert('✅ Данные успешно импортированы!');
+                    alert('✅ Данные успешно импортированы! Курсантов: ' + students.length);
                 } else {
                     alert('❌ Неверный формат файла. Ожидается поле "kursanty" или "students"');
                 }
@@ -1433,15 +1435,25 @@
                 const data = await response.json();
                 console.log('📦 Получены данные:', data);
                 
+                // Поддержка обоих форматов: kursanty (новый) и students (старый)
+                let kursantyList = null;
                 if (data.kursanty && Array.isArray(data.kursanty)) {
-                    students = data.kursanty.map(s => ensureStudent(s));
+                    kursantyList = data.kursanty;
+                    console.log('✅ Формат: новый (kursanty)');
+                } else if (data.students && Array.isArray(data.students)) {
+                    kursantyList = data.students;
+                    console.log('✅ Формат: старый (students) - конвертируем');
+                }
+                
+                if (kursantyList) {
+                    students = kursantyList.map(s => ensureStudent(s));
                     console.log('✅ Загружено курсантов:', students.length);
                     
                     // Сохраняем в localStorage как резервную копию
                     saveToLocalStorage();
                     renderAll();
                 } else {
-                    console.warn('⚠️ Файл kursanty.json не содержит массив kursanty');
+                    console.warn('⚠️ Файл kursanty.json не содержит массив курсантов');
                     loadFromLocalStorage();
                     renderAll();
                 }
