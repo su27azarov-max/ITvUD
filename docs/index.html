@@ -400,9 +400,8 @@
 
     // ===== RENDERING =====
     function renderAll() {
-        const maxT = getMaxTotal();
         document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся`;
-        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по взводам`;
+        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по группам`;
         if (isAuthenticated) {
             document.getElementById('instrTitle').textContent = 'Инструкция';
             document.getElementById('instrDesc').textContent = 'Руководство по работе с системой рейтинга';
@@ -433,6 +432,7 @@
         const sorted = [...students].sort((a,b) => calcTotal(b) - calcTotal(a));
         // Фильтруем категории с нулевым максимумом
         const activeCategories = categories.filter(c => c.maxTotal > 0);
+        const maxTotal = getMaxTotal();
         let html = `<div class="table-wrapper"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
         activeCategories.forEach(c => { 
             const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
@@ -468,6 +468,7 @@
         const filtered = students.filter(s => s.group === currentGroup).sort((a,b) => calcTotal(b) - calcTotal(a));
         // Фильтруем категории с нулевым максимумом
         const activeCategories = categories.filter(c => c.maxTotal > 0);
+        const maxTotal = getMaxTotal();
 
         let html = `<div class="group-selector"><label style="font-weight:500">Выберите группу:</label><div class="group-buttons">`;
         groups.forEach(g => { html += `<button class="group-btn ${g===currentGroup?'active':''}" onclick="selectGroup('${g}')">${g}</button>`; });
@@ -510,7 +511,6 @@
 
     function renderInstructions() {
         const container = document.getElementById('instructionsContent');
-        const maxT = getMaxTotal();
         if (isAuthenticated) {
             let html = `<div class="teacher-notice"><p style="color:#92400e;font-size:0.875rem"><strong>📌 Режим преподавателя:</strong> Вы можете импортировать студентов, начислять баллы и настраивать веса категорий.</p></div>`;
             html += `<div class="teacher-section"><h3>📥 Импорт студентов</h3><p style="font-size:0.875rem;color:#4b5563">Используйте кнопку «Импорт» для загрузки списка. Форматы:</p><pre># Группа ИТ-201
