@@ -289,7 +289,33 @@
         </div>
     </footer>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
     <script>
+    // ===== FIREBASE КОНФИГУРАЦИЯ =====
+    // ВСТАВЬТЕ СЮДА ВАШУ КОНФИГУРАЦИЮ FIREBASE (из шага 3)
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+        projectId: "YOUR_PROJECT",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+    
+    // Инициализация Firebase
+    let db = null;
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        console.log('✅ Firebase инициализирован');
+    } catch (e) {
+        console.error('❌ Ошибка инициализации Firebase:', e);
+    }
+    
     const TEACHER_PASSWORD = '05072020';
 
     // ===== КАТЕГОРИИ =====
@@ -645,12 +671,11 @@
                     if (data.categories && Array.isArray(data.categories)) {
                         categories = data.categories;
                     }
-                    // Автоматически сохраняем в localStorage после импорта
-                    localStorage.setItem('rating_students', JSON.stringify(students));
-                    localStorage.setItem('rating_categories', JSON.stringify(categories));
+                    // Автоматически сохраняем в Firebase после импорта
+                    saveToFirebase();
                     markAsChanged();
                     renderAll();
-                    alert('✅ Данные успешно импортированы!');
+                    alert('✅ Данные успешно импортированы в облако!');
                 } else {
                     alert('❌ Неверный формат файла');
                 }
@@ -831,11 +856,10 @@
 
     function saveAllChanges() {
         try {
-            localStorage.setItem('rating_students', JSON.stringify(students));
-            localStorage.setItem('rating_categories', JSON.stringify(categories));
+            saveToFirebase();
             hasChanges = false;
             document.getElementById('saveBtn').style.display = 'none';
-            showNotification('✅ Изменения сохранены!');
+            showNotification('✅ Изменения сохранены в облако!');
         } catch (e) {
             showNotification('❌ Ошибка: ' + e.message);
         }
@@ -853,8 +877,109 @@
         if (confirm('Удалить всех курсантов?')) { students = []; markAsChanged(); renderAll(); }
     }
 
-    // ===== ЗАГРУЗКА ДАННЫХ =====
-    function loadSavedData() {
+    // ===== FIREBASE СИНХРОНИЗАЦИЯ =====
+    
+    // Загрузка данных из Firebase
+    function loadFromFirebase() {
+        if (!db) {
+            console.warn('Firebase не инициализирован, используем localStorage');
+            loadFromLocalStorage();
+            return;
+        }
+        
+        console.log('📥 Загрузка данных из Firebase...');
+        
+        db.ref('ratingData').once('value').then(snapshot => {
+            const data = snapshot.val();
+            if (data) {
+                if (data.students) {
+                    students = data.students.map(s => ensureStudent(s));
+                }
+                if (data.categories) {
+                    categories = DEFAULT_CATEGORIES.map(def => {
+                        const found = data.categories.find(l => l.key === def.key);
+                        if (found) return { ...def, maxTotal: found.maxTotal };
+                        return { ...def };
+                    });
+                }
+                console.log('✅ Данные загружены из Firebase');
+            } else {
+                console.log('ℹ️ В Firebase нет данных, используем localStorage');
+                loadFromLocalStorage();
+            }
+            renderAll();
+        }).catch(error => {
+            console.error('❌ Ошибка загрузки из Firebase:', error);
+            loadFromLocalStorage();
+            renderAll();
+        });
+    }
+    
+    // Сохранение данных в Firebase
+    function saveToFirebase() {
+        if (!db) {
+            console.warn('Firebase не инициализирован, сохраняем в localStorage');
+            saveToLocalStorage();
+            return;
+        }
+        
+        console.log('📤 Сохранение данных в Firebase...');
+        
+        const data = {
+            students: students,
+            categories: categories,
+            lastUpdated: new Date().toISOString()
+        };
+        
+        db.ref('ratingData').set(data).then(() => {
+            console.log('✅ Данные сохранены в Firebase');
+            // Также сохраняем в localStorage как резервную копию
+            saveToLocalStorage();
+        }).catch(error => {
+            console.error('❌ Ошибка сохранения в Firebase:', error);
+            saveToLocalStorage();
+        });
+    }
+    
+    // Слушатель изменений в реальном времени
+    function listenToFirebaseChanges() {
+        if (!db) return;
+        
+        db.ref('ratingData').on('value', snapshot => {
+            const data = snapshot.val();
+            if (data && data.students) {
+                // Проверяем, есть ли изменения
+                const currentData = JSON.stringify(students);
+                const newData = JSON.stringify(data.students);
+                
+                if (currentData !== newData) {
+                    console.log('🔄 Обнаружены изменения в Firebase, обновляем...');
+                    students = data.students.map(s => ensureStudent(s));
+                    if (data.categories) {
+                        categories = DEFAULT_CATEGORIES.map(def => {
+                            const found = data.categories.find(l => l.key === def.key);
+                            if (found) return { ...def, maxTotal: found.maxTotal };
+                            return { ...def };
+                        });
+                    }
+                    renderAll();
+                }
+            }
+        });
+    }
+    
+    // Резервное сохранение в localStorage
+    function saveToLocalStorage() {
+        try {
+            localStorage.setItem('rating_students', JSON.stringify(students));
+            localStorage.setItem('rating_categories', JSON.stringify(categories));
+        } catch (e) {
+            console.error('Ошибка сохранения в localStorage:', e);
+        }
+    }
+    
+    // Загрузка из localStorage (резервный вариант)
+    function loadFromLocalStorage() {
         try {
             const saved = localStorage.getItem('rating_students');
             const savedCats = localStorage.getItem('rating_categories');
@@ -863,7 +988,6 @@
             }
             if (savedCats) {
                 const loaded = JSON.parse(savedCats);
-                // Мержим: берём сохранённые maxTotal, но гарантируем наличие всех категорий
                 categories = DEFAULT_CATEGORIES.map(def => {
                     const found = loaded.find(l => l.key === def.key);
                     if (found) return { ...def, maxTotal: found.maxTotal };
@@ -871,14 +995,19 @@
                 });
             }
         } catch (e) {
-            console.error('Ошибка загрузки:', e);
+            console.error('Ошибка загрузки из localStorage:', e);
         }
+    }
+    
+    // Загрузка данных (приоритет: Firebase > localStorage)
+    function loadSavedData() {
+        loadFromFirebase();
     }
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     loadSavedData();
+    listenToFirebaseChanges(); // Запускаем слушатель изменений в реальном времени
     updateAuthUI();
-    renderAll();
     </script>
 </body>
 </html>
