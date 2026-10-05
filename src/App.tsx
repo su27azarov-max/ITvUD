@@ -7,6 +7,7 @@ import {
   calculateMaxTotal,
   getGroups,
   createEmptyStudent,
+  ensureStudentFields,
 } from './data/students';
 import RatingTable from './components/RatingTable';
 import GroupRating from './components/GroupRating';
@@ -21,21 +22,21 @@ const TEACHER_PASSWORD = '05072020';
 
 // Демо-данные
 const demoStudents: Student[] = [
-  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 1, '5': 1 } },
-  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, bonus: 8, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 2 }, notesGrades: { '3': 0, '4': 0, '5': 2 } },
-  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, bonus: 2, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 } },
-  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 2, '5': 0 } },
-  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, bonus: 0, practiceGrades: { '3': 1, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 1, '4': 0, '5': 0 } },
-  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, bonus: 6, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 0, '5': 1 }, notesGrades: { '3': 0, '4': 1, '5': 1 } },
-  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, bonus: 3, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 } },
-  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, bonus: 5, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 1, '5': 1 } },
-  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, bonus: 1, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 } },
-  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, bonus: 4, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 2, '5': 0 } },
-  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, bonus: 10, practiceGrades: { '3': 0, '4': 0, '5': 3 }, reportsGrades: { '3': 0, '4': 0, '5': 2 }, notesGrades: { '3': 0, '4': 0, '5': 3 } },
-  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, bonus: 2, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 } },
-  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, bonus: 0, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 } },
-  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, bonus: 7, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 1 }, notesGrades: { '3': 0, '4': 0, '5': 2 } },
-  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, bonus: 1, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 } },
+  { id: 1, fullName: 'Иванов Иван Сергеевич', group: 'ИТ-201', notes: 24, practice: 20, reports: 10, bonus: 5, testing: 0, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 1, '5': 1 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 2, fullName: 'Петрова Анна Михайловна', group: 'ИТ-201', notes: 28, practice: 25, reports: 20, bonus: 8, testing: 0, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 2 }, notesGrades: { '3': 0, '4': 0, '5': 2 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 3, fullName: 'Сидоров Алексей Дмитриевич', group: 'ИТ-201', notes: 16, practice: 10, reports: 0, bonus: 2, testing: 0, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 4, fullName: 'Козлова Мария Андреевна', group: 'ИТ-201', notes: 22, practice: 20, reports: 10, bonus: 4, testing: 0, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 2, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 5, fullName: 'Новиков Дмитрий Павлович', group: 'ИТ-201', notes: 10, practice: 5, reports: 0, bonus: 0, testing: 0, practiceGrades: { '3': 1, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 1, '4': 0, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 6, fullName: 'Морозова Елена Викторовна', group: 'ИТ-202', notes: 26, practice: 25, reports: 15, bonus: 6, testing: 0, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 0, '5': 1 }, notesGrades: { '3': 0, '4': 1, '5': 1 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 7, fullName: 'Волков Артём Николаевич', group: 'ИТ-202', notes: 20, practice: 15, reports: 10, bonus: 3, testing: 0, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 8, fullName: 'Соколова Дарья Олеговна', group: 'ИТ-202', notes: 24, practice: 22, reports: 10, bonus: 5, testing: 0, practiceGrades: { '3': 0, '4': 1, '5': 1 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 1, '5': 1 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 9, fullName: 'Лебедев Максим Игоревич', group: 'ИТ-202', notes: 14, practice: 10, reports: 0, bonus: 1, testing: 0, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 10, fullName: 'Кузнецова Ольга Романовна', group: 'ИТ-202', notes: 22, practice: 20, reports: 10, bonus: 4, testing: 0, practiceGrades: { '3': 0, '4': 2, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 0, '4': 2, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 11, fullName: 'Попов Никита Александрович', group: 'ИТ-203', notes: 30, practice: 30, reports: 20, bonus: 10, testing: 0, practiceGrades: { '3': 0, '4': 0, '5': 3 }, reportsGrades: { '3': 0, '4': 0, '5': 2 }, notesGrades: { '3': 0, '4': 0, '5': 3 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 12, fullName: 'Васильева Татьяна Петровна', group: 'ИТ-203', notes: 18, practice: 15, reports: 10, bonus: 2, testing: 0, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 1, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 13, fullName: 'Зайцев Роман Владимирович', group: 'ИТ-203', notes: 12, practice: 10, reports: 0, bonus: 0, testing: 0, practiceGrades: { '3': 2, '4': 0, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 2, '4': 0, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 14, fullName: 'Павлова Наталья Сергеевна', group: 'ИТ-203', notes: 26, practice: 24, reports: 15, bonus: 7, testing: 0, practiceGrades: { '3': 0, '4': 0, '5': 2 }, reportsGrades: { '3': 0, '4': 0, '5': 1 }, notesGrades: { '3': 0, '4': 0, '5': 2 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
+  { id: 15, fullName: 'Семёнов Кирилл Олегович', group: 'ИТ-203', notes: 16, practice: 12, reports: 0, bonus: 1, testing: 0, practiceGrades: { '3': 1, '4': 1, '5': 0 }, reportsGrades: { '3': 0, '4': 0, '5': 0 }, notesGrades: { '3': 1, '4': 1, '5': 0 }, testingGrades: { '3': 0, '4': 0, '5': 0 } },
 ];
 
 function App() {
@@ -47,16 +48,7 @@ function App() {
     if (saved) {
       const parsed = JSON.parse(saved);
       // Инициализация недостающих полей
-      return parsed.map((s: Student) => ({
-        ...s,
-        notes: s.notes || 0,
-        practice: s.practice || 0,
-        reports: s.reports || 0,
-        bonus: s.bonus || 0,
-        notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
-        practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
-        reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0}
-      }));
+      return parsed.map((s: any) => ensureStudentFields(s));
     }
     return demoStudents;
   });

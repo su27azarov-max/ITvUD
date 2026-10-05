@@ -2,14 +2,16 @@ export interface Student {
   id: number;
   fullName: string;
   group: string;
-  notes: number;       // Конспекты
+  notes: number;       // Конспекты (дополнительные)
   practice: number;    // Защита практических работ
-  reports: number;     // Выступления с докладами
+  reports: number;     // Выступления с докладами (дополнительные)
   bonus: number;       // Дополнительные баллы
+  testing: number;     // Тестирование
   // Оценки для подсчета
   practiceGrades: { '3': number; '4': number; '5': number }; // Количество оценок за практики
   reportsGrades: { '3': number; '4': number; '5': number };  // Количество оценок за доклады
   notesGrades: { '3': number; '4': number; '5': number };    // Количество оценок за конспекты
+  testingGrades: { '3': number; '4': number; '5': number };  // Количество оценок за тестирование
 }
 
 export interface GradeToPoints {
@@ -19,7 +21,7 @@ export interface GradeToPoints {
 }
 
 export interface CategoryConfig {
-  key: keyof Pick<Student, 'notes' | 'practice' | 'reports' | 'bonus'>;
+  key: keyof Pick<Student, 'notes' | 'practice' | 'reports' | 'bonus' | 'testing'>;
   name: string;
   maxPerItem: number;
   maxTotal: number; // настраивается преподавателем
@@ -27,17 +29,10 @@ export interface CategoryConfig {
   shortDesc: string;
   useGrades?: boolean; // использовать систему оценок
   gradeMapping?: GradeToPoints; // соответствие оценок и баллов
+  isBonus?: boolean; // дополнительные баллы (не учитываются в максимуме)
 }
 
 export const defaultCategories: CategoryConfig[] = [
-  {
-    key: 'notes',
-    name: 'Конспекты',
-    maxPerItem: 2,
-    maxTotal: 500,
-    description: 'Наличие конспектов на занятиях',
-    shortDesc: '2 балла за конспект лекции',
-  },
   {
     key: 'practice',
     name: 'Практические работы',
@@ -49,6 +44,25 @@ export const defaultCategories: CategoryConfig[] = [
     gradeMapping: { grade3: 3, grade4: 7, grade5: 10 },
   },
   {
+    key: 'testing',
+    name: 'Тестирование',
+    maxPerItem: 10,
+    maxTotal: 500,
+    description: 'Результаты тестирования',
+    shortDesc: 'Оценка 3→3б, 4→7б, 5→10б',
+    useGrades: true,
+    gradeMapping: { grade3: 3, grade4: 7, grade5: 10 },
+  },
+  {
+    key: 'notes',
+    name: 'Конспекты',
+    maxPerItem: 2,
+    maxTotal: 500,
+    description: 'Наличие конспектов на занятиях',
+    shortDesc: '2 балла за конспект лекции',
+    isBonus: true, // Дополнительные баллы
+  },
+  {
     key: 'reports',
     name: 'Доклады',
     maxPerItem: 8,
@@ -57,6 +71,7 @@ export const defaultCategories: CategoryConfig[] = [
     shortDesc: 'Оценка 3→3б, 4→6б, 5→8б',
     useGrades: true,
     gradeMapping: { grade3: 3, grade4: 6, grade5: 8 },
+    isBonus: true, // Дополнительные баллы
   },
   {
     key: 'bonus',
@@ -65,19 +80,20 @@ export const defaultCategories: CategoryConfig[] = [
     maxTotal: 500,
     description: 'Дополнительные баллы от преподавателя',
     shortDesc: 'На усмотрение преподавателя',
+    isBonus: true, // Дополнительные баллы
   },
 ];
 
 export function calculateTotal(student: Student): number {
   // Итог включает все баллы, включая дополнительные (если они есть)
-  return (student.notes || 0) + (student.practice || 0) + (student.reports || 0) + (student.bonus || 0);
+  return (student.notes || 0) + (student.practice || 0) + (student.reports || 0) + (student.bonus || 0) + (student.testing || 0);
 }
 
 export function calculateMaxTotal(categories: CategoryConfig[]): number {
-  // Максимум НЕ включает дополнительные баллы (они добавляются отдельно)
+  // Максимум НЕ включает дополнительные баллы (isBonus = true)
   return categories.reduce((sum, c) => {
     if (c.maxTotal <= 0) return sum;
-    if (c.key === 'bonus') return sum; // Исключаем bonus из максимума
+    if (c.isBonus) return sum; // Исключаем дополнительные категории из максимума
     return sum + c.maxTotal;
   }, 0);
 }
@@ -113,9 +129,11 @@ export function createEmptyStudent(id: number, fullName: string, group: string):
     practice: 0, 
     reports: 0, 
     bonus: 0,
+    testing: 0,
     practiceGrades: { '3': 0, '4': 0, '5': 0 },
     reportsGrades: { '3': 0, '4': 0, '5': 0 },
-    notesGrades: { '3': 0, '4': 0, '5': 0 }
+    notesGrades: { '3': 0, '4': 0, '5': 0 },
+    testingGrades: { '3': 0, '4': 0, '5': 0 }
   };
 }
 
@@ -152,6 +170,23 @@ export function parseImportText(text: string): Student[] {
   return students;
 }
 
+export function ensureStudentFields(student: Partial<Student>): Student {
+  return {
+    id: student.id || 0,
+    fullName: student.fullName || '',
+    group: student.group || '',
+    notes: student.notes || 0,
+    practice: student.practice || 0,
+    reports: student.reports || 0,
+    bonus: student.bonus || 0,
+    testing: student.testing || 0,
+    practiceGrades: student.practiceGrades || { '3': 0, '4': 0, '5': 0 },
+    reportsGrades: student.reportsGrades || { '3': 0, '4': 0, '5': 0 },
+    notesGrades: student.notesGrades || { '3': 0, '4': 0, '5': 0 },
+    testingGrades: student.testingGrades || { '3': 0, '4': 0, '5': 0 },
+  };
+}
+
 // Функции для подсчета баллов по оценкам
 export function calculatePracticeScore(grades: { '3': number; '4': number; '5': number }): number {
   return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10;
@@ -159,4 +194,8 @@ export function calculatePracticeScore(grades: { '3': number; '4': number; '5': 
 
 export function calculateReportsScore(grades: { '3': number; '4': number; '5': number }): number {
   return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8;
+}
+
+export function calculateTestingScore(grades: { '3': number; '4': number; '5': number }): number {
+  return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10;
 }

@@ -65,7 +65,7 @@ export default function RatingTable({ students, categories, title, onEditStudent
                   </td>
                   <td className="px-3 py-3 text-center">
                     <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${getGradeColor(total, maxTotal)}`}>
-                      {getGrade(total, maxTotal)}
+                      {getGrade(total, maxTotal)} ({maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0}%)
                     </span>
                   </td>
                   {onEditStudent && (

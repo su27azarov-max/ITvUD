@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Student, CategoryConfig, calculateMaxTotal, calculatePracticeScore, calculateReportsScore } from '../data/students';
+import { Student, CategoryConfig, calculateMaxTotal, calculatePracticeScore, calculateReportsScore, calculateTestingScore } from '../data/students';
 
 interface ScoreModalProps {
   student: Student;
@@ -64,6 +64,25 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
       newGrades[grade]--;
       const reportsScore = calculateReportsScore(newGrades);
       setFormData({ ...formData, reportsGrades: newGrades, reports: reportsScore });
+    }
+  };
+
+  const handleAddTestingGrade = (grade: '3' | '4' | '5') => {
+    const newGrades = { ...formData.testingGrades };
+    newGrades[grade]++;
+    const testingScore = calculateTestingScore(newGrades);
+    const cat = categories.find(c => c.key === 'testing');
+    if (cat && testingScore <= cat.maxTotal) {
+      setFormData({ ...formData, testingGrades: newGrades, testing: testingScore });
+    }
+  };
+
+  const handleRemoveTestingGrade = (grade: '3' | '4' | '5') => {
+    const newGrades = { ...formData.testingGrades };
+    if (newGrades[grade] > 0) {
+      newGrades[grade]--;
+      const testingScore = calculateTestingScore(newGrades);
+      setFormData({ ...formData, testingGrades: newGrades, testing: testingScore });
     }
   };
 

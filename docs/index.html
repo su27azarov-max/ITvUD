@@ -300,28 +300,29 @@
     const TEACHER_PASSWORD = '05072020';
 
     let categories = [
-        { key: 'notes', name: 'Конспекты', maxPerItem: 2, maxTotal: 500, desc: 'Наличие конспектов на занятиях', shortDesc: '2 балла за конспект лекции' },
         { key: 'practice', name: 'Практические работы', maxPerItem: 10, maxTotal: 500, desc: 'Защита практических работ', shortDesc: 'Оценка 3→3б, 4→7б, 5→10б', useGrades: true, gradeMapping: { grade3: 3, grade4: 7, grade5: 10 } },
-        { key: 'reports', name: 'Доклады', maxPerItem: 8, maxTotal: 500, desc: 'Выступление с докладами', shortDesc: 'Оценка 3→3б, 4→6б, 5→8б', useGrades: true, gradeMapping: { grade3: 3, grade4: 6, grade5: 8 } },
-        { key: 'bonus', name: 'Дополнительные баллы', maxPerItem: 50, maxTotal: 500, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя' }
+        { key: 'testing', name: 'Тестирование', maxPerItem: 10, maxTotal: 500, desc: 'Результаты тестирования', shortDesc: 'Оценка 3→3б, 4→7б, 5→10б', useGrades: true, gradeMapping: { grade3: 3, grade4: 7, grade5: 10 } },
+        { key: 'notes', name: 'Конспекты', maxPerItem: 2, maxTotal: 500, desc: 'Наличие конспектов на занятиях', shortDesc: '2 балла за конспект лекции', isBonus: true },
+        { key: 'reports', name: 'Доклады', maxPerItem: 8, maxTotal: 500, desc: 'Выступление с докладами', shortDesc: 'Оценка 3→3б, 4→6б, 5→8б', useGrades: true, gradeMapping: { grade3: 3, grade4: 6, grade5: 8 }, isBonus: true },
+        { key: 'bonus', name: 'Дополнительные баллы', maxPerItem: 50, maxTotal: 500, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя', isBonus: true }
     ];
 
     let students = [
-        { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, bonus:5, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':1,'5':0} },
-        { id:2, fullName:'Петрова Анна Михайловна', group:'ИТ-201', notes:28, practice:25, reports:20, bonus:8, notesGrades:{'3':0,'4':0,'5':2}, practiceGrades:{'3':0,'4':0,'5':2}, reportsGrades:{'3':0,'4':0,'5':2} },
-        { id:3, fullName:'Сидоров Алексей Дмитриевич', group:'ИТ-201', notes:16, practice:10, reports:0, bonus:2, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
-        { id:4, fullName:'Козлова Мария Андреевна', group:'ИТ-201', notes:22, practice:20, reports:10, bonus:4, notesGrades:{'3':0,'4':2,'5':0}, practiceGrades:{'3':0,'4':2,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
-        { id:5, fullName:'Новиков Дмитрий Павлович', group:'ИТ-201', notes:10, practice:5, reports:0, bonus:0, notesGrades:{'3':1,'4':0,'5':0}, practiceGrades:{'3':1,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
-        { id:6, fullName:'Морозова Елена Викторовна', group:'ИТ-202', notes:26, practice:25, reports:15, bonus:6, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':0,'5':1} },
-        { id:7, fullName:'Волков Артём Николаевич', group:'ИТ-202', notes:20, practice:15, reports:10, bonus:3, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
-        { id:8, fullName:'Соколова Дарья Олеговна', group:'ИТ-202', notes:24, practice:22, reports:10, bonus:5, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':1,'5':0} },
-        { id:9, fullName:'Лебедев Максим Игоревич', group:'ИТ-202', notes:14, practice:10, reports:0, bonus:1, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
-        { id:10, fullName:'Кузнецова Ольга Романовна', group:'ИТ-202', notes:22, practice:20, reports:10, bonus:4, notesGrades:{'3':0,'4':2,'5':0}, practiceGrades:{'3':0,'4':2,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
-        { id:11, fullName:'Попов Никита Александрович', group:'ИТ-203', notes:30, practice:30, reports:20, bonus:10, notesGrades:{'3':0,'4':0,'5':3}, practiceGrades:{'3':0,'4':0,'5':3}, reportsGrades:{'3':0,'4':0,'5':2} },
-        { id:12, fullName:'Васильева Татьяна Петровна', group:'ИТ-203', notes:18, practice:15, reports:10, bonus:2, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':1,'5':0} },
-        { id:13, fullName:'Зайцев Роман Владимирович', group:'ИТ-203', notes:12, practice:10, reports:0, bonus:0, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} },
-        { id:14, fullName:'Павлова Наталья Сергеевна', group:'ИТ-203', notes:26, practice:24, reports:15, bonus:7, notesGrades:{'3':0,'4':0,'5':2}, practiceGrades:{'3':0,'4':0,'5':2}, reportsGrades:{'3':0,'4':0,'5':1} },
-        { id:15, fullName:'Семёнов Кирилл Олегович', group:'ИТ-203', notes:16, practice:12, reports:0, bonus:1, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} }
+        { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, bonus:5, testing:0, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':1,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:2, fullName:'Петрова Анна Михайловна', group:'ИТ-201', notes:28, practice:25, reports:20, bonus:8, testing:0, notesGrades:{'3':0,'4':0,'5':2}, practiceGrades:{'3':0,'4':0,'5':2}, reportsGrades:{'3':0,'4':0,'5':2}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:3, fullName:'Сидоров Алексей Дмитриевич', group:'ИТ-201', notes:16, practice:10, reports:0, bonus:2, testing:0, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:4, fullName:'Козлова Мария Андреевна', group:'ИТ-201', notes:22, practice:20, reports:10, bonus:4, testing:0, notesGrades:{'3':0,'4':2,'5':0}, practiceGrades:{'3':0,'4':2,'5':0}, reportsGrades:{'3':0,'4':1,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:5, fullName:'Новиков Дмитрий Павлович', group:'ИТ-201', notes:10, practice:5, reports:0, bonus:0, testing:0, notesGrades:{'3':1,'4':0,'5':0}, practiceGrades:{'3':1,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:6, fullName:'Морозова Елена Викторовна', group:'ИТ-202', notes:26, practice:25, reports:15, bonus:6, testing:0, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':0,'5':1}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:7, fullName:'Волков Артём Николаевич', group:'ИТ-202', notes:20, practice:15, reports:10, bonus:3, testing:0, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':1,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:8, fullName:'Соколова Дарья Олеговна', group:'ИТ-202', notes:24, practice:22, reports:10, bonus:5, testing:0, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':1,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:9, fullName:'Лебедев Максим Игоревич', group:'ИТ-202', notes:14, practice:10, reports:0, bonus:1, testing:0, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:10, fullName:'Кузнецова Ольга Романовна', group:'ИТ-202', notes:22, practice:20, reports:10, bonus:4, testing:0, notesGrades:{'3':0,'4':2,'5':0}, practiceGrades:{'3':0,'4':2,'5':0}, reportsGrades:{'3':0,'4':1,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:11, fullName:'Попов Никита Александрович', group:'ИТ-203', notes:30, practice:30, reports:20, bonus:10, testing:0, notesGrades:{'3':0,'4':0,'5':3}, practiceGrades:{'3':0,'4':0,'5':3}, reportsGrades:{'3':0,'4':0,'5':2}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:12, fullName:'Васильева Татьяна Петровна', group:'ИТ-203', notes:18, practice:15, reports:10, bonus:2, testing:0, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':1,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:13, fullName:'Зайцев Роман Владимирович', group:'ИТ-203', notes:12, practice:10, reports:0, bonus:0, testing:0, notesGrades:{'3':2,'4':0,'5':0}, practiceGrades:{'3':2,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:14, fullName:'Павлова Наталья Сергеевна', group:'ИТ-203', notes:26, practice:24, reports:15, bonus:7, testing:0, notesGrades:{'3':0,'4':0,'5':2}, practiceGrades:{'3':0,'4':0,'5':2}, reportsGrades:{'3':0,'4':0,'5':1}, testingGrades:{'3':0,'4':0,'5':0} },
+        { id:15, fullName:'Семёнов Кирилл Олегович', group:'ИТ-203', notes:16, practice:12, reports:0, bonus:1, testing:0, notesGrades:{'3':1,'4':1,'5':0}, practiceGrades:{'3':1,'4':1,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} }
     ];
 
     let isAuthenticated = false;
@@ -332,26 +333,28 @@
 
     function calcTotal(s) { 
         // Итог включает все баллы, включая дополнительные (если они есть)
-        return (s.notes || 0) + (s.practice || 0) + (s.reports || 0) + (s.bonus || 0); 
+        return (s.notes || 0) + (s.practice || 0) + (s.reports || 0) + (s.bonus || 0) + (s.testing || 0); 
     }
     function getMaxTotal() { 
-        // Максимум НЕ включает дополнительные баллы (они добавляются отдельно)
+        // Максимум НЕ включает дополнительные баллы (isBonus = true)
         return categories.reduce((sum, c) => {
             if (c.maxTotal <= 0) return sum;
-            if (c.key === 'bonus') return sum; // Исключаем bonus из максимума
+            if (c.isBonus) return sum; // Исключаем дополнительные категории из максимума
             return sum + c.maxTotal;
         }, 0);
     }
     function calcPracticeScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
     function calcReportsScore(grades) { return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8; }
+    function calcTestingScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
     function getGrade(total) {
         // Процентная шкала от максимума (без учета бонусов)
         const maxTotal = getMaxTotal();
         const pct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
-        if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
-        if (pct >= 75) return { text:'Хорошо', cls:'grade-good' };
-        if (pct >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
-        return { text:'Неудовлетворительно', cls:'grade-fail' };
+        const pctText = `(${Math.round(pct)}%)`;
+        if (pct >= 90) return { text:`Отлично ${pctText}`, cls:'grade-excellent' };
+        if (pct >= 75) return { text:`Хорошо ${pctText}`, cls:'grade-good' };
+        if (pct >= 60) return { text:`Удовлетворительно ${pctText}`, cls:'grade-satisfactory' };
+        return { text:`Неудовлетворительно ${pctText}`, cls:'grade-fail' };
     }
     function getGroups() { return [...new Set(students.map(s => s.group))].sort(); }
 
@@ -575,10 +578,10 @@
             if (gm) { group = gm[1].trim(); return; }
             const csv = line.match(/^(.+?)\s*[;,]\s*(.+)$/);
             if (csv && csv[2].trim().length <= 20) {
-                students.push({ id: nextId++, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, bonus:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} });
+                students.push({ id: nextId++, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, bonus:0, testing:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} });
                 return;
             }
-            if (group) students.push({ id: nextId++, fullName: line, group, notes:0, practice:0, reports:0, bonus:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} });
+            if (group) students.push({ id: nextId++, fullName: line, group, notes:0, practice:0, reports:0, bonus:0, testing:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} });
         });
         toggleImport();
         markAsChanged();
@@ -620,11 +623,17 @@
         // Инициализация недостающих полей
         modalFormData = {
             ...editingStudent,
+            notes: editingStudent.notes || 0,
+            practice: editingStudent.practice || 0,
+            reports: editingStudent.reports || 0,
+            bonus: editingStudent.bonus || 0,
+            testing: editingStudent.testing || 0,
             notesGrades: editingStudent.notesGrades || {'3':0,'4':0,'5':0},
             practiceGrades: editingStudent.practiceGrades || {'3':0,'4':0,'5':0},
-            reportsGrades: editingStudent.reportsGrades || {'3':0,'4':0,'5':0}
+            reportsGrades: editingStudent.reportsGrades || {'3':0,'4':0,'5':0},
+            testingGrades: editingStudent.testingGrades || {'3':0,'4':0,'5':0}
         };
-        modalActiveCategory = 'notes';
+        modalActiveCategory = 'practice';
         renderScoreModal();
         document.getElementById('scoreModal').classList.remove('hidden');
     }
@@ -635,9 +644,9 @@
         const group = prompt('Номер группы:');
         if (!group) return;
         const maxId = students.length > 0 ? Math.max(...students.map(s=>s.id)) : 0;
-        editingStudent = { id: maxId + 1, fullName: name, group, notes:0, practice:0, reports:0, bonus:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0} };
+        editingStudent = { id: maxId + 1, fullName: name, group, notes:0, practice:0, reports:0, bonus:0, testing:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} };
         modalFormData = {...editingStudent};
-        modalActiveCategory = 'notes';
+        modalActiveCategory = 'practice';
         renderScoreModal();
         document.getElementById('scoreModal').classList.remove('hidden');
     }
@@ -649,9 +658,11 @@
     function renderScoreModal() {
         if (!modalFormData) return;
         const total = calcTotal(modalFormData);
+        const maxTotal = getMaxTotal();
+        const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
         document.getElementById('modalStudentName').textContent = modalFormData.fullName;
         document.getElementById('modalStudentGroup').textContent = 'Группа: ' + modalFormData.group;
-        document.getElementById('modalTotalScore').textContent = total;
+        document.getElementById('modalTotalScore').textContent = `${total} (${pct}%)`;
         document.getElementById('modalMaxLabel').textContent = `баллов`;
 
         let tabsHtml = '';
@@ -662,9 +673,9 @@
 
         const cat = categories.find(c => c.key === modalActiveCategory);
         const val = modalFormData[cat.key];
-        const pct = (val / cat.maxTotal) * 100;
+        const pct2 = (val / cat.maxTotal) * 100;
         let body = `<div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:500">${cat.name}</span><span style="font-size:0.85rem;color:#6b7280">${cat.shortDesc}</span></div>`;
-        body += `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>`;
+        body += `<div class="progress-bar"><div class="progress-fill" style="width:${pct2}%"></div></div>`;
         body += `<p style="font-size:0.85rem;color:#6b7280">Баллы: <strong>${val}</strong></p>`;
 
         if (cat.key === 'notes') {
@@ -737,7 +748,11 @@
         const gradesKey = catKey + 'Grades';
         const newGrades = {...modalFormData[gradesKey]};
         newGrades[grade]++;
-        const calcFn = catKey === 'practice' ? calcPracticeScore : calcReportsScore;
+        let calcFn;
+        if (catKey === 'practice') calcFn = calcPracticeScore;
+        else if (catKey === 'reports') calcFn = calcReportsScore;
+        else if (catKey === 'testing') calcFn = calcTestingScore;
+        else return;
         const newScore = calcFn(newGrades);
         if (newScore <= cat.maxTotal) {
             modalFormData[gradesKey] = newGrades;
@@ -752,7 +767,11 @@
         const newGrades = {...modalFormData[gradesKey]};
         if (newGrades[grade] > 0) {
             newGrades[grade]--;
-            const calcFn = catKey === 'practice' ? calcPracticeScore : calcReportsScore;
+            let calcFn;
+            if (catKey === 'practice') calcFn = calcPracticeScore;
+            else if (catKey === 'reports') calcFn = calcReportsScore;
+            else if (catKey === 'testing') calcFn = calcTestingScore;
+            else return;
             modalFormData[gradesKey] = newGrades;
             modalFormData[catKey] = calcFn(newGrades);
             renderScoreModal();
@@ -829,9 +848,11 @@
                     practice: s.practice || 0,
                     reports: s.reports || 0,
                     bonus: s.bonus || 0,
+                    testing: s.testing || 0,
                     notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
                     practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
-                    reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0}
+                    reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0},
+                    testingGrades: s.testingGrades || {'3':0,'4':0,'5':0}
                 }));
             }
             if (savedCategories) categories = JSON.parse(savedCategories);
