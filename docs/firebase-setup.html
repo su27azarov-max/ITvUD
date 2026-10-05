@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инструкция по настройке Firebase</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+        h1 { color: #4f46e5; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; }
+        h2 { color: #6366f1; margin-top: 30px; }
+        .step {
+            background: #f9fafb;
+            border-left: 4px solid #6366f1;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .step-number {
+            display: inline-block;
+            background: #6366f1;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        code {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        a { color: #4f46e5; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .config-example {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔥 Инструкция по настройке Firebase</h1>
+    
+    <div class="warning">
+        <strong>⚠️ Важно:</strong> Без настройки Firebase изменения, внесённые на одном устройстве, не будут видны на других устройствах. Эта инструкция займёт всего 10 минут.
+    </div>
+
+    <h2>Зачем нужен Firebase?</h2>
+    <p>Сейчас данные сохраняются только в браузере конкретного устройства (localStorage). Когда преподаватель вносит изменения на своём компьютере, студенты на других устройствах их не видят.</p>
+    <p><strong>Firebase решает эту проблему</strong> — все данные синхронизируются в облаке в реальном времени.</p>
+
+    <div class="step">
+        <span class="step-number">1</span>
+        <strong>Создание проекта Firebase (2 минуты)</strong>
+        <ol>
+            <li>Перейдите на <a href="https://console.firebase.google.com/" target="_blank">console.firebase.google.com</a></li>
+            <li>Войдите в свой Google аккаунт</li>
+            <li>Нажмите <strong>"Добавить проект"</strong></li>
+            <li>Введите название: <code>rating-system</code></li>
+            <li>Отключите Google Analytics (не обязательно)</li>
+            <li>Нажмите <strong>"Создать проект"</strong></li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <span class="step-number">2</span>
+        <strong>Создание Realtime Database (2 минуты)</strong>
+        <ol>
+            <li>В левом меню нажмите <strong>"Realtime Database"</strong></li>
+            <li>Нажмите <strong>"Создать базу данных"</strong></li>
+            <li>Выберите регион: <code>europe-west1</code></li>
+            <li>Выберите <strong>"Начать в тестовом режиме"</strong></li>
+            <li>Нажмите <strong>"Включить"</strong></li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <span class="step-number">3</span>
+        <strong>Получение конфигурации (2 минуты)</strong>
+        <ol>
+            <li>Нажмите на шестерёнку ⚙️ в левом верхнем углу</li>
+            <li>Выберите <strong>"Настройки проекта"</strong></li>
+            <li>Прокрутите вниз до раздела <strong>"Ваши приложения"</strong></li>
+            <li>Нажмите на иконку <strong>веб-приложения</strong> <code>&lt;/&gt;</code></li>
+            <li>Введите название: <code>rating-web</code></li>
+            <li>Нажмите <strong>"Зарегистрировать приложение"</strong></li>
+            <li>Скопируйте объект <code>firebaseConfig</code>:</li>
+        </ol>
+        <div class="config-example">const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "rating-system.firebaseapp.com",
+  databaseURL: "https://rating-system-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "rating-system",
+  storageBucket: "rating-system.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123..."
+};</div>
+    </div>
+
+    <div class="step">
+        <span class="step-number">4</span>
+        <strong>Вставка конфигурации в код (1 минута)</strong>
+        <ol>
+            <li>Откройте файл <code>docs/index.html</code> в текстовом редакторе</li>
+            <li>Найдите строку с комментарием: <code>// ВСТАВЬТЕ СЮДА ВАШУ КОНФИГУРАЦИЮ FIREBASE</code></li>
+            <li>Замените плейсхолдеры на ваши значения из <code>firebaseConfig</code></li>
+            <li>Сохраните файл</li>
+        </ol>
+        <div class="warning">
+            <strong>Важно:</strong> Убедитесь, что все поля заполнены correctly. Не оставляйте <code>YOUR_API_KEY</code> или другие плейсхолдеры!
+        </div>
+    </div>
+
+    <div class="step">
+        <span class="step-number">5</span>
+        <strong>Публикация изменений (1 минута)</strong>
+        <pre>git add docs/index.html
+git commit -m "Добавлена интеграция с Firebase"
+git push</pre>
+        <p>GitHub Pages автоматически пересоберёт сайт через 1-2 минуты.</p>
+    </div>
+
+    <div class="step">
+        <span class="step-number">6</span>
+        <strong>Проверка работы (2 минуты)</strong>
+        <ol>
+            <li>Откройте сайт на <strong>первом устройстве</strong> (компьютер преподавателя)</li>
+            <li>Откройте консоль браузера (F12 → вкладка Console)</li>
+            <li>Вы должны увидеть: <code>✅ Firebase инициализирован</code></li>
+            <li>Войдите как преподаватель (пароль: <code>05072020</code>)</li>
+            <li>Внесите изменения (добавьте курсанта или измените баллы)</li>
+            <li>Нажмите <strong>"💾 Сохранить"</strong></li>
+            <li>Откройте сайт на <strong>втором устройстве</strong> (телефон студента)</li>
+            <li>Обновите страницу (F5)</li>
+            <li>✨ Изменения должны появиться автоматически!</li>
+        </ol>
+    </div>
+
+    <h2>Как это работает?</h2>
+    <div class="success">
+        <strong>🔄 Синхронизация в реальном времени:</strong>
+        <ol>
+            <li>Преподаватель вносит изменения → данные сохраняются в Firebase</li>
+            <li>Firebase уведомляет все подключённые устройства об изменениях</li>
+            <li>Все устройства автоматически обновляют данные</li>
+        </ol>
+    </div>
+
+    <h2>Устранение проблем</h2>
+    
+    <div class="warning">
+        <strong>Проблема:</strong> "Firebase не инициализирован" в консоли<br>
+        <strong>Решение:</strong> Проверьте, что вы правильно скопировали <code>firebaseConfig</code>. Убедитесь, что все поля заполнены.
+    </div>
+
+    <div class="warning">
+        <strong>Проблема:</strong> Данные не синхронизируются между устройствами<br>
+        <strong>Решение:</strong> 
+        <ul>
+            <li>Убедитесь, что на обоих устройствах используется одна и та же конфигурация Firebase</li>
+            <li>Проверьте консоль браузера на обоих устройствах</li>
+            <li>Обновите страницу (F5) на обоих устройствах</li>
+        </ul>
+    </div>
+
+    <div class="warning">
+        <strong>Проблема:</strong> Старые данные из localStorage перезаписывают новые из Firebase<br>
+        <strong>Решение:</strong> Очистите localStorage:
+        <pre>// В консоли браузера (F12):
+localStorage.clear();
+// Затем обновите страницу (F5)</pre>
+    </div>
+
+    <h2>Стоимость</h2>
+    <div class="success">
+        <strong>Бесплатный тариф Spark:</strong>
+        <ul>
+            <li>1 ГБ хранилища</li>
+            <li>10 ГБ передачи данных в месяц</li>
+            <li>100 одновременных подключений</li>
+        </ul>
+        Для небольшого количества курсантов (до 100-200 человек) этого более чем достаточно.
+    </div>
+
+    <h2>Безопасность</h2>
+    <p>Сейчас база данных работает в <strong>тестовом режиме</strong> — любой, кто знает URL, может читать и писать данные.</p>
+    <p>Для продакшена рекомендуется настроить правила безопасности в Firebase Console:</p>
+    <ol>
+        <li>Перейдите в <strong>Realtime Database</strong> → вкладка <strong>"Правила"</strong></li>
+        <li>Замените правила на:</li>
+    </ol>
+    <pre>{
+  "rules": {
+    ".read": true,
+    ".write": "auth != null"
+  }
+}</pre>
+    <p>Это разрешит чтение всем, но запись только авторизованным пользователям.</p>
+
+    <h2>Дополнительные ресурсы</h2>
+    <ul>
+        <li><a href="https://firebase.google.com/docs/database/web/start" target="_blank">Документация Firebase</a></li>
+        <li><a href="https://console.firebase.google.com/" target="_blank">Консоль Firebase</a></li>
+        <li><a href="https://firebase.google.com/pricing" target="_blank">Калькулятор стоимости</a></li>
+    </ul>
+
+    <div class="success">
+        <strong>✅ Готово!</strong> После настройки Firebase данные будут синхронизироваться между всеми устройствами в реальном времени.
+    </div>
+</body>
+</html>
