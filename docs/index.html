@@ -919,76 +919,17 @@
         return GITHUB_CONFIG.owner && GITHUB_CONFIG.repo && GITHUB_CONFIG.token;
     }
     
-    // Чтение файла из GitHub
+    // Чтение файла из GitHub (для обратной совместимости)
     async function readFromGitHub() {
-        if (!isGitHubConfigured()) {
-            console.warn('GitHub не настроен');
-            return null;
-        }
-        
-        try {
-            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`;
-            
-            console.log('📡 Запрос к GitHub:', url);
-            
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'X-GitHub-Api-Version': '2022-11-28',
-                    'Cache-Control': 'no-cache',
-                    'If-None-Match': ''
-                },
-                cache: 'no-store'
-            });
-            
-            console.log('📥 Ответ GitHub:', response.status, response.statusText);
-            
-            if (!response.ok) {
-                if (response.status === 404) {
-                    console.log('ℹ️ Файл data.json не найден в репозитории');
-                    return null;
-                }
-                if (response.status === 401) {
-                    throw new Error('Неверный токен GitHub. Проверьте настройки.');
-                }
-                if (response.status === 403) {
-                    throw new Error('Доступ запрещён. Проверьте права токена (должен быть repo).');
-                }
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
-            }
-            
-            const data = await response.json();
-            
-            // Декодирование base64
-            let content;
-            try {
-                // GitHub возвращает base64 с переносами строк
-                const base64Content = data.content.replace(/\n/g, '');
-                content = atob(base64Content);
-            } catch (e) {
-                console.error('Ошибка декодирования base64:', e);
-                throw new Error('Не удалось декодировать содержимое файла');
-            }
-            
-            const jsonData = JSON.parse(content);
-            
-            console.log('✅ Данные загружены из GitHub');
-            console.log('📊 Загружено курсантов:', jsonData.students ? jsonData.students.length : 0);
-            
-            return jsonData;
-        } catch (error) {
-            console.error('❌ Ошибка чтения из GitHub:', error);
-            throw error;
-        }
+        console.warn('⚠️ readFromGitHub() устарела, используйте loadDataFromJson()');
+        await loadDataFromJson();
+        return { students: students, categories: categories };
     }
     
     // Флаг блокировки от параллельных сохранений
     let isSaving = false;
     
-    // Запись файла в GitHub с надёжным механизмом повторных попыток
+    // Запись файла в GitHub - упрощённая версия
     async function writeToGitHub() {
         if (!isGitHubConfigured()) {
             console.warn('GitHub не настроен');
@@ -1003,122 +944,89 @@
         
         isSaving = true;
         
-        const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
-        
-        // Повторные попытки при конфликте (максимум 5)
-        const maxRetries = 5;
-        
         try {
-            for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                console.log(`📡 Попытка ${attempt}/${maxRetries} записи в GitHub...`);
-                
-                try {
-                    // ШАГ 1: Получаем актуальный SHA файла
-                    let sha = null;
-                    let fileExists = false;
-                    
-                    const getResponse = await fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
-                            'Accept': 'application/vnd.github.v3+json',
-                            'X-GitHub-Api-Version': '2022-11-28',
-                            'Cache-Control': 'no-cache',
-                            'If-None-Match': ''
-                        },
-                        cache: 'no-store'
-                    });
-                    
-                    if (getResponse.ok) {
-                        const existingData = await getResponse.json();
-                        sha = existingData.sha;
-                        fileExists = true;
-                        console.log('📝 Файл существует, SHA:', sha);
-                    } else if (getResponse.status === 404) {
-                        console.log('📝 Файл не существует, будет создан новый');
-                    } else {
-                        throw new Error(`Не удалось получить SHA: ${getResponse.status}`);
-                    }
-                    
-                    // ШАГ 2: Сразу (без задержки!) формируем и отправляем запрос
-                    const data = {
-                        students: students,
-                        categories: categories,
-                        lastUpdated: new Date().toISOString()
-                    };
-                    
-                    const jsonString = JSON.stringify(data, null, 2);
-                    const content = btoa(unescape(encodeURIComponent(jsonString)));
-                    
-                    const requestBody = {
-                        message: 'Обновление данных рейтинга курсантов',
-                        content: content,
-                        branch: GITHUB_CONFIG.branch
-                    };
-                    
-                    if (sha) {
-                        requestBody.sha = sha;
-                    }
-                    
-                    console.log('📤 Отправка данных в GitHub...');
-                    
-                    const response = await fetch(url, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Content-Type': 'application/json',
-                            'X-GitHub-Api-Version': '2022-11-28',
-                            'Cache-Control': 'no-cache'
-                        },
-                        cache: 'no-store',
-                        body: JSON.stringify(requestBody)
-                    });
-                    
-                    console.log('📥 Ответ GitHub:', response.status, response.statusText);
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        console.log('✅ Данные сохранены в GitHub');
-                        console.log('📝 Commit:', result.commit.sha);
-                        return true;
-                    }
-                    
-                    // Обработка ошибок
-                    const errorData = await response.json().catch(() => ({}));
-                    
-                    if (response.status === 409) {
-                        console.warn(`⚠️ Конфликт (409): файл был изменён. Повторная попытка...`);
-                        // Небольшая случайная задержка для избежания синхронизации конфликтов
-                        await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
-                        continue;
-                    }
-                    
-                    if (response.status === 401) {
-                        throw new Error('Неверный токен GitHub. Проверьте настройки.');
-                    }
-                    if (response.status === 403) {
-                        throw new Error('Доступ запрещён. Проверьте права токена (должен быть repo).');
-                    }
-                    if (response.status === 404) {
-                        throw new Error('Репозиторий не найден. Проверьте имя владельца и репозитория.');
-                    }
-                    if (response.status === 422) {
-                        throw new Error('Ошибка валидации. ' + (errorData.message || ''));
-                    }
-                    
-                    throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
-                    
-                } catch (error) {
-                    if (attempt === maxRetries) {
-                        throw error;
-                    }
-                    console.warn(`⚠️ Попытка ${attempt} не удалась: ${error.message}. Повтор...`);
-                    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
-                }
+            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
+            
+            console.log('📡 Запись в GitHub...');
+            
+            // Получаем актуальный SHA файла
+            let sha = null;
+            const getResponse = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                },
+                cache: 'no-store'
+            });
+            
+            if (getResponse.ok) {
+                const existingData = await getResponse.json();
+                sha = existingData.sha;
+                console.log('📝 Файл существует, SHA:', sha.substring(0, 20) + '...');
+            } else if (getResponse.status !== 404) {
+                throw new Error(`Не удалось получить информацию о файле: ${getResponse.status}`);
             }
             
-            throw new Error('Все попытки сохранения исчерпаны. Попробуйте позже.');
+            // Формируем данные
+            const data = {
+                students: students,
+                categories: categories,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            const jsonString = JSON.stringify(data, null, 2);
+            const content = btoa(unescape(encodeURIComponent(jsonString)));
+            
+            const requestBody = {
+                message: 'Обновление данных рейтинга курсантов',
+                content: content,
+                branch: GITHUB_CONFIG.branch
+            };
+            
+            if (sha) {
+                requestBody.sha = sha;
+            }
+            
+            console.log('📤 Отправка данных в GitHub...');
+            
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                },
+                cache: 'no-store',
+                body: JSON.stringify(requestBody)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                console.log('✅ Данные сохранены в GitHub');
+                console.log('📝 Commit:', result.commit.sha.substring(0, 20) + '...');
+                return true;
+            }
+            
+            // Обработка ошибок
+            const errorData = await response.json().catch(() => ({}));
+            
+            if (response.status === 401) {
+                throw new Error('Неверный токен GitHub. Проверьте настройки.');
+            }
+            if (response.status === 403) {
+                throw new Error('Доступ запрещён. Проверьте права токена (должен быть repo).');
+            }
+            if (response.status === 404) {
+                throw new Error('Репозиторий не найден. Проверьте имя владельца и репозитория.');
+            }
+            if (response.status === 409) {
+                throw new Error('Конфликт версий. Файл был изменён. Попробуйте ещё раз.');
+            }
+            
+            throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
             
         } finally {
             isSaving = false;
@@ -1185,7 +1093,7 @@
                 if (success) {
                     hasChanges = false;
                     document.getElementById('saveBtn').style.display = 'none';
-                    showNotification('✅ Изменения сохранены в GitHub!');
+                    showNotification('✅ Изменения сохранены в data.json!');
                 } else {
                     showNotification('⚠️ Сохранено локально, но ошибка при сохранении в GitHub');
                 }
@@ -1198,10 +1106,6 @@
                         '❌ Ошибка при сохранении в GitHub:\n\n' + 
                         error.message + '\n\n' +
                         'Данные сохранены локально.\n\n' +
-                        'Возможные причины:\n' +
-                        '• Файл изменяется другим процессом\n' +
-                        '• Проблемы с интернет-соединением\n' +
-                        '• Ограничения GitHub API\n\n' +
                         'Нажмите "ОК" чтобы повторить попытку,\n' +
                         'или "Отмена" чтобы продолжить работу локально.'
                     );
@@ -1218,13 +1122,8 @@
         }
     }
     
-    // Синхронизация с GitHub (загрузка данных)
+    // Синхронизация с GitHub (загрузка данных из data.json)
     async function syncWithGitHub() {
-        if (!isGitHubConfigured()) {
-            alert('⚠️ GitHub не настроен. Пожалуйста, настройте синхронизацию в меню преподавателя.');
-            return;
-        }
-        
         // Защита от синхронизации во время сохранения
         if (isSaving) {
             alert('⚠️ Сохранение уже выполняется, подождите...');
@@ -1235,7 +1134,7 @@
         if (hasChanges) {
             const confirmSync = confirm(
                 '⚠️ У вас есть несохранённые изменения!\n\n' +
-                'Синхронизация перезапишет локальные данные данными из GitHub.\n\n' +
+                'Синхронизация перезапишет локальные данные данными из data.json.\n\n' +
                 'Рекомендуется сначала нажать "💾 Сохранить".\n\n' +
                 'Продолжить синхронизацию?'
             );
@@ -1245,47 +1144,22 @@
             }
         }
         
-        showNotification('🔄 Синхронизация с GitHub...');
+        showNotification('🔄 Загрузка данных из data.json...');
         
         try {
-            // Загружаем данные из GitHub
-            const githubData = await readFromGitHub();
+            // Загружаем данные из data.json
+            await loadDataFromJson();
             
-            if (githubData) {
-                if (githubData.students) {
-                    students = githubData.students.map(s => ensureStudent(s));
-                }
-                if (githubData.categories) {
-                    categories = DEFAULT_CATEGORIES.map(def => {
-                        const found = githubData.categories.find(l => l.key === def.key);
-                        if (found) return { ...def, maxTotal: found.maxTotal };
-                        return { ...def };
-                    });
-                }
-                saveToLocalStorage();
-                hasChanges = false;
-                document.getElementById('saveBtn').style.display = 'none';
-                renderAll();
-                showNotification('✅ Данные синхронизированы с GitHub!');
-            } else {
-                showNotification('ℹ️ Файл data.json не найден в репозитории.');
-                
-                const createFile = confirm(
-                    'Файл data.json не найден в репозитории.\n\n' +
-                    'Создать файл сейчас?'
-                );
-                
-                if (createFile) {
-                    await saveAllChanges();
-                }
-            }
+            hasChanges = false;
+            document.getElementById('saveBtn').style.display = 'none';
+            showNotification('✅ Данные синхронизированы!');
         } catch (error) {
             console.error('Ошибка синхронизации:', error);
             showNotification('❌ Ошибка: ' + error.message);
             
             // Показываем подробную информацию об ошибке
             setTimeout(() => {
-                alert('Ошибка при синхронизации с GitHub:\n\n' + error.message + '\n\nПроверьте:\n1. Правильность токена\n2. Права токена (должен быть repo)\n3. Имя владельца и репозитория\n4. Открыта ли консоль браузера (F12) для подробностей');
+                alert('Ошибка при синхронизации:\n\n' + error.message + '\n\nПроверьте:\n1. Существует ли файл data.json в репозитории\n2. Правильность URL сайта\n3. Открыта ли консоль браузера (F12) для подробностей');
             }, 100);
         }
     }
@@ -1355,7 +1229,8 @@
                     'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
                     'Accept': 'application/vnd.github.v3+json',
                     'X-GitHub-Api-Version': '2022-11-28'
-                }
+                },
+                cache: 'no-store'
             });
             
             if (!response.ok) {
@@ -1374,26 +1249,25 @@
             const repoData = await response.json();
             console.log('✅ Репозиторий найден:', repoData.full_name);
             
-            // Проверяем доступ к файлу
+            // Проверяем доступ к файлу data.json напрямую
             try {
-                const fileUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
-                const fileResponse = await fetch(fileUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'X-GitHub-Api-Version': '2022-11-28'
-                    }
+                const repoUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+                const dataUrl = repoUrl + '/data.json';
+                
+                console.log('📡 Проверка файла data.json:', dataUrl);
+                
+                const dataResponse = await fetch(dataUrl, {
+                    cache: 'no-store'
                 });
                 
-                if (fileResponse.ok) {
-                    console.log('✅ Файл data.json найден');
-                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\nФайл: ' + GITHUB_CONFIG.filePath + '\n\nМожете использовать синхронизацию.');
-                } else if (fileResponse.status === 404) {
+                if (dataResponse.ok) {
+                    console.log('✅ Файл data.json доступен');
+                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\nФайл: data.json\n\nМожете использовать синхронизацию.');
+                } else if (dataResponse.status === 404) {
                     console.log('⚠️ Файл data.json не найден');
-                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\n\n⚠️ Файл data.json не найден в репозитории.\n\nСоздайте файл data.json вручную или нажмите "💾 Сохранить" для его создания.');
+                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\n\n⚠️ Файл data.json не найден.\n\nСоздайте файл data.json в репозитории или нажмите "💾 Сохранить" для его создания.');
                 } else {
-                    throw new Error(`HTTP ${fileResponse.status}`);
+                    throw new Error(`HTTP ${dataResponse.status}`);
                 }
             } catch (fileError) {
                 console.warn('⚠️ Ошибка проверки файла:', fileError);
@@ -1448,12 +1322,60 @@
         }
     }
 
+    // Загрузка данных из файла data.json
+    async function loadDataFromJson() {
+        try {
+            console.log('📥 Загрузка данных из data.json...');
+            
+            // Получаем URL текущего репозитория
+            const repoUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+            const dataUrl = repoUrl + '/data.json';
+            
+            console.log('📡 URL для загрузки:', dataUrl);
+            
+            const response = await fetch(dataUrl, {
+                cache: 'no-store'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                
+                if (data.students) {
+                    students = data.students.map(s => ensureStudent(s));
+                    console.log('✅ Загружено курсантов:', students.length);
+                }
+                
+                if (data.categories) {
+                    categories = DEFAULT_CATEGORIES.map(def => {
+                        const found = data.categories.find(l => l.key === def.key);
+                        if (found) return { ...def, maxTotal: found.maxTotal };
+                        return { ...def };
+                    });
+                    console.log('✅ Загружено категорий:', categories.length);
+                }
+                
+                // Сохраняем в localStorage как резервную копию
+                saveToLocalStorage();
+                renderAll();
+                showNotification('✅ Данные загружены из data.json');
+            } else {
+                console.warn('⚠️ Не удалось загрузить data.json, используем localStorage');
+                loadFromLocalStorage();
+                renderAll();
+            }
+        } catch (error) {
+            console.error('❌ Ошибка загрузки data.json:', error);
+            console.log('📥 Используем данные из localStorage');
+            loadFromLocalStorage();
+            renderAll();
+        }
+    }
+
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    // Загружаем только конфигурацию GitHub, данные - только по кнопке "Синхронизация"
+    // Загружаем данные из data.json и конфигурацию GitHub
     loadGitHubConfig();
-    loadFromLocalStorage();
+    loadDataFromJson();
     updateAuthUI();
-    renderAll();
     </script>
 </body>
 </html>
