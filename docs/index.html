@@ -1337,29 +1337,29 @@
             const repoData = await response.json();
             console.log('✅ Репозиторий найден:', repoData.full_name);
             
-            // Проверяем доступ к файлу data.json напрямую
+            // Проверяем доступ к файлу kursanty.json напрямую
             try {
                 const repoUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-                const dataUrl = repoUrl + '/data.json';
+                const dataUrl = repoUrl + '/kursanty.json';
                 
-                console.log('📡 Проверка файла data.json:', dataUrl);
+                console.log('📡 Проверка файла kursanty.json:', dataUrl);
                 
                 const dataResponse = await fetch(dataUrl, {
                     cache: 'no-store'
                 });
                 
                 if (dataResponse.ok) {
-                    console.log('✅ Файл data.json доступен');
-                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\nФайл: data.json\n\nМожете использовать синхронизацию.');
+                    console.log('✅ Файл kursanty.json доступен');
+                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\nФайл: kursanty.json\n\nМожете использовать синхронизацию.');
                 } else if (dataResponse.status === 404) {
-                    console.log('⚠️ Файл data.json не найден');
-                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\n\n⚠️ Файл data.json не найден.\n\nСоздайте файл data.json в репозитории или нажмите "💾 Сохранить" для его создания.');
+                    console.log('⚠️ Файл kursanty.json не найден');
+                    alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\n\n⚠️ Файл kursanty.json не найден.\n\nСоздайте файл docs/kursanty.json в репозитории или нажмите "💾 Сохранить" для его создания.');
                 } else {
                     throw new Error(`HTTP ${dataResponse.status}`);
                 }
             } catch (fileError) {
                 console.warn('⚠️ Ошибка проверки файла:', fileError);
-                alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\n\n⚠️ Не удалось проверить файл data.json, но это не критично.');
+                alert('✅ Соединение с GitHub работает!\n\nРепозиторий: ' + repoData.full_name + '\n\n⚠️ Не удалось проверить файл kursanty.json, но это не критично.');
             }
             
             showNotification('✅ Соединение с GitHub работает!');
