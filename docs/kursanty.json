@@ -2,19 +2,755 @@
   "kursanty": [
     {
       "id": 1,
-      "fullName": "",
-      "group": "1 взвод",
+      "fullName": "Алтынаманова Даниэла Динисламовна",
+      "group": "Взвод 1",
       "notes": 0,
       "practice": 0,
       "reports": 0,
       "bonus": 0,
       "testing": 0,
-      "notesGrades": {"3": 0, "4": 0, "5": 0},
-      "practiceGrades": {"3": 0, "4": 0, "5": 0},
-      "reportsGrades": {"3": 0, "4": 0, "5": 0},
-      "testingGrades": {"3": 0, "4": 0, "5": 0}
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 2,
+      "fullName": "Безьянова Татьяна Дмитриевна\r",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 3,
+      "fullName": "Бутурлина Эвелина Александровна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 4,
+      "fullName": "Габдуллина Марина Даниэлевна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 5,
+      "fullName": "Гайтус Ангелина Андреевна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 6,
+      "fullName": "Залян Саркис Суренович",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 7,
+      "fullName": "Иманов Ратмир Рустамович",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 8,
+      "fullName": "Карасева Полина Денисовна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 9,
+      "fullName": "Колесников Кирилл Андреевич",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 10,
+      "fullName": "Коньков Сергей Романович",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 11,
+      "fullName": "Кочаева Анастасия Владимировна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 12,
+      "fullName": "Лапшинов Матвей Сергеевич",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 13,
+      "fullName": "Лелюшкина Арина Александровна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 14,
+      "fullName": "Лисова Злата Олеговна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 15,
+      "fullName": "Ондар Тамир Чаяанович",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 16,
+      "fullName": "Синяев Артём Андреевич",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 17,
+      "fullName": "Слетнева Татьяна Андреевна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 18,
+      "fullName": "Соловьева Анастасия Валерьевна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 19,
+      "fullName": "Тружников Дмитрий Андреевич",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 20,
+      "fullName": "Утаргазиева Гульмира Биктымбаевна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 21,
+      "fullName": "Федянина Кристина Михайловна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 22,
+      "fullName": "Чепурнова Анастасия Дмитриевна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 23,
+      "fullName": "Чижова Оксана Васильевна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 24,
+      "fullName": "Шаронова Анастасия Павловна",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    },
+    {
+      "id": 25,
+      "fullName": "Щербаков Кирилл Андреевич",
+      "group": "Взвод 1",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "practiceGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "reportsGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "testingGrades": {
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
     }
   ],
-  "lastUpdated": "",
+  "lastUpdated": "2026-10-05T17:48:52.411Z",
   "version": "1.0"
 }
