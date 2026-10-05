@@ -1346,11 +1346,19 @@
         }
     }
     
+    // Сохранение в Firebase (заглушка - Firebase не используется)
+    function saveToFirebase() {
+        // Firebase не настроен, сохраняем только в localStorage и GitHub
+        console.log('ℹ️ Firebase не используется, сохраняем в localStorage');
+        saveToLocalStorage();
+    }
+    
     // Резервное сохранение в localStorage
     function saveToLocalStorage() {
         try {
             localStorage.setItem('rating_students', JSON.stringify(students));
             localStorage.setItem('rating_categories', JSON.stringify(categories));
+            console.log('✅ Данные сохранены в localStorage');
         } catch (e) {
             console.error('Ошибка сохранения в localStorage:', e);
         }
