@@ -86,7 +86,7 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
     }
   };
 
-  const total = formData.notes + formData.practice + formData.reports + formData.bonus;
+  const total = formData.notes + formData.practice + formData.reports + formData.bonus + formData.testing;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -326,6 +326,80 @@ export default function ScoreModal({ student, categories, onSave, onClose }: Sco
                       </button>
                       <button
                         onClick={() => setFormData({ ...formData, reportsGrades: { '3': 0, '4': 0, '5': 0 }, reports: 0 })}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                      >
+                        Сбросить все
+                      </button>
+                    </div>
+                  </div>
+                ) : cat.key === 'testing' ? (
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-600">
+                      Оценки за тестирование: <strong>{formData.testing}</strong> баллов
+                    </p>
+                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                      <div className="grid grid-cols-3 gap-2 text-center text-sm">
+                        <div>
+                          <div className="font-bold text-yellow-600">{formData.testingGrades['3']}</div>
+                          <div className="text-xs text-gray-500">оценки «3»</div>
+                          <div className="text-xs text-gray-400">× 3 балла</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-blue-600">{formData.testingGrades['4']}</div>
+                          <div className="text-xs text-gray-500">оценки «4»</div>
+                          <div className="text-xs text-gray-400">× 7 баллов</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-green-600">{formData.testingGrades['5']}</div>
+                          <div className="text-xs text-gray-500">оценки «5»</div>
+                          <div className="text-xs text-gray-400">× 10 баллов</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleAddTestingGrade('3')}
+                        className="px-4 py-2.5 bg-yellow-100 text-yellow-700 rounded-xl font-medium hover:bg-yellow-200 transition-colors"
+                      >
+                        + Оценка «3» (3б)
+                      </button>
+                      <button
+                        onClick={() => handleAddTestingGrade('4')}
+                        className="px-4 py-2.5 bg-blue-100 text-blue-700 rounded-xl font-medium hover:bg-blue-200 transition-colors"
+                      >
+                        + Оценка «4» (7б)
+                      </button>
+                      <button
+                        onClick={() => handleAddTestingGrade('5')}
+                        className="px-4 py-2.5 bg-green-100 text-green-700 rounded-xl font-medium hover:bg-green-200 transition-colors"
+                      >
+                        + Оценка «5» (10б)
+                      </button>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleRemoveTestingGrade('3')}
+                        disabled={formData.testingGrades['3'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «3»
+                      </button>
+                      <button
+                        onClick={() => handleRemoveTestingGrade('4')}
+                        disabled={formData.testingGrades['4'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «4»
+                      </button>
+                      <button
+                        onClick={() => handleRemoveTestingGrade('5')}
+                        disabled={formData.testingGrades['5'] === 0}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        − «5»
+                      </button>
+                      <button
+                        onClick={() => setFormData({ ...formData, testingGrades: { '3': 0, '4': 0, '5': 0 }, testing: 0 })}
                         className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
                       >
                         Сбросить все

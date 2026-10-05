@@ -52,6 +52,50 @@ function App() {
     }
     return demoStudents;
   });
+
+  // Функция экспорта данных в JSON файл
+  const handleExportData = () => {
+    const data = {
+      students,
+      categories,
+      exportDate: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rating-data-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // Функция импорта данных из JSON файла
+  const handleImportData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
+        if (data.students && Array.isArray(data.students)) {
+          setStudents(data.students.map((s: any) => ensureStudentFields(s)));
+          if (data.categories && Array.isArray(data.categories)) {
+            setCategories(data.categories);
+          }
+          alert('Данные успешно импортированы!');
+        } else {
+          alert('Ошибка: неверный формат файла');
+        }
+      } catch (error) {
+        alert('Ошибка при чтении файла: ' + (error as Error).message);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = ''; // Сброс input для возможности повторного импорта
+  };
   const [categories, setCategories] = useState<CategoryConfig[]>(() => {
     const saved = localStorage.getItem('categories');
     return saved ? JSON.parse(saved) : defaultCategories;
@@ -237,6 +281,21 @@ function App() {
                   >
                     📥 Импорт
                   </button>
+                  <button
+                    onClick={handleExportData}
+                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
+                  >
+                    💾 Экспорт данных
+                  </button>
+                  <label className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2 cursor-pointer">
+                    📂 Импорт данных
+                    <input
+                      type="file"
+                      accept=".json"
+                      onChange={handleImportData}
+                      className="hidden"
+                    />
+                  </label>
                   <button
                     onClick={() => {
                       const maxId = students.reduce((max, s) => Math.max(max, s.id), 0);
@@ -499,9 +558,22 @@ function TeacherInstructions() {
           появится кнопка <strong>«💾 Сохранить изменения»</strong>. 
           Нажмите её для сохранения всех данных в браузере.
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 mb-3">
           Данные сохраняются локально в браузере и будут доступны при следующем входе.
         </p>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+          <h4 className="font-semibold text-blue-900 mb-2">🔄 Работа на разных компьютерах</h4>
+          <p className="text-sm text-blue-800 mb-2">
+            Для переноса данных между компьютерами используйте функции экспорта/импорта:
+          </p>
+          <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
+            <li><strong>💾 Экспорт данных</strong> — сохраняет все данные (студенты, категории, баллы) в JSON файл</li>
+            <li><strong>📂 Импорт данных</strong> — загружает данные из ранее сохраненного JSON файла</li>
+          </ul>
+          <p className="text-sm text-blue-800 mt-2">
+            Это позволяет работать с рейтингом на разных компьютерах, сохраняя и загружая данные через JSON файл.
+          </p>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6">

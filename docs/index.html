@@ -201,6 +201,11 @@
                     <div class="toolbar-actions hidden" id="teacherActions">
                         <button class="btn btn-secondary" onclick="toggleWeights()">⚖️ Веса категорий</button>
                         <button class="btn btn-secondary" onclick="toggleImport()">📥 Импорт</button>
+                        <button class="btn btn-secondary" onclick="exportData()">💾 Экспорт данных</button>
+                        <label class="btn btn-secondary" style="cursor:pointer">
+                            📂 Импорт данных
+                            <input type="file" accept=".json" onchange="importData(event)" style="display:none">
+                        </label>
                         <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
                         <button class="btn btn-danger" onclick="clearAll()" id="clearBtn">🗑️ Очистить</button>
                         <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить изменения</button>
@@ -350,11 +355,10 @@
         // Процентная шкала от максимума (без учета бонусов)
         const maxTotal = getMaxTotal();
         const pct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
-        const pctText = `(${Math.round(pct)}%)`;
-        if (pct >= 90) return { text:`Отлично ${pctText}`, cls:'grade-excellent' };
-        if (pct >= 75) return { text:`Хорошо ${pctText}`, cls:'grade-good' };
-        if (pct >= 60) return { text:`Удовлетворительно ${pctText}`, cls:'grade-satisfactory' };
-        return { text:`Неудовлетворительно ${pctText}`, cls:'grade-fail' };
+        if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
+        if (pct >= 75) return { text:'Хорошо', cls:'grade-good' };
+        if (pct >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
+        return { text:'Неудовлетворительно', cls:'grade-fail' };
     }
     function getGroups() { return [...new Set(students.map(s => s.group))].sort(); }
 
@@ -442,7 +446,8 @@
             const grade = getGrade(total);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
             activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
-            html += `<td class="center"><span class="total-score">${total}</span></td>`;
+            const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
+            html += `<td class="center"><span class="total-score">${total} (${pct}%)</span></td>`;
             html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
             if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
             html += `</tr>`;
@@ -482,7 +487,8 @@
             const grade = getGrade(total);
             html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
             activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
-            html += `<td class="center"><span class="total-score">${total}</span></td>`;
+            const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
+            html += `<td class="center"><span class="total-score">${total} (${pct}%)</span></td>`;
             html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
             if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
             html += `</tr>`;
@@ -513,8 +519,9 @@
 
 Или CSV:
 Иванов Иван Сергеевич;ИТ-201</pre></div>`;
-            html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p style="font-size:0.875rem;color:#4b5563">Нажмите «Баллы» рядом с именем студента. Выберите критерий и введите оценку:</p><ul style="list-style:none;margin-top:8px"><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — 2 балла за конспект лекции</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — оценка 3→3б, 4→7б, 5→10б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — оценка 3→3б, 4→6б, 5→8б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li></ul></div>`;
+            html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p style="font-size:0.875rem;color:#4b5563">Нажмите «Баллы» рядом с именем студента. Выберите критерий и введите оценку:</p><ul style="list-style:none;margin-top:8px"><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — оценка 3→3б, 4→7б, 5→10б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Тестирование</strong> — оценка 3→3б, 4→7б, 5→10б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — 2 балла за конспект лекции (дополнительные баллы)</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — оценка 3→3б, 4→6б, 5→8б (дополнительные баллы)</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li></ul></div>`;
             html += `<div class="teacher-section"><h3>⚖️ Веса категорий</h3><p style="font-size:0.875rem;color:#4b5563">Настройте максимальное количество баллов по каждой категории.</p><p style="font-size:0.875rem;color:#4b5563;margin-top:8px">Итоговая оценка рассчитывается как процент от суммы максимумов основных категорий (без учета дополнительных баллов):</p><ul style="font-size:0.875rem;color:#4b5563;margin-top:4px;margin-left:16px;list-style:disc"><li>Отлично ≥90% от максимума</li><li>Хорошо 75-89% от максимума</li><li>Удовлетворительно 60-74% от максимума</li><li>Неудовлетворительно &lt;60% от максимума</li></ul><p style="font-size:0.875rem;color:#4b5563;margin-top:8px">Дополнительные баллы добавляются к общему итогу, но не влияют на процентную шкалу.</p></div>`;
+            html += `<div class="teacher-section"><h3>💾 Экспорт/Импорт данных</h3><p style="font-size:0.875rem;color:#4b5563">Для работы на разных компьютерах используйте функции экспорта/импорта:</p><ul style="font-size:0.875rem;color:#4b5563;margin-top:8px;list-style:none"><li style="padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>💾 Экспорт данных</strong> — сохраняет все данные (студенты, категории, баллы) в JSON файл</li><li style="padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>📂 Импорт данных</strong> — загружает данные из ранее сохраненного JSON файла</li></ul><p style="font-size:0.875rem;color:#4b5563;margin-top:8px">Это позволяет работать с рейтингом на разных компьютерах, сохраняя и загружая данные через JSON файл.</p></div>`;
             container.innerHTML = html;
         } else {
             let html = `<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе. Оценка выставляется автоматически на основе набранных баллов.</p></div>`;
@@ -537,9 +544,10 @@
             html += `<p style="font-size:0.85rem;color:#6b7280;margin-top:16px;font-style:italic">* Дополнительные баллы добавляются к общему итогу, но не учитываются в максимальном количестве баллов</p>`;
             html += `</div></div>`;
             html += `<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>`;
-            html += `<li>Регулярно посещайте занятия и ведите конспекты — 2 балла за каждый конспект</li>`;
             html += `<li>Своевременно защищайте практические работы — оценки 3, 4, 5 дают соответствующие баллы</li>`;
-            html += `<li>Подготовьте и выступите с докладами — оценки 3, 4, 5 дают соответствующие баллы</li>`;
+            html += `<li>Успешно проходите тестирование — оценки 3, 4, 5 дают соответствующие баллы</li>`;
+            html += `<li>Регулярно посещайте занятия и ведите конспекты — 2 балла за каждый конспект (дополнительные баллы)</li>`;
+            html += `<li>Подготовьте и выступите с докладами — оценки 3, 4, 5 дают соответствующие баллы (дополнительные баллы)</li>`;
             html += `<li>Проявляйте активность — преподаватель может начислить дополнительные баллы</li>`;
             html += `</ul></div>`;
             html += `<div class="info-box"><h3>⚠️ Важная информация</h3><ul><li>Студенты с результатом менее 60% допускаются к пересдаче</li><li>Баллы начисляются накопительно в течение семестра</li><li>Отслеживайте свой рейтинг на данной странице</li><li>По вопросам начисления баллов обращайтесь к преподавателю</li><li>Максимальные баллы по категориям устанавливает преподаватель</li></ul></div>`;
@@ -689,7 +697,11 @@
         } else if (cat.useGrades && cat.gradeMapping) {
             const gradesKey = cat.key + 'Grades';
             const grades = modalFormData[gradesKey];
-            const calcFn = cat.key === 'practice' ? calcPracticeScore : calcReportsScore;
+            let calcFn;
+            if (cat.key === 'practice') calcFn = calcPracticeScore;
+            else if (cat.key === 'reports') calcFn = calcReportsScore;
+            else if (cat.key === 'testing') calcFn = calcTestingScore;
+            else return;
             
             body += `<div style="background:#f9fafb;border-radius:8px;padding:12px;margin:12px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:0.85rem">`;
             body += `<div><div style="font-weight:700;color:#ca8a04">${grades['3']}</div><div style="font-size:0.7rem;color:#6b7280">оценки «3»</div><div style="font-size:0.7rem;color:#9ca3af">× ${cat.gradeMapping.grade3}б</div></div>`;
@@ -794,6 +806,63 @@
         closeScoreModal();
         renderAll();
     }
+    // Экспорт данных в JSON файл
+    function exportData() {
+        const data = {
+            students: students,
+            categories: categories,
+            exportDate: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `rating-data-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Импорт данных из JSON файла
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.students && Array.isArray(data.students)) {
+                    students = data.students.map(s => ({
+                        ...s,
+                        notes: s.notes || 0,
+                        practice: s.practice || 0,
+                        reports: s.reports || 0,
+                        bonus: s.bonus || 0,
+                        testing: s.testing || 0,
+                        notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
+                        practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
+                        reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0},
+                        testingGrades: s.testingGrades || {'3':0,'4':0,'5':0}
+                    }));
+                    if (data.categories && Array.isArray(data.categories)) {
+                        categories = data.categories;
+                    }
+                    markAsChanged();
+                    renderAll();
+                    alert('Данные успешно импортированы!');
+                } else {
+                    alert('Ошибка: неверный формат файла');
+                }
+            } catch (error) {
+                alert('Ошибка при чтении файла: ' + error.message);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; // Сброс input для возможности повторного импорта
+    }
+
     function clearAll() {
         if (confirm('Удалить всех студентов?')) { 
             students = []; 

@@ -139,15 +139,19 @@ export default function StudentInstructions({ categories }: StudentInstructionsP
         <ul className="space-y-2 text-sm text-amber-800">
           <li className="flex items-start gap-2">
             <span className="text-amber-500 mt-0.5">•</span>
-            <span>Регулярно посещайте занятия и ведите конспекты — 2 балла за каждый конспект</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-amber-500 mt-0.5">•</span>
             <span>Своевременно выполняйте и защищайте практические работы — оценки 3, 4, 5 дают соответствующие баллы</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-amber-500 mt-0.5">•</span>
-            <span>Подготовьте и выступите с докладами по темам курса — оценки 3, 4, 5 дают соответствующие баллы</span>
+            <span>Успешно проходите тестирование — оценки 3, 4, 5 дают соответствующие баллы</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-amber-500 mt-0.5">•</span>
+            <span>Регулярно посещайте занятия и ведите конспекты — 2 балла за каждый конспект (дополнительные баллы)</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-amber-500 mt-0.5">•</span>
+            <span>Подготовьте и выступите с докладами по темам курса — оценки 3, 4, 5 дают соответствующие баллы (дополнительные баллы)</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-amber-500 mt-0.5">•</span>
