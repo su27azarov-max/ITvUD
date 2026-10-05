@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Диагностика синхронизации GitHub</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #eef2ff 100%);
+            min-height: 100vh;
+        }
+        h1 {
+            color: #4f46e5;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #1f2937;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .test-result {
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .test-pass {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        .test-fail {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #dc2626;
+        }
+        .test-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+        .test-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+        button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        pre {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85em;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-ok {
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+        .status-error {
+            background: #dc2626;
+            box-shadow: 0 0 8px #dc2626;
+        }
+        .status-warning {
+            background: #f59e0b;
+            box-shadow: 0 0 8px #f59e0b;
+        }
+        .summary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .summary h2 {
+            margin-top: 0;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Диагностика синхронизации GitHub</h1>
+    
+    <div class="summary">
+        <h2>📊 Общая проверка</h2>
+        <p>Эта страница поможет диагностировать проблемы с синхронизацией данных через GitHub API.</p>
+        <button onclick="runFullDiagnostics()">🚀 Запустить полную диагностику</button>
+    </div>
+
+    <div class="test-section">
+        <h2><span class="status-indicator" id="status-config"></span>1. Проверка конфигурации GitHub</h2>
+        <button onclick="testGitHubConfig()">Проверить конфигурацию</button>
+        <div id="test-config-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2><span class="status-indicator" id="status-connection"></span>2. Проверка соединения с GitHub</h2>
+        <button onclick="testGitHubConnection()">Проверить соединение</button>
+        <div id="test-connection-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2><span class="status-indicator" id="status-file"></span>3. Проверка файла data.json</h2>
+        <button onclick="testGitHubFile()">Проверить файл</button>
+        <div id="test-file-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2><span class="status-indicator" id="status-read"></span>4. Тест чтения данных</h2>
+        <button onclick="testReadData()">Тестировать чтение</button>
+        <div id="test-read-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2><span class="status-indicator" id="status-write"></span>5. Тест записи данных</h2>
+        <button onclick="testWriteData()" class="btn-danger">Тестировать запись</button>
+        <div id="test-write-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2><span class="status-indicator" id="status-local"></span>6. Проверка localStorage</h2>
+        <button onclick="testLocalStorage()">Проверить localStorage</button>
+        <button onclick="clearLocalStorage()" class="btn-danger">Очистить localStorage</button>
+        <div id="test-local-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🛠️ Быстрые действия</h2>
+        <button onclick="forceSync()" class="btn-success">🔄 Принудительная синхронизация</button>
+        <button onclick="exportCurrentData()">💾 Экспорт текущих данных</button>
+        <button onclick="showGitHubSettings()">⚙️ Открыть настройки GitHub</button>
+    </div>
+
+    <script>
+        // Загружаем данные из основного файла
+        const script = document.createElement('script');
+        script.src = 'index.html';
+        document.head.appendChild(script);
+
+        // Устанавливаем статус
+        function setStatus(elementId, status) {
+            const element = document.getElementById(elementId);
+            element.className = 'status-indicator status-' + status;
+        }
+
+        // Тест 1: Проверка конфигурации
+        function testGitHubConfig() {
+            const resultDiv = document.getElementById('test-config-result');
+            let html = '';
+            
+            try {
+                const configStr = localStorage.getItem('github_config');
+                
+                if (!configStr) {
+                    html += '<div class="test-result test-fail">❌ Конфигурация GitHub не найдена в localStorage</div>';
+                    setStatus('status-config', 'error');
+                } else {
+                    const config = JSON.parse(configStr);
+                    html += '<div class="test-result test-pass">✅ Конфигурация найдена</div>';
+                    
+                    // Проверка полей
+                    const fields = ['owner', 'repo', 'token', 'filePath', 'branch'];
+                    let allFieldsPresent = true;
+                    
+                    fields.forEach(field => {
+                        if (config[field]) {
+                            if (field === 'token') {
+                                html += `<div class="test-result test-pass">✅ ${field}: ${config[field].substring(0, 10)}... (длина: ${config[field].length})</div>`;
+                            } else {
+                                html += `<div class="test-result test-pass">✅ ${field}: ${config[field]}</div>`;
+                            }
+                        } else {
+                            html += `<div class="test-result test-fail">❌ ${field}: не указано</div>`;
+                            allFieldsPresent = false;
+                        }
+                    });
+                    
+                    // Проверка формата токена
+                    if (config.token) {
+                        if (config.token.startsWith('ghp_') || config.token.startsWith('github_pat_')) {
+                            html += '<div class="test-result test-pass">✅ Токен имеет правильный формат</div>';
+                        } else {
+                            html += '<div class="test-result test-warning">⚠️ Токен должен начинаться с "ghp_" или "github_pat_"</div>';
+                        }
+                    }
+                    
+                    if (allFieldsPresent) {
+                        setStatus('status-config', 'ok');
+                    } else {
+                        setStatus('status-config', 'error');
+                    }
+                }
+            } catch (error) {
+                html += `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+                setStatus('status-config', 'error');
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 2: Проверка соединения
+        async function testGitHubConnection() {
+            const resultDiv = document.getElementById('test-connection-result');
+            let html = '';
+            
+            try {
+                const config = JSON.parse(localStorage.getItem('github_config'));
+                
+                if (!config || !config.owner || !config.repo || !config.token) {
+                    html += '<div class="test-result test-fail">❌ GitHub не настроен</div>';
+                    setStatus('status-connection', 'error');
+                    resultDiv.innerHTML = html;
+                    return;
+                }
+                
+                html += '<div class="test-result test-info">⏳ Проверка соединения...</div>';
+                resultDiv.innerHTML = html;
+                
+                const url = `https://api.github.com/repos/${config.owner}/${config.repo}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${config.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                });
+                
+                if (response.ok) {
+                    const repoData = await response.json();
+                    html = '<div class="test-result test-pass">✅ Соединение работает!</div>';
+                    html += `<div class="test-result test-info">Репозиторий: ${repoData.full_name}</div>`;
+                    html += `<div class="test-result test-info">Описание: ${repoData.description || 'не указано'}</div>`;
+                    html += `<div class="test-result test-info">Приватность: ${repoData.private ? 'приватный' : 'публичный'}</div>`;
+                    setStatus('status-connection', 'ok');
+                } else {
+                    if (response.status === 401) {
+                        html = '<div class="test-result test-fail">❌ Неверный токен</div>';
+                    } else if (response.status === 403) {
+                        html = '<div class="test-result test-fail">❌ Доступ запрещён. Проверьте права токена</div>';
+                    } else if (response.status === 404) {
+                        html = '<div class="test-result test-fail">❌ Репозиторий не найден</div>';
+                    } else {
+                        html = `<div class="test-result test-fail">❌ Ошибка: ${response.status} ${response.statusText}</div>`;
+                    }
+                    setStatus('status-connection', 'error');
+                }
+            } catch (error) {
+                html = `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+                setStatus('status-connection', 'error');
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 3: Проверка файла
+        async function testGitHubFile() {
+            const resultDiv = document.getElementById('test-file-result');
+            let html = '';
+            
+            try {
+                const config = JSON.parse(localStorage.getItem('github_config'));
+                
+                if (!config || !config.owner || !config.repo || !config.token) {
+                    html += '<div class="test-result test-fail">❌ GitHub не настроен</div>';
+                    setStatus('status-file', 'error');
+                    resultDiv.innerHTML = html;
+                    return;
+                }
+                
+                html += '<div class="test-result test-info">⏳ Проверка файла...</div>';
+                resultDiv.innerHTML = html;
+                
+                const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.filePath || 'data.json'}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${config.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const fileData = await response.json();
+                    html = '<div class="test-result test-pass">✅ Файл найден!</div>';
+                    html += `<div class="test-result test-info">Путь: ${fileData.path}</div>`;
+                    html += `<div class="test-result test-info">Размер: ${fileData.size} байт</div>`;
+                    html += `<div class="test-result test-info">SHA: ${fileData.sha}</div>`;
+                    html += `<div class="test-result test-info">Последнее обновление: ${new Date(fileData.sha).toLocaleString()}</div>`;
+                    setStatus('status-file', 'ok');
+                } else if (response.status === 404) {
+                    html = '<div class="test-result test-warning">⚠️ Файл data.json не найден в репозитории</div>';
+                    html += '<div class="test-result test-info">💡 Создайте файл вручную или нажмите "💾 Сохранить" в приложении</div>';
+                    setStatus('status-file', 'warning');
+                } else {
+                    html = `<div class="test-result test-fail">❌ Ошибка: ${response.status} ${response.statusText}</div>`;
+                    setStatus('status-file', 'error');
+                }
+            } catch (error) {
+                html = `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+                setStatus('status-file', 'error');
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 4: Чтение данных
+        async function testReadData() {
+            const resultDiv = document.getElementById('test-read-result');
+            let html = '';
+            
+            try {
+                if (typeof readFromGitHub === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция readFromGitHub не определена</div>';
+                    setStatus('status-read', 'error');
+                    resultDiv.innerHTML = html;
+                    return;
+                }
+                
+                html += '<div class="test-result test-info">⏳ Чтение данных из GitHub...</div>';
+                resultDiv.innerHTML = html;
+                
+                const data = await readFromGitHub();
+                
+                if (data) {
+                    html = '<div class="test-result test-pass">✅ Данные успешно прочитаны!</div>';
+                    html += `<div class="test-result test-info">Курсантов: ${data.students ? data.students.length : 0}</div>`;
+                    html += `<div class="test-result test-info">Категорий: ${data.categories ? data.categories.length : 0}</div>`;
+                    html += `<div class="test-result test-info">Последнее обновление: ${data.lastUpdated || 'не указано'}</div>`;
+                    setStatus('status-read', 'ok');
+                } else {
+                    html = '<div class="test-result test-warning">⚠️ Данные не найдены в GitHub</div>';
+                    setStatus('status-read', 'warning');
+                }
+            } catch (error) {
+                html = `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+                setStatus('status-read', 'error');
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 5: Запись данных
+        async function testWriteData() {
+            const resultDiv = document.getElementById('test-write-result');
+            let html = '';
+            
+            if (!confirm('⚠️ Это запишет тестовые данные в GitHub. Продолжить?')) {
+                return;
+            }
+            
+            try {
+                if (typeof writeToGitHub === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция writeToGitHub не определена</div>';
+                    setStatus('status-write', 'error');
+                    resultDiv.innerHTML = html;
+                    return;
+                }
+                
+                html += '<div class="test-result test-info">⏳ Запись тестовых данных в GitHub...</div>';
+                resultDiv.innerHTML = html;
+                
+                // Сохраняем текущие данные
+                const backupStudents = JSON.stringify(students);
+                const backupCategories = JSON.stringify(categories);
+                
+                // Создаём тестовые данные
+                students = [{
+                    id: 999,
+                    fullName: 'ТЕСТОВЫЙ КУРСАНТ',
+                    group: 'ТЕСТ-001',
+                    notes: 0,
+                    practice: 0,
+                    reports: 0,
+                    bonus: 0,
+                    testing: 0,
+                    notesGrades: {'3':0,'4':0,'5':0},
+                    practiceGrades: {'3':0,'4':0,'5':0},
+                    reportsGrades: {'3':0,'4':0,'5':0},
+                    testingGrades: {'3':0,'4':0,'5':0}
+                }];
+                
+                const success = await writeToGitHub();
+                
+                // Восстанавливаем данные
+                students = JSON.parse(backupStudents);
+                categories = JSON.parse(backupCategories);
+                
+                if (success) {
+                    html = '<div class="test-result test-pass">✅ Тестовые данные успешно записаны!</div>';
+                    html += '<div class="test-result test-info">💡 Проверьте репозиторий на GitHub - должен появиться курсант "ТЕСТОВЫЙ КУРСАНТ"</div>';
+                    html += '<div class="test-result test-warning">⚠️ Не забудьте удалить тестовые данные на GitHub или перезаписать их реальными данными</div>';
+                    setStatus('status-write', 'ok');
+                } else {
+                    html = '<div class="test-result test-fail">❌ Не удалось записать данные</div>';
+                    setStatus('status-write', 'error');
+                }
+            } catch (error) {
+                html = `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+                setStatus('status-write', 'error');
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 6: localStorage
+        function testLocalStorage() {
+            const resultDiv = document.getElementById('test-local-result');
+            let html = '';
+            
+            try {
+                const studentsData = localStorage.getItem('rating_students');
+                const categoriesData = localStorage.getItem('rating_categories');
+                const githubConfig = localStorage.getItem('github_config');
+                
+                if (studentsData) {
+                    const students = JSON.parse(studentsData);
+                    html += `<div class="test-result test-pass">✅ Курсанты в localStorage: ${students.length}</div>`;
+                } else {
+                    html += '<div class="test-result test-warning">⚠️ Курсанты не найдены в localStorage</div>';
+                }
+                
+                if (categoriesData) {
+                    const categories = JSON.parse(categoriesData);
+                    html += `<div class="test-result test-pass">✅ Категории в localStorage: ${categories.length}</div>`;
+                } else {
+                    html += '<div class="test-result test-warning">⚠️ Категории не найдены в localStorage</div>';
+                }
+                
+                if (githubConfig) {
+                    html += '<div class="test-result test-pass">✅ Конфигурация GitHub в localStorage</div>';
+                } else {
+                    html += '<div class="test-result test-warning">⚠️ Конфигурация GitHub не найдена в localStorage</div>';
+                }
+                
+                setStatus('status-local', 'ok');
+            } catch (error) {
+                html = `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+                setStatus('status-local', 'error');
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Очистка localStorage
+        function clearLocalStorage() {
+            if (confirm('⚠️ Это удалит все данные из localStorage. Продолжить?')) {
+                localStorage.clear();
+                alert('✅ localStorage очищен');
+                location.reload();
+            }
+        }
+
+        // Принудительная синхронизация
+        async function forceSync() {
+            if (typeof syncWithGitHub !== 'undefined') {
+                await syncWithGitHub();
+            } else {
+                alert('❌ Функция syncWithGitHub не определена');
+            }
+        }
+
+        // Экспорт данных
+        function exportCurrentData() {
+            if (typeof exportData !== 'undefined') {
+                exportData();
+            } else {
+                alert('❌ Функция exportData не определена');
+            }
+        }
+
+        // Открыть настройки GitHub
+        function showGitHubSettings() {
+            if (typeof openGitHubSettings !== 'undefined') {
+                openGitHubSettings();
+            } else {
+                alert('❌ Функция openGitHubSettings не определена');
+            }
+        }
+
+        // Полная диагностика
+        async function runFullDiagnostics() {
+            testGitHubConfig();
+            await testGitHubConnection();
+            await testGitHubFile();
+            await testReadData();
+            testLocalStorage();
+            
+            alert('✅ Диагностика завершена! Проверьте результаты выше.');
+        }
+
+        // Автоматическая проверка при загрузке
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('Страница диагностики загружена');
+                console.log('Проверка доступности функций...');
+                console.log('- students:', typeof students);
+                console.log('- categories:', typeof categories);
+                console.log('- readFromGitHub:', typeof readFromGitHub);
+                console.log('- writeToGitHub:', typeof writeToGitHub);
+                console.log('- syncWithGitHub:', typeof syncWithGitHub);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

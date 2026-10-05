@@ -879,16 +879,7 @@
         if (btn) btn.style.display = '';
     }
 
-    function saveAllChanges() {
-        try {
-            saveToFirebase();
-            hasChanges = false;
-            document.getElementById('saveBtn').style.display = 'none';
-            showNotification('✅ Изменения сохранены в облако!');
-        } catch (e) {
-            showNotification('❌ Ошибка: ' + e.message);
-        }
-    }
+    // Функция saveAllChanges() определена ниже в разделе GitHub API
 
     function showNotification(msg) {
         const n = document.createElement('div');
