@@ -174,9 +174,9 @@
                     🚪 <span>Выйти</span>
                 </button>
                 <div class="header-stats">
-                    <div class="stat-item"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Студентов</div></div>
+                    <div class="stat-item"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Курсантов</div></div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Групп</div></div>
+                    <div class="stat-item"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Взводов</div></div>
                     <div class="stat-divider"></div>
                     <div class="stat-item"><div class="stat-value" id="avgRating">0</div><div class="stat-label">Ср. балл</div></div>
                 </div>
@@ -187,7 +187,7 @@
     <div class="main-container">
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('general')"><span>📊</span><span>Общий рейтинг</span></button>
-            <button class="tab-btn" onclick="switchTab('groups')"><span>👥</span><span>Рейтинг по группам</span></button>
+            <button class="tab-btn" onclick="switchTab('groups')"><span>👥</span><span>Рейтинг по взводам</span></button>
             <button class="tab-btn" onclick="switchTab('instructions')"><span>📋</span><span id="instrTabLabel">Для обучающихся</span></button>
         </div>
 
@@ -289,9 +289,9 @@
         <div class="footer-inner">
             <p style="font-size:0.875rem;color:#6b7280">© 2026 Система рейтинга обучающихся</p>
             <div style="display:flex;align-items:center;gap:16px;font-size:0.875rem;color:#6b7280">
-                <span>Дисциплина: Программирование</span>
+                <span>Дисциплина: Информационные технологии в юридической деятельности</span>
                 <span style="width:4px;height:4px;border-radius:50%;background:#d1d5db"></span>
-                <span>Семестр: Весна 2026</span>
+                <span>1 семестр 2026-2027 учебного года</span>
             </div>
         </div>
     </footer>
@@ -397,8 +397,8 @@
     // ===== RENDERING =====
     function renderAll() {
         const maxT = getMaxTotal();
-        document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся (макс. ${maxT} баллов)`;
-        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по группам (макс. ${maxT} баллов)`;
+        document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся`;
+        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по взводам`;
         if (isAuthenticated) {
             document.getElementById('instrTitle').textContent = 'Инструкция';
             document.getElementById('instrDesc').textContent = 'Руководство по работе с системой рейтинга';
