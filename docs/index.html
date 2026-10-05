@@ -55,13 +55,14 @@
         .legend-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid; }
         .btn { padding: 8px 16px; border-radius: 10px; border: none; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
         .btn-secondary { background: white; color: #374151; border: 1px solid #e5e7eb; }
+        .btn-secondary:hover { background: #f9fafb; }
         .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-        .btn-save { background: #10b981; color: white; border: 1px solid #059669; font-weight: 600; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
-        .btn-save:hover { background: #059669; box-shadow: 0 6px 16px rgba(16,185,129,0.4); transform: translateY(-1px); }
-        .save-notification { position: fixed; top: 80px; right: 20px; background: #10b981; color: white; padding: 12px 20px; border-radius: 12px; font-size: 0.875rem; font-weight: 500; box-shadow: 0 4px 12px rgba(16,185,129,0.3); z-index: 1000; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .btn-save { background: #10b981; color: white; border: 1px solid #059669; font-weight: 600; }
+        .btn-save:hover { background: #059669; }
         .btn-edit { background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; cursor: pointer; border: none; }
+        .btn-edit:hover { background: #e0e7ff; }
         .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1rem; }
         .toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
         .group-selector { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
@@ -77,7 +78,6 @@
         .weights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
         .weight-item { background: #f9fafb; border-radius: 12px; padding: 16px; }
         .weight-input { width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; font-weight: 700; }
-        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
         .modal { background: white; border-radius: 20px; width: 100%; max-width: 420px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
         .modal-header { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 24px; color: white; }
@@ -86,12 +86,7 @@
         .form-input { width: 100%; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 12px; font-size: 0.95rem; outline: none; }
         .form-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
         .form-error { color: #dc2626; font-size: 0.85rem; margin-top: 8px; }
-        .form-hint { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px; font-size: 0.75rem; color: #1e40af; margin-top: 12px; }
-        .form-hint code { background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
-        /* Score Modal */
         .score-modal { max-width: 600px; }
-        .score-modal .modal-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .score-display { font-size: 2rem; font-weight: 700; text-align: right; }
         .modal-tabs { display: flex; border-bottom: 1px solid #e5e7eb; overflow-x: auto; }
         .modal-tab { padding: 12px 16px; font-size: 0.8rem; font-weight: 500; cursor: pointer; border: none; background: none; color: #6b7280; border-bottom: 2px solid transparent; white-space: nowrap; }
         .modal-tab.active { color: #4f46e5; border-bottom-color: #4f46e5; }
@@ -108,7 +103,6 @@
         .score-btn-set { background: #f3e8ff; color: #6b21a8; }
         .manual-input { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
         .manual-input input { width: 80px; padding: 8px; border: 1px solid #e5e7eb; border-radius: 10px; text-align: center; font-weight: 700; }
-        /* Instructions */
         .overview-box { background: linear-gradient(135deg, #eef2ff, #faf5ff); border: 1px solid #c7d2fe; border-radius: 12px; padding: 20px; margin-bottom: 1.5rem; }
         .overview-box h3 { font-size: 1.1rem; font-weight: 700; color: #3730a3; margin-bottom: 8px; }
         .overview-box p { font-size: 0.875rem; color: #4338ca; line-height: 1.6; }
@@ -128,7 +122,6 @@
         .final-grade-row.satisfactory { background: #fefce8; border-color: #fef08a; }
         .final-grade-row.fail { background: #fef2f2; border-color: #fecaca; }
         .final-grade-range { width: 80px; text-align: center; font-weight: 700; font-size: 1.1rem; }
-        .final-grade-badge { margin-left: auto; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
         .tips-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; }
         .tips-box h3 { font-weight: 700; color: #92400e; margin-bottom: 12px; }
         .tips-box li { font-size: 0.85rem; color: #92400e; padding: 4px 0 4px 16px; position: relative; list-style: none; }
@@ -148,6 +141,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .hidden { display: none !important; }
+        .save-notification { position: fixed; top: 80px; right: 20px; background: #10b981; color: white; padding: 12px 20px; border-radius: 12px; font-size: 0.875rem; font-weight: 500; z-index: 1000; }
         @media (max-width: 768px) {
             .header-stats { display: none; }
             .tabs-container { flex-direction: column; }
@@ -167,16 +161,12 @@
                 </div>
             </div>
             <div class="header-right">
-                <button class="auth-btn auth-btn-login" id="loginBtn" onclick="showLoginModal()">
-                    🔐 <span>Вход для преподавателя</span>
-                </button>
-                <button class="auth-btn auth-btn-logout hidden" id="logoutBtn" onclick="doLogout()">
-                    🚪 <span>Выйти</span>
-                </button>
+                <button class="auth-btn auth-btn-login" id="loginBtn" onclick="showLoginModal()">🔐 <span>Вход для преподавателя</span></button>
+                <button class="auth-btn auth-btn-logout hidden" id="logoutBtn" onclick="doLogout()">🚪 <span>Выйти</span></button>
                 <div class="header-stats">
-                    <div class="stat-item"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Курсантов</div></div>
+                    <div class="stat-item"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Студентов</div></div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Взводов</div></div>
+                    <div class="stat-item"><div class="stat-value" id="totalGroups">0</div><div class="stat-label">Групп</div></div>
                     <div class="stat-divider"></div>
                     <div class="stat-item"><div class="stat-value" id="avgRating">0</div><div class="stat-label">Ср. балл</div></div>
                 </div>
@@ -187,7 +177,7 @@
     <div class="main-container">
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('general')"><span>📊</span><span>Общий рейтинг</span></button>
-            <button class="tab-btn" onclick="switchTab('groups')"><span>👥</span><span>Рейтинг по взводам</span></button>
+            <button class="tab-btn" onclick="switchTab('groups')"><span>👥</span><span>Рейтинг по группам</span></button>
             <button class="tab-btn" onclick="switchTab('instructions')"><span>📋</span><span id="instrTabLabel">Для обучающихся</span></button>
         </div>
 
@@ -199,16 +189,13 @@
                         <p class="section-desc" id="generalDesc"></p>
                     </div>
                     <div class="toolbar-actions hidden" id="teacherActions">
-                        <button class="btn btn-secondary" onclick="toggleWeights()">⚖️ Веса категорий</button>
+                        <button class="btn btn-secondary" onclick="toggleWeights()">⚖️ Веса</button>
                         <button class="btn btn-secondary" onclick="toggleImport()">📥 Импорт</button>
-                        <button class="btn btn-secondary" onclick="exportData()">💾 Экспорт данных</button>
-                        <label class="btn btn-secondary" style="cursor:pointer">
-                            📂 Импорт данных
-                            <input type="file" accept=".json" onchange="importData(event)" style="display:none">
-                        </label>
+                        <button class="btn btn-secondary" onclick="exportData()">💾 Экспорт</button>
+                        <label class="btn btn-secondary" style="cursor:pointer">📂 Загрузить<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
                         <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
-                        <button class="btn btn-danger" onclick="clearAll()" id="clearBtn">🗑️ Очистить</button>
-                        <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить изменения</button>
+                        <button class="btn btn-danger" onclick="clearAll()">🗑️ Очистить</button>
+                        <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить</button>
                     </div>
                 </div>
                 <div id="weightsPanel" class="weights-panel hidden"></div>
@@ -255,7 +242,6 @@
                     <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:8px">Пароль преподавателя</label>
                     <input type="password" id="loginPassword" class="form-input" placeholder="Введите пароль" autofocus>
                     <div id="loginError" class="form-error hidden">⚠️ Неверный пароль</div>
-
                 </form>
             </div>
             <div class="modal-footer">
@@ -269,13 +255,15 @@
     <div id="scoreModal" class="modal-overlay hidden" onclick="if(event.target===this)closeScoreModal()">
         <div class="modal score-modal">
             <div class="modal-header">
-                <div>
-                    <h3 id="modalStudentName" style="font-size:1.1rem;font-weight:700"></h3>
-                    <p id="modalStudentGroup" style="font-size:0.85rem;opacity:0.8"></p>
-                </div>
-                <div style="text-align:right">
-                    <div class="score-display" id="modalTotalScore">0</div>
-                    <div style="font-size:0.75rem;opacity:0.8" id="modalMaxLabel"></div>
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%">
+                    <div>
+                        <h3 id="modalStudentName" style="font-size:1.1rem;font-weight:700"></h3>
+                        <p id="modalStudentGroup" style="font-size:0.85rem;opacity:0.8"></p>
+                    </div>
+                    <div style="text-align:right">
+                        <div id="modalTotalScore" style="font-size:2rem;font-weight:700">0</div>
+                        <div id="modalMaxLabel" style="font-size:0.75rem;opacity:0.8">баллов</div>
+                    </div>
                 </div>
             </div>
             <div class="modal-tabs" id="modalTabs"></div>
@@ -294,9 +282,9 @@
         <div class="footer-inner">
             <p style="font-size:0.875rem;color:#6b7280">© 2026 Система рейтинга обучающихся</p>
             <div style="display:flex;align-items:center;gap:16px;font-size:0.875rem;color:#6b7280">
-                <span>Дисциплина: Информационные технологии в юридической деятельности</span>
+                <span>Дисциплина: Программирование</span>
                 <span style="width:4px;height:4px;border-radius:50%;background:#d1d5db"></span>
-                <span>1 семестр 2026-2027 учебного года</span>
+                <span>Семестр: Весна 2026</span>
             </div>
         </div>
     </footer>
@@ -304,13 +292,18 @@
     <script>
     const TEACHER_PASSWORD = '05072020';
 
-    let categories = [
+    // ===== КАТЕГОРИИ =====
+    // practice и testing — основные (входят в максимум)
+    // notes, reports, bonus — дополнительные (isBonus=true, НЕ входят в максимум)
+    const DEFAULT_CATEGORIES = [
         { key: 'practice', name: 'Практические работы', maxPerItem: 10, maxTotal: 500, desc: 'Защита практических работ', shortDesc: 'Оценка 3→3б, 4→7б, 5→10б', useGrades: true, gradeMapping: { grade3: 3, grade4: 7, grade5: 10 } },
         { key: 'testing', name: 'Тестирование', maxPerItem: 10, maxTotal: 500, desc: 'Результаты тестирования', shortDesc: 'Оценка 3→3б, 4→7б, 5→10б', useGrades: true, gradeMapping: { grade3: 3, grade4: 7, grade5: 10 } },
         { key: 'notes', name: 'Конспекты', maxPerItem: 2, maxTotal: 500, desc: 'Наличие конспектов на занятиях', shortDesc: '2 балла за конспект лекции', isBonus: true },
         { key: 'reports', name: 'Доклады', maxPerItem: 8, maxTotal: 500, desc: 'Выступление с докладами', shortDesc: 'Оценка 3→3б, 4→6б, 5→8б', useGrades: true, gradeMapping: { grade3: 3, grade4: 6, grade5: 8 }, isBonus: true },
-        { key: 'bonus', name: 'Дополнительные баллы', maxPerItem: 50, maxTotal: 500, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя', isBonus: true }
+        { key: 'bonus', name: 'Доп. баллы', maxPerItem: 50, maxTotal: 500, desc: 'Дополнительные баллы от преподавателя', shortDesc: 'На усмотрение преподавателя', isBonus: true }
     ];
+
+    let categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
 
     let students = [
         { id:1, fullName:'Иванов Иван Сергеевич', group:'ИТ-201', notes:24, practice:20, reports:10, bonus:5, testing:0, notesGrades:{'3':0,'4':1,'5':1}, practiceGrades:{'3':0,'4':1,'5':1}, reportsGrades:{'3':0,'4':1,'5':0}, testingGrades:{'3':0,'4':0,'5':0} },
@@ -333,49 +326,67 @@
     let isAuthenticated = false;
     let currentGroup = '';
     let editingStudent = null;
-    let modalActiveCategory = 'notes';
+    let modalActiveCategory = 'practice';
     let modalFormData = null;
+    let hasChanges = false;
 
-    function calcTotal(s) { 
-        // Итог включает все баллы, включая дополнительные (если они есть)
-        return (s.notes || 0) + (s.practice || 0) + (s.reports || 0) + (s.bonus || 0) + (s.testing || 0); 
+    // ===== ФУНКЦИИ РАСЧЁТА =====
+    function calcTotal(s) {
+        return (s.notes||0) + (s.practice||0) + (s.reports||0) + (s.bonus||0) + (s.testing||0);
     }
-    function getMaxTotal() { 
-        // Максимум НЕ включает дополнительные баллы (isBonus = true)
+
+    function getMaxTotal() {
+        // Максимум = сумма maxTotal только основных категорий (НЕ isBonus)
         return categories.reduce((sum, c) => {
             if (c.maxTotal <= 0) return sum;
-            if (c.isBonus) return sum; // Исключаем дополнительные категории из максимума
+            if (c.isBonus) return sum; // доп. баллы НЕ входят в максимум
             return sum + c.maxTotal;
         }, 0);
     }
-    function calcPracticeScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
-    function calcReportsScore(grades) { return grades['3'] * 3 + grades['4'] * 6 + grades['5'] * 8; }
-    function calcTestingScore(grades) { return grades['3'] * 3 + grades['4'] * 7 + grades['5'] * 10; }
+
+    function calcPracticeScore(g) { return (g['3']||0)*3 + (g['4']||0)*7 + (g['5']||0)*10; }
+    function calcReportsScore(g) { return (g['3']||0)*3 + (g['4']||0)*6 + (g['5']||0)*8; }
+    function calcTestingScore(g) { return (g['3']||0)*3 + (g['4']||0)*7 + (g['5']||0)*10; }
+
     function getGrade(total) {
-        // Процентная шкала от максимума (без учета бонусов)
-        const maxTotal = getMaxTotal();
-        const pct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
+        const maxT = getMaxTotal();
+        const pct = maxT > 0 ? (total / maxT) * 100 : 0;
         if (pct >= 90) return { text:'Отлично', cls:'grade-excellent' };
         if (pct >= 75) return { text:'Хорошо', cls:'grade-good' };
         if (pct >= 60) return { text:'Удовлетворительно', cls:'grade-satisfactory' };
         return { text:'Неудовлетворительно', cls:'grade-fail' };
     }
+
     function getGroups() { return [...new Set(students.map(s => s.group))].sort(); }
 
-    // ===== AUTH =====
+    function ensureStudent(s) {
+        return {
+            id: s.id || 0,
+            fullName: s.fullName || '',
+            group: s.group || '',
+            notes: s.notes || 0,
+            practice: s.practice || 0,
+            reports: s.reports || 0,
+            bonus: s.bonus || 0,
+            testing: s.testing || 0,
+            notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
+            practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
+            reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0},
+            testingGrades: s.testingGrades || {'3':0,'4':0,'5':0}
+        };
+    }
+
+    // ===== АВТОРИЗАЦИЯ =====
     function showLoginModal() {
         document.getElementById('loginModal').classList.remove('hidden');
         document.getElementById('loginPassword').value = '';
         document.getElementById('loginError').classList.add('hidden');
         setTimeout(() => document.getElementById('loginPassword').focus(), 100);
     }
-    function closeLoginModal() {
-        document.getElementById('loginModal').classList.add('hidden');
-    }
+    function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
     function handleLogin(e) {
         if (e) e.preventDefault();
-        const pwd = document.getElementById('loginPassword').value;
-        if (pwd === TEACHER_PASSWORD) {
+        if (document.getElementById('loginPassword').value === TEACHER_PASSWORD) {
             isAuthenticated = true;
             closeLoginModal();
             updateAuthUI();
@@ -383,14 +394,9 @@
         } else {
             document.getElementById('loginError').classList.remove('hidden');
             document.getElementById('loginPassword').value = '';
-            document.getElementById('loginPassword').focus();
         }
     }
-    function doLogout() {
-        isAuthenticated = false;
-        updateAuthUI();
-        renderAll();
-    }
+    function doLogout() { isAuthenticated = false; updateAuthUI(); renderAll(); }
     function updateAuthUI() {
         document.getElementById('loginBtn').classList.toggle('hidden', isAuthenticated);
         document.getElementById('logoutBtn').classList.toggle('hidden', !isAuthenticated);
@@ -398,16 +404,142 @@
         document.getElementById('instrTabLabel').textContent = isAuthenticated ? 'Инструкция' : 'Для обучающихся';
     }
 
-    // ===== RENDERING =====
+    // ===== ВКЛАДКИ =====
+    function switchTab(name) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        const idx = { general:0, groups:1, instructions:2 };
+        document.querySelectorAll('.tab-btn')[idx[name]].classList.add('active');
+    }
+
+    // ===== РЕНДЕРИНГ ТАБЛИЦЫ =====
+    function renderTable(studentList, containerId) {
+        const container = document.getElementById(containerId);
+        if (students.length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><h3>Нет данных</h3><p>Преподаватель ещё не загрузил данные</p></div>';
+            return;
+        }
+        const sorted = [...studentList].sort((a,b) => calcTotal(b) - calcTotal(a));
+        const maxT = getMaxTotal();
+        const activeCats = categories.filter(c => c.maxTotal > 0);
+
+        let html = '<div class="table-wrapper"><table><thead><tr><th>№</th><th>ФИО студента</th>';
+        activeCats.forEach(c => {
+            const maxTxt = isAuthenticated ? '<span class="sub-text">(макс. ' + c.maxTotal + ')</span>' : '';
+            html += '<th class="center">' + c.name + maxTxt + '</th>';
+        });
+        html += '<th class="center">Итого</th><th class="center">Оценка</th>';
+        if (isAuthenticated) html += '<th class="center">Действия</th>';
+        html += '</tr></thead><tbody>';
+
+        sorted.forEach((s, i) => {
+            const total = calcTotal(s);
+            const pct = maxT > 0 ? Math.round((total / maxT) * 100) : 0;
+            const grade = getGrade(total);
+            html += '<tr><td class="center">' + (i+1) + '</td><td class="student-name">' + s.fullName + '</td>';
+            activeCats.forEach(c => { html += '<td class="center">' + (s[c.key]||0) + '</td>'; });
+            html += '<td class="center"><span class="total-score">' + total + ' (' + pct + '%)</span></td>';
+            html += '<td class="center"><span class="grade-badge ' + grade.cls + '">' + grade.text + '</span></td>';
+            if (isAuthenticated) html += '<td class="center"><button class="btn-edit" onclick="openEditModal(' + s.id + ')">✏️ Баллы</button></td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+        html += '<div class="legend"><span class="legend-item"><span class="legend-dot" style="background:#dcfce7;border-color:#86efac"></span> Отлично (≥90%)</span><span class="legend-item"><span class="legend-dot" style="background:#dbeafe;border-color:#93c5fd"></span> Хорошо (75-89%)</span><span class="legend-item"><span class="legend-dot" style="background:#fef9c3;border-color:#fde047"></span> Удовл. (60-74%)</span><span class="legend-item"><span class="legend-dot" style="background:#fee2e2;border-color:#fca5a5"></span> Неудовл. (&lt;60%)</span></div>';
+        container.innerHTML = html;
+    }
+
+    function renderGeneralTable() {
+        renderTable(students, 'ratingTableContainer');
+    }
+
+    function renderGroupTab() {
+        const container = document.getElementById('groupContent');
+        if (students.length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><h3>Нет данных</h3><p>Преподаватель ещё не загрузил данные</p></div>';
+            return;
+        }
+        const groups = getGroups();
+        if (!currentGroup || !groups.includes(currentGroup)) currentGroup = groups[0];
+        const filtered = students.filter(s => s.group === currentGroup);
+
+        let html = '<div class="group-selector"><label style="font-weight:500">Выберите группу:</label><div class="group-buttons">';
+        groups.forEach(g => { html += '<button class="group-btn ' + (g===currentGroup?'active':'') + '" onclick="selectGroup(\'' + g + '\')">' + g + '</button>'; });
+        html += '</div></div>';
+        html += '<div class="group-info"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem"><h3 style="font-size:1.25rem;font-weight:700">Группа <span style="color:#4f46e5">' + currentGroup + '</span></h3><span style="font-size:0.8rem;color:#6b7280;background:#f3f4f6;padding:4px 12px;border-radius:20px">Студентов: ' + filtered.length + '</span></div>';
+        html += '<div id="groupTableContainer"></div></div>';
+        html += '<div class="group-cards">';
+        groups.forEach(g => {
+            const gs = students.filter(s => s.group === g);
+            const totals = gs.map(s => calcTotal(s));
+            const avg = totals.length ? (totals.reduce((a,b)=>a+b,0)/totals.length).toFixed(1) : 0;
+            const max = totals.length ? Math.max(...totals) : 0;
+            const min = totals.length ? Math.min(...totals) : 0;
+            html += '<div class="group-card ' + (g===currentGroup?'active':'') + '" onclick="selectGroup(\'' + g + '\')"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-weight:700">' + g + '</span><span style="font-size:0.75rem;color:#6b7280">' + gs.length + ' чел.</span></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center"><div><div style="font-size:1.1rem;font-weight:700;color:#4f46e5">' + avg + '</div><div style="font-size:0.7rem;color:#6b7280">Средний</div></div><div><div style="font-size:1.1rem;font-weight:700;color:#16a34a">' + max + '</div><div style="font-size:0.7rem;color:#6b7280">Макс.</div></div><div><div style="font-size:1.1rem;font-weight:700;color:#ea580c">' + min + '</div><div style="font-size:0.7rem;color:#6b7280">Мин.</div></div></div></div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        renderTable(filtered, 'groupTableContainer');
+    }
+
+    function selectGroup(g) { currentGroup = g; renderGroupTab(); }
+
+    // ===== ИНСТРУКЦИИ =====
+    function renderInstructions() {
+        const container = document.getElementById('instructionsContent');
+        if (isAuthenticated) {
+            let html = '<div class="teacher-notice"><p style="color:#92400e;font-size:0.875rem"><strong>📌 Режим преподавателя:</strong> Вы можете импортировать студентов, начислять баллы, настраивать веса и экспортировать/импортировать данные.</p></div>';
+            html += '<div class="teacher-section"><h3>📥 Импорт студентов</h3><p style="font-size:0.875rem;color:#4b5563">Формат 1 — по группам:</p><pre># Группа ИТ-201\nИванов Иван Сергеевич\n\n# Группа ИТ-202\nПетрова Анна Михайловна</pre><p style="font-size:0.875rem;color:#4b5563;margin-top:8px">Формат 2 — CSV:</p><pre>Иванов Иван Сергеевич;ИТ-201</pre></div>';
+            html += '<div class="teacher-section"><h3>✏️ Начисление баллов</h3><ul style="list-style:none;margin-top:8px">';
+            html += '<li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — оценка 3→3б, 4→7б, 5→10б</li>';
+            html += '<li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Тестирование</strong> — оценка 3→3б, 4→7б, 5→10б</li>';
+            html += '<li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — 2 балла за конспект (доп. баллы)</li>';
+            html += '<li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — оценка 3→3б, 4→6б, 5→8б (доп. баллы)</li>';
+            html += '<li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li>';
+            html += '</ul></div>';
+            html += '<div class="teacher-section"><h3>💾 Экспорт/Импорт</h3><p style="font-size:0.875rem;color:#4b5563">Для переноса данных между компьютерами:</p><ul style="font-size:0.875rem;color:#4b5563;margin-top:8px;margin-left:16px;list-style:disc"><li>Нажмите «💾 Экспорт» — скачается JSON файл</li><li>На другом компьютере нажмите «📂 Загрузить» и выберите файл</li></ul></div>';
+            container.innerHTML = html;
+        } else {
+            let html = '<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе. Оценка = процент от максимума основных категорий (без учёта дополнительных баллов).</p></div>';
+            html += '<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Категории оценивания</h3><p style="font-size:0.85rem;opacity:0.8">За что можно получить баллы</p></div>';
+            categories.forEach((c, i) => {
+                let detail = '';
+                if (c.useGrades && c.gradeMapping) {
+                    detail = '<div class="instr-cat-detail"><strong>Система оценивания:</strong><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px"><div style="background:#fef9c3;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#854d0e">Оценка «3»</div><div style="font-size:0.75rem;color:#92400e">' + c.gradeMapping.grade3 + ' балла</div></div><div style="background:#dbeafe;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#1e40af">Оценка «4»</div><div style="font-size:0.75rem;color:#1e3a8a">' + c.gradeMapping.grade4 + ' балла</div></div><div style="background:#dcfce7;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#166534">Оценка «5»</div><div style="font-size:0.75rem;color:#14532d">' + c.gradeMapping.grade5 + ' баллов</div></div></div>' + (c.isBonus ? '<p style="margin-top:6px;font-size:0.75rem;color:#6b7280;font-style:italic">* Дополнительные баллы</p>' : '') + '</div>';
+                } else {
+                    detail = '<div class="instr-cat-detail"><strong>Как начисляется:</strong> ' + c.shortDesc + (c.isBonus ? ' <em style="font-size:0.75rem;color:#6b7280">* доп. баллы</em>' : '') + '</div>';
+                }
+                html += '<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">' + (i+1) + '</span><span class="instr-cat-name">' + c.name + '</span></div><p class="instr-cat-desc">' + c.desc + '</p>' + detail + '</div>';
+            });
+            html += '</div>';
+            html += '<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Итоговые оценки</h3><p style="font-size:0.85rem;opacity:0.8">Процент от максимума (без доп. баллов)</p></div><div style="padding:24px">';
+            html += '<div class="final-grade-row excellent"><span class="final-grade-range" style="color:#166534">≥90%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span style="margin-left:auto;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.8rem;background:#dcfce7;color:#166534">Отлично (5)</span></div>';
+            html += '<div class="final-grade-row good"><span class="final-grade-range" style="color:#1e40af">75–89%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span style="margin-left:auto;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.8rem;background:#dbeafe;color:#1e40af">Хорошо (4)</span></div>';
+            html += '<div class="final-grade-row satisfactory"><span class="final-grade-range" style="color:#854d0e">60–74%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span style="margin-left:auto;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.8rem;background:#fef9c3;color:#854d0e">Удовлетворительно (3)</span></div>';
+            html += '<div class="final-grade-row fail"><span class="final-grade-range" style="color:#991b1b">&lt; 60%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span style="margin-left:auto;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.8rem;background:#fee2e2;color:#991b1b">Неудовлетворительно (2)</span></div>';
+            html += '<p style="font-size:0.85rem;color:#6b7280;margin-top:16px;font-style:italic">* Дополнительные баллы (конспекты, доклады, доп. баллы) прибавляются к итогу, но не влияют на процент</p>';
+            html += '</div></div>';
+            html += '<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>';
+            html += '<li>Своевременно защищайте практические работы</li>';
+            html += '<li>Успешно проходите тестирование</li>';
+            html += '<li>Ведите конспекты — 2 балла за каждый (доп. баллы)</li>';
+            html += '<li>Выступайте с докладами (доп. баллы)</li>';
+            html += '<li>Проявляйте активность — преподаватель может начислить доп. баллы</li>';
+            html += '</ul></div>';
+            container.innerHTML = html;
+        }
+    }
+
+    // ===== РЕНДЕРИНГ =====
     function renderAll() {
-        document.getElementById('generalDesc').textContent = `Рейтинг всех обучающихся`;
-        document.getElementById('groupsDesc').textContent = `Просмотр рейтинга по группам`;
+        document.getElementById('generalDesc').textContent = 'Рейтинг всех обучающихся';
+        document.getElementById('groupsDesc').textContent = 'Просмотр рейтинга по группам';
         if (isAuthenticated) {
             document.getElementById('instrTitle').textContent = 'Инструкция';
             document.getElementById('instrDesc').textContent = 'Руководство по работе с системой рейтинга';
         } else {
             document.getElementById('instrTitle').textContent = 'Инструкция для обучающихся';
-            document.getElementById('instrDesc').textContent = 'Какие баллы и за что можно получить в рамках дисциплины';
+            document.getElementById('instrDesc').textContent = 'Какие баллы и за что можно получить';
         }
         renderGeneralTable();
         renderGroupTab();
@@ -422,180 +554,7 @@
         document.getElementById('avgRating').textContent = avg;
     }
 
-    function renderGeneralTable() {
-        const container = document.getElementById('ratingTableContainer');
-        if (students.length === 0) {
-            const msg = isAuthenticated ? 'Импортируйте студентов или добавьте их вручную' : 'Преподаватель ещё не загрузил данные';
-            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Список студентов пуст</h3><p>${msg}</p></div>`;
-            return;
-        }
-        const sorted = [...students].sort((a,b) => calcTotal(b) - calcTotal(a));
-        // Фильтруем категории с нулевым максимумом
-        const activeCategories = categories.filter(c => c.maxTotal > 0);
-        const maxTotal = getMaxTotal();
-        let html = `<div class="table-wrapper"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
-        activeCategories.forEach(c => { 
-            const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
-            html += `<th class="center">${c.name}${maxText}</th>`; 
-        });
-        html += `<th class="center">Итого</th><th class="center">Оценка</th>`;
-        if (isAuthenticated) html += `<th class="center">Действия</th>`;
-        html += `</tr></thead><tbody>`;
-        sorted.forEach((s, i) => {
-            const total = calcTotal(s);
-            const grade = getGrade(total);
-            html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
-            activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
-            const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
-            html += `<td class="center"><span class="total-score">${total} (${pct}%)</span></td>`;
-            html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
-            if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
-            html += `</tr>`;
-        });
-        html += `</tbody></table></div>`;
-        html += `<div class="legend"><span class="legend-item"><span class="legend-dot" style="background:#dcfce7;border-color:#86efac"></span> Отлично (≥90%)</span><span class="legend-item"><span class="legend-dot" style="background:#dbeafe;border-color:#93c5fd"></span> Хорошо (75-89%)</span><span class="legend-item"><span class="legend-dot" style="background:#fef9c3;border-color:#fde047"></span> Удовл. (60-74%)</span><span class="legend-item"><span class="legend-dot" style="background:#fee2e2;border-color:#fca5a5"></span> Неудовл. (&lt;60%)</span></div>`;
-        container.innerHTML = html;
-    }
-
-    function renderGroupTab() {
-        const container = document.getElementById('groupContent');
-        if (students.length === 0) {
-            container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><h3>Нет данных</h3><p>Преподаватель ещё не загрузил данные</p></div>`;
-            return;
-        }
-        const groups = getGroups();
-        if (!currentGroup || !groups.includes(currentGroup)) currentGroup = groups[0];
-        const filtered = students.filter(s => s.group === currentGroup).sort((a,b) => calcTotal(b) - calcTotal(a));
-        // Фильтруем категории с нулевым максимумом
-        const activeCategories = categories.filter(c => c.maxTotal > 0);
-        const maxTotal = getMaxTotal();
-
-        let html = `<div class="group-selector"><label style="font-weight:500">Выберите группу:</label><div class="group-buttons">`;
-        groups.forEach(g => { html += `<button class="group-btn ${g===currentGroup?'active':''}" onclick="selectGroup('${g}')">${g}</button>`; });
-        html += `</div></div>`;
-
-        html += `<div class="group-info"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem"><h3 style="font-size:1.25rem;font-weight:700">Группа <span style="color:#4f46e5">${currentGroup}</span></h3><span style="font-size:0.8rem;color:#6b7280;background:#f3f4f6;padding:4px 12px;border-radius:20px">Студентов: ${filtered.length}</span></div>`;
-        html += `<div style="overflow-x:auto"><table><thead><tr><th>№</th><th>ФИО студента</th>`;
-        activeCategories.forEach(c => { 
-            const maxText = isAuthenticated ? `<span class="sub-text">(макс. ${c.maxTotal})</span>` : '';
-            html += `<th class="center">${c.name}${maxText}</th>`; 
-        });
-        html += `<th class="center">Итого</th><th class="center">Оценка</th>`;
-        if (isAuthenticated) html += `<th class="center">Действия</th>`;
-        html += `</tr></thead><tbody>`;
-        filtered.forEach((s, i) => {
-            const total = calcTotal(s);
-            const grade = getGrade(total);
-            html += `<tr><td class="center">${i+1}</td><td class="student-name">${s.fullName}</td>`;
-            activeCategories.forEach(c => { html += `<td class="center">${s[c.key] || 0}</td>`; });
-            const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
-            html += `<td class="center"><span class="total-score">${total} (${pct}%)</span></td>`;
-            html += `<td class="center"><span class="grade-badge ${grade.cls}">${grade.text}</span></td>`;
-            if (isAuthenticated) html += `<td class="center"><button class="btn-edit" onclick="openEditModal(${s.id})">✏️ Баллы</button></td>`;
-            html += `</tr>`;
-        });
-        html += `</tbody></table></div></div>`;
-
-        html += `<div class="group-cards">`;
-        groups.forEach(g => {
-            const gs = students.filter(s => s.group === g);
-            const totals = gs.map(s => calcTotal(s));
-            const avg = totals.length ? (totals.reduce((a,b)=>a+b,0)/totals.length).toFixed(1) : 0;
-            const max = totals.length ? Math.max(...totals) : 0;
-            const min = totals.length ? Math.min(...totals) : 0;
-            html += `<div class="group-card ${g===currentGroup?'active':''}" onclick="selectGroup('${g}')"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-weight:700">${g}</span><span style="font-size:0.75rem;color:#6b7280">${gs.length} чел.</span></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center"><div><div style="font-size:1.1rem;font-weight:700;color:#4f46e5">${avg}</div><div style="font-size:0.7rem;color:#6b7280">Средний</div></div><div><div style="font-size:1.1rem;font-weight:700;color:#16a34a">${max}</div><div style="font-size:0.7rem;color:#6b7280">Макс.</div></div><div><div style="font-size:1.1rem;font-weight:700;color:#ea580c">${min}</div><div style="font-size:0.7rem;color:#6b7280">Мин.</div></div></div></div>`;
-        });
-        html += `</div>`;
-        container.innerHTML = html;
-    }
-
-    function renderInstructions() {
-        const container = document.getElementById('instructionsContent');
-        if (isAuthenticated) {
-            let html = `<div class="teacher-notice"><p style="color:#92400e;font-size:0.875rem"><strong>📌 Режим преподавателя:</strong> Вы можете импортировать студентов, начислять баллы и настраивать веса категорий.</p></div>`;
-            html += `<div class="teacher-section"><h3>📥 Импорт студентов</h3><p style="font-size:0.875rem;color:#4b5563">Используйте кнопку «Импорт» для загрузки списка. Форматы:</p><pre># Группа ИТ-201
-Иванов Иван Сергеевич
-Петрова Анна Михайловна
-
-Или CSV:
-Иванов Иван Сергеевич;ИТ-201</pre></div>`;
-            html += `<div class="teacher-section"><h3>✏️ Начисление баллов</h3><p style="font-size:0.875rem;color:#4b5563">Нажмите «Баллы» рядом с именем студента. Выберите критерий и введите оценку:</p><ul style="list-style:none;margin-top:8px"><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Практические работы</strong> — оценка 3→3б, 4→7б, 5→10б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Тестирование</strong> — оценка 3→3б, 4→7б, 5→10б</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Конспекты</strong> — 2 балла за конспект лекции (дополнительные баллы)</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доклады</strong> — оценка 3→3б, 4→6б, 5→8б (дополнительные баллы)</li><li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li></ul></div>`;
-            html += `<div class="teacher-section"><h3>⚖️ Веса категорий</h3><p style="font-size:0.875rem;color:#4b5563">Настройте максимальное количество баллов по каждой категории.</p><p style="font-size:0.875rem;color:#4b5563;margin-top:8px">Итоговая оценка рассчитывается как процент от суммы максимумов основных категорий (без учета дополнительных баллов):</p><ul style="font-size:0.875rem;color:#4b5563;margin-top:4px;margin-left:16px;list-style:disc"><li>Отлично ≥90% от максимума</li><li>Хорошо 75-89% от максимума</li><li>Удовлетворительно 60-74% от максимума</li><li>Неудовлетворительно &lt;60% от максимума</li></ul><p style="font-size:0.875rem;color:#4b5563;margin-top:8px">Дополнительные баллы добавляются к общему итогу, но не влияют на процентную шкалу.</p></div>`;
-            html += `<div class="teacher-section"><h3>💾 Экспорт/Импорт данных</h3><p style="font-size:0.875rem;color:#4b5563">Для работы на разных компьютерах используйте функции экспорта/импорта:</p><ul style="font-size:0.875rem;color:#4b5563;margin-top:8px;list-style:none"><li style="padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>💾 Экспорт данных</strong> — сохраняет все данные (студенты, категории, баллы) в JSON файл</li><li style="padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>📂 Импорт данных</strong> — загружает данные из ранее сохраненного JSON файла</li></ul><p style="font-size:0.875rem;color:#4b5563;margin-top:8px">Это позволяет работать с рейтингом на разных компьютерах, сохраняя и загружая данные через JSON файл.</p></div>`;
-            container.innerHTML = html;
-        } else {
-            let html = `<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе. Оценка выставляется автоматически на основе набранных баллов.</p></div>`;
-            html += `<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Категории оценивания</h3><p style="font-size:0.85rem;opacity:0.8">За что можно получить баллы</p></div>`;
-            categories.forEach((c, i) => {
-                let detailHtml = '';
-                if (c.useGrades && c.gradeMapping) {
-                    detailHtml = `<div class="instr-cat-detail"><strong>Система оценивания:</strong><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px"><div style="background:#fef9c3;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#854d0e">Оценка «3»</div><div style="font-size:0.75rem;color:#92400e">${c.gradeMapping.grade3} балла</div></div><div style="background:#dbeafe;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#1e40af">Оценка «4»</div><div style="font-size:0.75rem;color:#1e3a8a">${c.gradeMapping.grade4} балла</div></div><div style="background:#dcfce7;padding:8px;border-radius:6px;text-align:center"><div style="font-weight:700;color:#166534">Оценка «5»</div><div style="font-size:0.75rem;color:#14532d">${c.gradeMapping.grade5} баллов</div></div></div></div>`;
-                } else {
-                    detailHtml = `<div class="instr-cat-detail"><strong>Как начисляется:</strong> ${c.shortDesc}</div>`;
-                }
-                html += `<div class="instr-category"><div class="instr-cat-header"><span class="instr-cat-num">${i+1}</span><span class="instr-cat-name">${c.name}</span><div style="text-align:right;margin-left:auto"><div class="instr-cat-max">∞</div><div style="font-size:0.7rem;color:#6b7280">баллов</div></div></div><p class="instr-cat-desc">${c.desc}</p>${detailHtml}</div>`;
-            });
-            html += `</div>`;
-            html += `<div class="instr-card"><div class="instr-card-header"><h3 style="font-size:1.1rem;font-weight:700">Итоговые оценки</h3><p style="font-size:0.85rem;opacity:0.8">Процент от максимума (без учета доп. баллов)</p></div><div style="padding:24px">`;
-            html += `<div class="final-grade-row excellent"><span class="final-grade-range" style="color:#166534">≥90%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#dcfce7;color:#166534">Отлично (5)</span></div>`;
-            html += `<div class="final-grade-row good"><span class="final-grade-range" style="color:#1e40af">75–89%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#dbeafe;color:#1e40af">Хорошо (4)</span></div>`;
-            html += `<div class="final-grade-row satisfactory"><span class="final-grade-range" style="color:#854d0e">60–74%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#fef9c3;color:#854d0e">Удовлетворительно (3)</span></div>`;
-            html += `<div class="final-grade-row fail"><span class="final-grade-range" style="color:#991b1b">&lt; 60%</span><span style="font-size:0.85rem;color:#6b7280">от максимума</span><span class="final-grade-badge" style="background:#fee2e2;color:#991b1b">Неудовлетворительно (2)</span></div>`;
-            html += `<p style="font-size:0.85rem;color:#6b7280;margin-top:16px;font-style:italic">* Дополнительные баллы добавляются к общему итогу, но не учитываются в максимальном количестве баллов</p>`;
-            html += `</div></div>`;
-            html += `<div class="tips-box"><h3>💡 Как набрать максимум баллов</h3><ul>`;
-            html += `<li>Своевременно защищайте практические работы — оценки 3, 4, 5 дают соответствующие баллы</li>`;
-            html += `<li>Успешно проходите тестирование — оценки 3, 4, 5 дают соответствующие баллы</li>`;
-            html += `<li>Регулярно посещайте занятия и ведите конспекты — 2 балла за каждый конспект (дополнительные баллы)</li>`;
-            html += `<li>Подготовьте и выступите с докладами — оценки 3, 4, 5 дают соответствующие баллы (дополнительные баллы)</li>`;
-            html += `<li>Проявляйте активность — преподаватель может начислить дополнительные баллы</li>`;
-            html += `</ul></div>`;
-            html += `<div class="info-box"><h3>⚠️ Важная информация</h3><ul><li>Студенты с результатом менее 60% допускаются к пересдаче</li><li>Баллы начисляются накопительно в течение семестра</li><li>Отслеживайте свой рейтинг на данной странице</li><li>По вопросам начисления баллов обращайтесь к преподавателю</li><li>Максимальные баллы по категориям устанавливает преподаватель</li></ul></div>`;
-            container.innerHTML = html;
-        }
-    }
-
-    // ===== TABS =====
-    function switchTab(name) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + name).classList.add('active');
-        const idx = { general:0, groups:1, instructions:2 };
-        document.querySelectorAll('.tab-btn')[idx[name]].classList.add('active');
-    }
-    function selectGroup(g) { currentGroup = g; renderGroupTab(); }
-
-    // ===== IMPORT & WEIGHTS =====
-    function toggleImport() {
-        const panel = document.getElementById('importPanel');
-        if (panel.classList.contains('hidden')) {
-            panel.classList.remove('hidden');
-            panel.innerHTML = `<h3 style="font-weight:700;margin-bottom:12px">📥 Импорт обучающихся</h3><textarea id="importText" placeholder="# Группа ИТ-201&#10;Иванов Иван Сергеевич&#10;Петрова Анна Михайловна"></textarea><div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-secondary" onclick="doImport()">Импортировать</button><button class="btn btn-secondary" onclick="toggleImport()">Закрыть</button></div><div style="margin-top:8px;font-size:0.75rem;color:#6b7280">Формат: # Группа ИТ-201 (для заголовка группы) или ФИО;Группа (CSV)</div>`;
-        } else {
-            panel.classList.add('hidden');
-        }
-    }
-    function doImport() {
-        const text = document.getElementById('importText').value;
-        if (!text.trim()) return;
-        let group = ''; let nextId = students.length > 0 ? Math.max(...students.map(s=>s.id)) + 1 : 1;
-        text.split('\n').forEach(line => {
-            line = line.trim();
-            if (!line) return;
-            const gm = line.match(/^(?:#\s*Группа\s*|Группа\s*[:\-]?\s*)(.+)$/i);
-            if (gm) { group = gm[1].trim(); return; }
-            const csv = line.match(/^(.+?)\s*[;,]\s*(.+)$/);
-            if (csv && csv[2].trim().length <= 20) {
-                students.push({ id: nextId++, fullName: csv[1].trim(), group: csv[2].trim(), notes:0, practice:0, reports:0, bonus:0, testing:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} });
-                return;
-            }
-            if (group) students.push({ id: nextId++, fullName: line, group, notes:0, practice:0, reports:0, bonus:0, testing:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} });
-        });
-        toggleImport();
-        markAsChanged();
-        renderAll();
-    }
-
+    // ===== ВЕСА =====
     function toggleWeights() {
         const panel = document.getElementById('weightsPanel');
         if (panel.classList.contains('hidden')) {
@@ -607,44 +566,110 @@
     }
     function renderWeightsPanel() {
         const panel = document.getElementById('weightsPanel');
-        let html = `<h3 style="font-weight:700;margin-bottom:4px">⚖️ Настройка весов категорий</h3><p style="font-size:0.85rem;color:#6b7280">Установите максимум от 1 до 1000 баллов. Итого: <strong style="color:#4f46e5">${getMaxTotal()}</strong> баллов</p><div class="weights-grid">`;
+        let html = '<h3 style="font-weight:700;margin-bottom:4px">⚖️ Настройка весов категорий</h3>';
+        html += '<p style="font-size:0.85rem;color:#6b7280">Максимум основных: <strong style="color:#4f46e5">' + getMaxTotal() + '</strong> баллов (без доп.)</p>';
+        html += '<div class="weights-grid">';
         categories.forEach(c => {
-            html += `<div class="weight-item"><label style="display:block;font-size:0.85rem;font-weight:500;margin-bottom:4px">${c.name}</label><div style="display:flex;align-items:center;gap:8px"><input type="number" class="weight-input" min="1" max="1000" value="${c.maxTotal}" onchange="updateWeight('${c.key}',parseInt(this.value)||1)"><span style="font-size:0.85rem;color:#6b7280">баллов</span></div><p style="font-size:0.7rem;color:#9ca3af;margin-top:4px">${c.shortDesc}</p><p style="font-size:0.7rem;color:#d97706;margin-top:2px">Допустимо: 1–1000</p></div>`;
+            html += '<div class="weight-item"><label style="display:block;font-size:0.85rem;font-weight:500;margin-bottom:4px">' + c.name + (c.isBonus ? ' <span style="color:#d97706;font-size:0.7rem">(доп.)</span>' : '') + '</label>';
+            html += '<div style="display:flex;align-items:center;gap:8px"><input type="number" class="weight-input" min="0" max="1000" value="' + c.maxTotal + '" onchange="updateWeight(\'' + c.key + '\',parseInt(this.value)||0)"><span style="font-size:0.85rem;color:#6b7280">баллов</span></div>';
+            html += '<p style="font-size:0.7rem;color:#9ca3af;margin-top:4px">' + c.shortDesc + '</p></div>';
         });
-        html += `</div><div style="margin-top:16px;padding:12px;background:#eef2ff;border-radius:8px;font-size:0.85rem;color:#3730a3">💡 Шкала: Отлично ≥90%, Хорошо 75-89%, Удовл. 60-74%, Неудовл. &lt;60% (от максимума без учета доп. баллов)</div><div style="margin-top:8px"><button class="btn btn-secondary" onclick="toggleWeights()">Закрыть</button></div>`;
+        html += '</div>';
+        html += '<div style="margin-top:16px;padding:12px;background:#eef2ff;border-radius:8px;font-size:0.85rem;color:#3730a3">💡 Доп. баллы (конспекты, доклады, доп.) не входят в максимум для расчёта процента</div>';
+        html += '<div style="margin-top:8px"><button class="btn btn-secondary" onclick="toggleWeights()">Закрыть</button></div>';
         panel.innerHTML = html;
     }
     function updateWeight(key, val) {
-        // Ограничения: минимум 1 балл, максимум 1000 баллов
-        const clampedVal = Math.max(1, Math.min(1000, val));
-        categories = categories.map(c => c.key === key ? {...c, maxTotal: clampedVal} : c);
+        const clamped = Math.max(0, Math.min(1000, val));
+        categories = categories.map(c => c.key === key ? {...c, maxTotal: clamped} : c);
         markAsChanged();
         renderWeightsPanel();
         renderAll();
     }
 
-    // ===== SCORE MODAL =====
+    // ===== ИМПОРТ СТУДЕНТОВ =====
+    function toggleImport() {
+        const panel = document.getElementById('importPanel');
+        if (panel.classList.contains('hidden')) {
+            panel.classList.remove('hidden');
+            panel.innerHTML = '<h3 style="font-weight:700;margin-bottom:12px">📥 Импорт студентов</h3><textarea id="importText" placeholder="# Группа ИТ-201\nИванов Иван Сергеевич\n\nИли CSV:\nИванов Иван Сергеевич;ИТ-201"></textarea><div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary" onclick="doImport()">Импортировать</button><button class="btn btn-secondary" onclick="toggleImport()">Закрыть</button></div>';
+        } else {
+            panel.classList.add('hidden');
+        }
+    }
+    function doImport() {
+        const text = document.getElementById('importText').value;
+        if (!text.trim()) return;
+        let group = '';
+        let nextId = students.length > 0 ? Math.max(...students.map(s=>s.id)) + 1 : 1;
+        text.split('\n').forEach(line => {
+            line = line.trim();
+            if (!line) return;
+            const gm = line.match(/^(?:#\s*Группа\s*|Группа\s*[:\-]?\s*)(.+)$/i);
+            if (gm) { group = gm[1].trim(); return; }
+            const csv = line.match(/^(.+?)\s*[;,]\s*(.+)$/);
+            if (csv && csv[2].trim().length <= 20) {
+                students.push(ensureStudent({ id: nextId++, fullName: csv[1].trim(), group: csv[2].trim() }));
+                return;
+            }
+            if (group) students.push(ensureStudent({ id: nextId++, fullName: line, group: group }));
+        });
+        toggleImport();
+        markAsChanged();
+        renderAll();
+    }
+
+    // ===== ЭКСПОРТ/ИМПОРТ ДАННЫХ =====
+    function exportData() {
+        const data = { students: students, categories: categories, exportDate: new Date().toISOString() };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'rating-data-' + new Date().toISOString().split('T')[0] + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.students && Array.isArray(data.students)) {
+                    students = data.students.map(s => ensureStudent(s));
+                    if (data.categories && Array.isArray(data.categories)) {
+                        categories = data.categories;
+                    }
+                    markAsChanged();
+                    renderAll();
+                    alert('✅ Данные успешно импортированы!');
+                } else {
+                    alert('❌ Неверный формат файла');
+                }
+            } catch (err) {
+                alert('❌ Ошибка: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    // ===== МОДАЛЬНОЕ ОКНО БАЛЛОВ =====
     function openEditModal(id) {
         if (!isAuthenticated) return;
         editingStudent = students.find(s => s.id === id);
         if (!editingStudent) return;
-        // Инициализация недостающих полей
-        modalFormData = {
-            ...editingStudent,
-            notes: editingStudent.notes || 0,
-            practice: editingStudent.practice || 0,
-            reports: editingStudent.reports || 0,
-            bonus: editingStudent.bonus || 0,
-            testing: editingStudent.testing || 0,
-            notesGrades: editingStudent.notesGrades || {'3':0,'4':0,'5':0},
-            practiceGrades: editingStudent.practiceGrades || {'3':0,'4':0,'5':0},
-            reportsGrades: editingStudent.reportsGrades || {'3':0,'4':0,'5':0},
-            testingGrades: editingStudent.testingGrades || {'3':0,'4':0,'5':0}
-        };
-        modalActiveCategory = 'practice';
+        modalFormData = ensureStudent(editingStudent);
+        modalActiveCategory = categories[0].key;
         renderScoreModal();
         document.getElementById('scoreModal').classList.remove('hidden');
     }
+
     function openAddModal() {
         if (!isAuthenticated) return;
         const name = prompt('ФИО студента:');
@@ -652,122 +677,113 @@
         const group = prompt('Номер группы:');
         if (!group) return;
         const maxId = students.length > 0 ? Math.max(...students.map(s=>s.id)) : 0;
-        editingStudent = { id: maxId + 1, fullName: name, group, notes:0, practice:0, reports:0, bonus:0, testing:0, notesGrades:{'3':0,'4':0,'5':0}, practiceGrades:{'3':0,'4':0,'5':0}, reportsGrades:{'3':0,'4':0,'5':0}, testingGrades:{'3':0,'4':0,'5':0} };
+        editingStudent = ensureStudent({ id: maxId + 1, fullName: name, group: group });
         modalFormData = {...editingStudent};
-        modalActiveCategory = 'practice';
+        modalActiveCategory = categories[0].key;
         renderScoreModal();
         document.getElementById('scoreModal').classList.remove('hidden');
     }
+
     function closeScoreModal() {
         document.getElementById('scoreModal').classList.add('hidden');
         editingStudent = null;
         modalFormData = null;
     }
+
     function renderScoreModal() {
         if (!modalFormData) return;
         const total = calcTotal(modalFormData);
-        const maxTotal = getMaxTotal();
-        const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
+        const maxT = getMaxTotal();
+        const pct = maxT > 0 ? Math.round((total / maxT) * 100) : 0;
         document.getElementById('modalStudentName').textContent = modalFormData.fullName;
         document.getElementById('modalStudentGroup').textContent = 'Группа: ' + modalFormData.group;
-        document.getElementById('modalTotalScore').textContent = `${total} (${pct}%)`;
-        document.getElementById('modalMaxLabel').textContent = `баллов`;
+        document.getElementById('modalTotalScore').textContent = total + ' (' + pct + '%)';
+        document.getElementById('modalMaxLabel').textContent = 'баллов';
 
         let tabsHtml = '';
         categories.forEach(c => {
-            tabsHtml += `<button class="modal-tab ${modalActiveCategory===c.key?'active':''}" onclick="switchModalCat('${c.key}')">${c.name}<span class="badge">${modalFormData[c.key]}</span></button>`;
+            tabsHtml += '<button class="modal-tab ' + (modalActiveCategory===c.key?'active':'') + '" onclick="switchModalCat(\'' + c.key + '\')">' + c.name + '<span class="badge">' + modalFormData[c.key] + '</span></button>';
         });
         document.getElementById('modalTabs').innerHTML = tabsHtml;
 
         const cat = categories.find(c => c.key === modalActiveCategory);
         const val = modalFormData[cat.key];
-        const pct2 = (val / cat.maxTotal) * 100;
-        let body = `<div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:500">${cat.name}</span><span style="font-size:0.85rem;color:#6b7280">${cat.shortDesc}</span></div>`;
-        body += `<div class="progress-bar"><div class="progress-fill" style="width:${pct2}%"></div></div>`;
-        body += `<p style="font-size:0.85rem;color:#6b7280">Баллы: <strong>${val}</strong></p>`;
+        const pctBar = cat.maxTotal > 0 ? Math.min(100, (val / cat.maxTotal) * 100) : 0;
+        let body = '<div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:500">' + cat.name + '</span><span style="font-size:0.85rem;color:#6b7280">' + cat.shortDesc + '</span></div>';
+        body += '<div class="progress-bar"><div class="progress-fill" style="width:' + pctBar + '%"></div></div>';
+        body += '<p style="font-size:0.85rem;color:#6b7280">Баллы: <strong>' + val + '</strong></p>';
 
         if (cat.key === 'notes') {
-            body += `<p style="font-size:0.85rem;color:#6b7280;margin:8px 0">2 балла за каждый конспект лекции</p>`;
-            body += `<div class="score-buttons">`;
-            body += `<button class="score-btn score-btn-add" onclick="addCatScore('notes',2)">+ Конспект (2б)</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="addCatScore('notes',-2)">− Конспект (2б)</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="setCatScore('notes',0)">Сбросить все</button>`;
-            body += `</div>`;
-            body += `<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Или введите вручную:</label><input type="number" min="0" value="${val}" onchange="setCatScore('notes',parseInt(this.value)||0)"></div>`;
+            body += '<p style="font-size:0.85rem;color:#6b7280;margin:8px 0">2 балла за каждый конспект лекции</p>';
+            body += '<div class="score-buttons">';
+            body += '<button class="score-btn score-btn-add" onclick="addCatScore(\'notes\',2)">+ Конспект (2б)</button>';
+            body += '<button class="score-btn score-btn-sub" onclick="addCatScore(\'notes\',-2)">− Конспект (2б)</button>';
+            body += '<button class="score-btn score-btn-sub" onclick="setCatScore(\'notes\',0)">Сбросить</button>';
+            body += '</div>';
+            body += '<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Вручную:</label><input type="number" min="0" value="' + val + '" onchange="setCatScore(\'notes\',parseInt(this.value)||0)"></div>';
         } else if (cat.useGrades && cat.gradeMapping) {
-            const gradesKey = cat.key + 'Grades';
-            const grades = modalFormData[gradesKey];
-            let calcFn;
-            if (cat.key === 'practice') calcFn = calcPracticeScore;
-            else if (cat.key === 'reports') calcFn = calcReportsScore;
-            else if (cat.key === 'testing') calcFn = calcTestingScore;
-            else return;
-            
-            body += `<div style="background:#f9fafb;border-radius:8px;padding:12px;margin:12px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:0.85rem">`;
-            body += `<div><div style="font-weight:700;color:#ca8a04">${grades['3']}</div><div style="font-size:0.7rem;color:#6b7280">оценки «3»</div><div style="font-size:0.7rem;color:#9ca3af">× ${cat.gradeMapping.grade3}б</div></div>`;
-            body += `<div><div style="font-weight:700;color:#2563eb">${grades['4']}</div><div style="font-size:0.7rem;color:#6b7280">оценки «4»</div><div style="font-size:0.7rem;color:#9ca3af">× ${cat.gradeMapping.grade4}б</div></div>`;
-            body += `<div><div style="font-weight:700;color:#16a34a">${grades['5']}</div><div style="font-size:0.7rem;color:#6b7280">оценки «5»</div><div style="font-size:0.7rem;color:#9ca3af">× ${cat.gradeMapping.grade5}б</div></div>`;
-            body += `</div></div>`;
-            
-            body += `<div class="score-buttons">`;
-            body += `<button class="score-btn" style="background:#fef9c3;color:#854d0e" onclick="addGrade('${cat.key}','3')">+ Оценка «3» (${cat.gradeMapping.grade3}б)</button>`;
-            body += `<button class="score-btn" style="background:#dbeafe;color:#1e40af" onclick="addGrade('${cat.key}','4')">+ Оценка «4» (${cat.gradeMapping.grade4}б)</button>`;
-            body += `<button class="score-btn" style="background:#dcfce7;color:#166534" onclick="addGrade('${cat.key}','5')">+ Оценка «5» (${cat.gradeMapping.grade5}б)</button>`;
-            body += `</div>`;
-            
-            body += `<div class="score-buttons" style="margin-top:8px">`;
-            body += `<button class="score-btn score-btn-sub" onclick="removeGrade('${cat.key}','3')">− «3»</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="removeGrade('${cat.key}','4')">− «4»</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="removeGrade('${cat.key}','5')">− «5»</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="resetGrades('${cat.key}')">Сбросить все</button>`;
-            body += `</div>`;
+            const gk = cat.key + 'Grades';
+            const grades = modalFormData[gk] || {'3':0,'4':0,'5':0};
+            let calcFn = cat.key === 'practice' ? calcPracticeScore : cat.key === 'testing' ? calcTestingScore : calcReportsScore;
+
+            body += '<div style="background:#f9fafb;border-radius:8px;padding:12px;margin:12px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:0.85rem">';
+            body += '<div><div style="font-weight:700;color:#ca8a04">' + (grades['3']||0) + '</div><div style="font-size:0.7rem;color:#6b7280">оценки «3»</div><div style="font-size:0.7rem;color:#9ca3af">× ' + cat.gradeMapping.grade3 + 'б</div></div>';
+            body += '<div><div style="font-weight:700;color:#2563eb">' + (grades['4']||0) + '</div><div style="font-size:0.7rem;color:#6b7280">оценки «4»</div><div style="font-size:0.7rem;color:#9ca3af">× ' + cat.gradeMapping.grade4 + 'б</div></div>';
+            body += '<div><div style="font-weight:700;color:#16a34a">' + (grades['5']||0) + '</div><div style="font-size:0.7rem;color:#6b7280">оценки «5»</div><div style="font-size:0.7rem;color:#9ca3af">× ' + cat.gradeMapping.grade5 + 'б</div></div>';
+            body += '</div></div>';
+
+            body += '<div class="score-buttons">';
+            body += '<button class="score-btn" style="background:#fef9c3;color:#854d0e" onclick="addGrade(\'' + cat.key + '\',\'3\')">+ Оценка «3» (' + cat.gradeMapping.grade3 + 'б)</button>';
+            body += '<button class="score-btn" style="background:#dbeafe;color:#1e40af" onclick="addGrade(\'' + cat.key + '\',\'4\')">+ Оценка «4» (' + cat.gradeMapping.grade4 + 'б)</button>';
+            body += '<button class="score-btn" style="background:#dcfce7;color:#166534" onclick="addGrade(\'' + cat.key + '\',\'5\')">+ Оценка «5» (' + cat.gradeMapping.grade5 + 'б)</button>';
+            body += '</div>';
+            body += '<div class="score-buttons" style="margin-top:8px">';
+            body += '<button class="score-btn score-btn-sub" onclick="removeGrade(\'' + cat.key + '\',\'3\')">− «3»</button>';
+            body += '<button class="score-btn score-btn-sub" onclick="removeGrade(\'' + cat.key + '\',\'4\')">− «4»</button>';
+            body += '<button class="score-btn score-btn-sub" onclick="removeGrade(\'' + cat.key + '\',\'5\')">− «5»</button>';
+            body += '<button class="score-btn score-btn-sub" onclick="resetGrades(\'' + cat.key + '\')">Сбросить все</button>';
+            body += '</div>';
         } else if (cat.key === 'bonus') {
-            body += `<div class="manual-input"><input type="number" min="0" value="${val}" onchange="setCatScore('bonus',parseInt(this.value)||0)"><span style="color:#6b7280">баллов</span></div>`;
-            body += `<div class="score-buttons">`;
-            body += `<button class="score-btn score-btn-add" onclick="addCatScore('bonus',1)">+1 балл</button>`;
-            body += `<button class="score-btn score-btn-add" onclick="addCatScore('bonus',5)">+5 баллов</button>`;
-            body += `<button class="score-btn score-btn-add" onclick="addCatScore('bonus',10)">+10 баллов</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="addCatScore('bonus',-1)" ${val < 1 ? 'disabled' : ''}>−1 балл</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="setCatScore('bonus',0)">Сбросить</button>`;
-            body += `</div>`;
-        } else {
-            body += `<div class="score-buttons">`;
-            body += `<button class="score-btn score-btn-add" onclick="addCatScore('${cat.key}',${cat.maxPerItem})">+${cat.maxPerItem}</button>`;
-            body += `<button class="score-btn score-btn-half" onclick="addCatScore('${cat.key}',${Math.ceil(cat.maxPerItem/2)})">+${Math.ceil(cat.maxPerItem/2)}</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="addCatScore('${cat.key}',-${cat.maxPerItem})">-${cat.maxPerItem}</button>`;
-            body += `<button class="score-btn score-btn-sub" onclick="setCatScore('${cat.key}',0)">Сброс</button>`;
-            body += `</div>`;
-            body += `<div class="manual-input"><label style="font-size:0.85rem;color:#6b7280">Вручную:</label><input type="number" min="0" value="${val}" onchange="setCatScore('${cat.key}',parseInt(this.value)||0)"></div>`;
+            body += '<div class="manual-input"><input type="number" min="0" value="' + val + '" onchange="setCatScore(\'bonus\',parseInt(this.value)||0)"><span style="color:#6b7280">баллов</span></div>';
+            body += '<div class="score-buttons">';
+            body += '<button class="score-btn score-btn-add" onclick="addCatScore(\'bonus\',1)">+1</button>';
+            body += '<button class="score-btn score-btn-add" onclick="addCatScore(\'bonus\',5)">+5</button>';
+            body += '<button class="score-btn score-btn-add" onclick="addCatScore(\'bonus\',10)">+10</button>';
+            body += '<button class="score-btn score-btn-sub" onclick="addCatScore(\'bonus\',-1)">−1</button>';
+            body += '<button class="score-btn score-btn-sub" onclick="setCatScore(\'bonus\',0)">Сбросить</button>';
+            body += '</div>';
         }
-        body += `</div>`;
+        body += '</div>';
         document.getElementById('modalBody').innerHTML = body;
-        document.getElementById('modalSummary').textContent = `${modalFormData.notes}+${modalFormData.practice}+${modalFormData.reports}+${modalFormData.bonus} = ${total}`;
+        document.getElementById('modalSummary').textContent = modalFormData.notes + '+' + modalFormData.practice + '+' + modalFormData.reports + '+' + modalFormData.testing + '+' + modalFormData.bonus + ' = ' + total;
     }
+
     function switchModalCat(key) { modalActiveCategory = key; renderScoreModal(); }
+
     function addCatScore(key, amount) {
         const cat = categories.find(c => c.key === key);
-        modalFormData[key] = Math.max(0, Math.min(modalFormData[key] + amount, cat.maxTotal));
+        if (!cat) return;
+        modalFormData[key] = Math.max(0, Math.min((modalFormData[key]||0) + amount, cat.maxTotal));
         renderScoreModal();
     }
     function setCatScore(key, val) {
         const cat = categories.find(c => c.key === key);
+        if (!cat) return;
         modalFormData[key] = Math.max(0, Math.min(val, cat.maxTotal));
         renderScoreModal();
     }
+
     function addGrade(catKey, grade) {
         const cat = categories.find(c => c.key === catKey);
         if (!cat || !cat.gradeMapping) return;
-        const gradesKey = catKey + 'Grades';
-        const newGrades = {...modalFormData[gradesKey]};
-        newGrades[grade]++;
-        let calcFn;
-        if (catKey === 'practice') calcFn = calcPracticeScore;
-        else if (catKey === 'reports') calcFn = calcReportsScore;
-        else if (catKey === 'testing') calcFn = calcTestingScore;
-        else return;
+        const gk = catKey + 'Grades';
+        if (!modalFormData[gk]) modalFormData[gk] = {'3':0,'4':0,'5':0};
+        const newGrades = {...modalFormData[gk]};
+        newGrades[grade] = (newGrades[grade]||0) + 1;
+        let calcFn = catKey === 'practice' ? calcPracticeScore : catKey === 'testing' ? calcTestingScore : calcReportsScore;
         const newScore = calcFn(newGrades);
         if (newScore <= cat.maxTotal) {
-            modalFormData[gradesKey] = newGrades;
+            modalFormData[gk] = newGrades;
             modalFormData[catKey] = newScore;
             renderScoreModal();
         }
@@ -775,28 +791,24 @@
     function removeGrade(catKey, grade) {
         const cat = categories.find(c => c.key === catKey);
         if (!cat || !cat.gradeMapping) return;
-        const gradesKey = catKey + 'Grades';
-        const newGrades = {...modalFormData[gradesKey]};
-        if (newGrades[grade] > 0) {
+        const gk = catKey + 'Grades';
+        if (!modalFormData[gk]) modalFormData[gk] = {'3':0,'4':0,'5':0};
+        const newGrades = {...modalFormData[gk]};
+        if ((newGrades[grade]||0) > 0) {
             newGrades[grade]--;
-            let calcFn;
-            if (catKey === 'practice') calcFn = calcPracticeScore;
-            else if (catKey === 'reports') calcFn = calcReportsScore;
-            else if (catKey === 'testing') calcFn = calcTestingScore;
-            else return;
-            modalFormData[gradesKey] = newGrades;
+            let calcFn = catKey === 'practice' ? calcPracticeScore : catKey === 'testing' ? calcTestingScore : calcReportsScore;
+            modalFormData[gk] = newGrades;
             modalFormData[catKey] = calcFn(newGrades);
             renderScoreModal();
         }
     }
     function resetGrades(catKey) {
-        const cat = categories.find(c => c.key === catKey);
-        if (!cat) return;
-        const gradesKey = catKey + 'Grades';
-        modalFormData[gradesKey] = {'3':0,'4':0,'5':0};
+        const gk = catKey + 'Grades';
+        modalFormData[gk] = {'3':0,'4':0,'5':0};
         modalFormData[catKey] = 0;
         renderScoreModal();
     }
+
     function saveScoreModal() {
         if (!modalFormData || !modalFormData.fullName || !modalFormData.group) { alert('Заполните ФИО и группу'); return; }
         const idx = students.findIndex(s => s.id === modalFormData.id);
@@ -806,131 +818,61 @@
         closeScoreModal();
         renderAll();
     }
-    // Экспорт данных в JSON файл
-    function exportData() {
-        const data = {
-            students: students,
-            categories: categories,
-            exportDate: new Date().toISOString()
-        };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `rating-data-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
 
-    // Импорт данных из JSON файла
-    function importData(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.students && Array.isArray(data.students)) {
-                    students = data.students.map(s => ({
-                        ...s,
-                        notes: s.notes || 0,
-                        practice: s.practice || 0,
-                        reports: s.reports || 0,
-                        bonus: s.bonus || 0,
-                        testing: s.testing || 0,
-                        notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
-                        practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
-                        reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0},
-                        testingGrades: s.testingGrades || {'3':0,'4':0,'5':0}
-                    }));
-                    if (data.categories && Array.isArray(data.categories)) {
-                        categories = data.categories;
-                    }
-                    markAsChanged();
-                    renderAll();
-                    alert('Данные успешно импортированы!');
-                } else {
-                    alert('Ошибка: неверный формат файла');
-                }
-            } catch (error) {
-                alert('Ошибка при чтении файла: ' + error.message);
-            }
-        };
-        reader.readAsText(file);
-        event.target.value = ''; // Сброс input для возможности повторного импорта
-    }
-
-    function clearAll() {
-        if (confirm('Удалить всех студентов?')) { 
-            students = []; 
-            markAsChanged();
-            renderAll(); 
-        }
-    }
-
-    // ===== SAVE CHANGES =====
-    let hasChanges = false;
-
+    // ===== СОХРАНЕНИЕ =====
     function markAsChanged() {
         hasChanges = true;
-        const saveBtn = document.getElementById('saveBtn');
-        if (saveBtn) saveBtn.style.display = '';
+        const btn = document.getElementById('saveBtn');
+        if (btn) btn.style.display = '';
     }
 
     function saveAllChanges() {
         try {
-            localStorage.setItem('students', JSON.stringify(students));
-            localStorage.setItem('categories', JSON.stringify(categories));
+            localStorage.setItem('rating_students', JSON.stringify(students));
+            localStorage.setItem('rating_categories', JSON.stringify(categories));
             hasChanges = false;
             document.getElementById('saveBtn').style.display = 'none';
-            showNotification('✅ Изменения успешно сохранены!');
+            showNotification('✅ Изменения сохранены!');
         } catch (e) {
-            showNotification('❌ Ошибка при сохранении: ' + e.message);
+            showNotification('❌ Ошибка: ' + e.message);
         }
     }
 
-    function showNotification(message) {
-        const notif = document.createElement('div');
-        notif.className = 'save-notification';
-        notif.textContent = message;
-        document.body.appendChild(notif);
-        setTimeout(() => {
-            notif.style.transition = 'opacity 0.3s';
-            notif.style.opacity = '0';
-            setTimeout(() => notif.remove(), 300);
-        }, 2500);
+    function showNotification(msg) {
+        const n = document.createElement('div');
+        n.className = 'save-notification';
+        n.textContent = msg;
+        document.body.appendChild(n);
+        setTimeout(() => { n.style.opacity = '0'; n.style.transition = 'opacity 0.3s'; setTimeout(() => n.remove(), 300); }, 2500);
     }
 
+    function clearAll() {
+        if (confirm('Удалить всех студентов?')) { students = []; markAsChanged(); renderAll(); }
+    }
+
+    // ===== ЗАГРУЗКА ДАННЫХ =====
     function loadSavedData() {
         try {
-            const savedStudents = localStorage.getItem('students');
-            const savedCategories = localStorage.getItem('categories');
-            if (savedStudents) {
-                students = JSON.parse(savedStudents);
-                // Инициализация недостающих полей
-                students = students.map(s => ({
-                    ...s,
-                    notes: s.notes || 0,
-                    practice: s.practice || 0,
-                    reports: s.reports || 0,
-                    bonus: s.bonus || 0,
-                    testing: s.testing || 0,
-                    notesGrades: s.notesGrades || {'3':0,'4':0,'5':0},
-                    practiceGrades: s.practiceGrades || {'3':0,'4':0,'5':0},
-                    reportsGrades: s.reportsGrades || {'3':0,'4':0,'5':0},
-                    testingGrades: s.testingGrades || {'3':0,'4':0,'5':0}
-                }));
+            const saved = localStorage.getItem('rating_students');
+            const savedCats = localStorage.getItem('rating_categories');
+            if (saved) {
+                students = JSON.parse(saved).map(s => ensureStudent(s));
             }
-            if (savedCategories) categories = JSON.parse(savedCategories);
+            if (savedCats) {
+                const loaded = JSON.parse(savedCats);
+                // Мержим: берём сохранённые maxTotal, но гарантируем наличие всех категорий
+                categories = DEFAULT_CATEGORIES.map(def => {
+                    const found = loaded.find(l => l.key === def.key);
+                    if (found) return { ...def, maxTotal: found.maxTotal };
+                    return { ...def };
+                });
+            }
         } catch (e) {
-            console.error('Ошибка загрузки данных:', e);
+            console.error('Ошибка загрузки:', e);
         }
     }
 
-    // Init
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
     loadSavedData();
     updateAuthUI();
     renderAll();
