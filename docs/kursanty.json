@@ -1,0 +1,20 @@
+{
+  "kursanty": [
+    {
+      "id": 1,
+      "fullName": "",
+      "group": "1 взвод",
+      "notes": 0,
+      "practice": 0,
+      "reports": 0,
+      "bonus": 0,
+      "testing": 0,
+      "notesGrades": {"3": 0, "4": 0, "5": 0},
+      "practiceGrades": {"3": 0, "4": 0, "5": 0},
+      "reportsGrades": {"3": 0, "4": 0, "5": 0},
+      "testingGrades": {"3": 0, "4": 0, "5": 0}
+    }
+  ],
+  "lastUpdated": "",
+  "version": "1.0"
+}

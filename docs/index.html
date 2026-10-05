@@ -1362,14 +1362,9 @@
         try {
             console.log('📥 Загрузка данных из kursanty.json...');
             
-            // Получаем URL текущего репозитория (корень)
-            // Если сайт на https://username.github.io/repo-name/, то убираем последний слэш
-            let repoUrl = window.location.origin + window.location.pathname;
-            
-            // Убираем index.html или другой файл из пути
-            repoUrl = repoUrl.replace(/\/index\.html$/, '').replace(/\/$/, '');
-            
-            const dataUrl = repoUrl + '/kursanty.json';
+            // Файл kursanty.json находится в папке docs/ вместе с index.html
+            // Поэтому URL формируется относительно текущего местоположения
+            const dataUrl = 'kursanty.json';
             
             console.log('📡 URL для загрузки:', dataUrl);
             console.log('🔍 Текущий URL:', window.location.href);
