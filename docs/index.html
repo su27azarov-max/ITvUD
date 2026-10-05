@@ -656,16 +656,21 @@
 
     // ===== ЭКСПОРТ/ИМПОРТ ДАННЫХ =====
     function exportData() {
-        const data = { students: students, categories: categories, exportDate: new Date().toISOString() };
+        const data = { 
+            kursanty: students, 
+            lastUpdated: new Date().toISOString(),
+            version: "1.0"
+        };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'rating-data-' + new Date().toISOString().split('T')[0] + '.json';
+        a.download = 'kursanty-' + new Date().toISOString().split('T')[0] + '.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        showNotification('✅ Данные экспортированы в файл kursanty.json');
     }
 
     function importData(event) {
@@ -675,18 +680,22 @@
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
-                if (data.students && Array.isArray(data.students)) {
+                // Поддержка обоих форматов: kursanty (новый) и students (старый)
+                if (data.kursanty && Array.isArray(data.kursanty)) {
+                    students = data.kursanty.map(s => ensureStudent(s));
+                    markAsChanged();
+                    renderAll();
+                    alert('✅ Данные успешно импортированы из kursanty.json!');
+                } else if (data.students && Array.isArray(data.students)) {
                     students = data.students.map(s => ensureStudent(s));
                     if (data.categories && Array.isArray(data.categories)) {
                         categories = data.categories;
                     }
-                    // Автоматически сохраняем в Firebase после импорта
-                    saveToFirebase();
                     markAsChanged();
                     renderAll();
-                    alert('✅ Данные успешно импортированы в облако!');
+                    alert('✅ Данные успешно импортированы!');
                 } else {
-                    alert('❌ Неверный формат файла');
+                    alert('❌ Неверный формат файла. Ожидается поле "kursanty" или "students"');
                 }
             } catch (err) {
                 alert('❌ Ошибка: ' + err.message);
@@ -1348,14 +1357,14 @@
         }
     }
 
-    // Загрузка данных из файла data.json
+    // Загрузка данных из файла kursanty.json
     async function loadDataFromJson() {
         try {
-            console.log('📥 Загрузка данных из data.json...');
+            console.log('📥 Загрузка данных из kursanty.json...');
             
             // Получаем URL текущего репозитория
             const repoUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-            const dataUrl = repoUrl + '/data.json';
+            const dataUrl = repoUrl + '/kursanty.json';
             
             console.log('📡 URL для загрузки:', dataUrl);
             
@@ -1366,31 +1375,22 @@
             if (response.ok) {
                 const data = await response.json();
                 
-                if (data.students) {
-                    students = data.students.map(s => ensureStudent(s));
+                if (data.kursanty) {
+                    students = data.kursanty.map(s => ensureStudent(s));
                     console.log('✅ Загружено курсантов:', students.length);
-                }
-                
-                if (data.categories) {
-                    categories = DEFAULT_CATEGORIES.map(def => {
-                        const found = data.categories.find(l => l.key === def.key);
-                        if (found) return { ...def, maxTotal: found.maxTotal };
-                        return { ...def };
-                    });
-                    console.log('✅ Загружено категорий:', categories.length);
                 }
                 
                 // Сохраняем в localStorage как резервную копию
                 saveToLocalStorage();
                 renderAll();
-                showNotification('✅ Данные загружены из data.json');
+                showNotification('✅ Данные загружены из kursanty.json');
             } else {
-                console.warn('⚠️ Не удалось загрузить data.json, используем localStorage');
+                console.warn('⚠️ Не удалось загрузить kursanty.json, используем localStorage');
                 loadFromLocalStorage();
                 renderAll();
             }
         } catch (error) {
-            console.error('❌ Ошибка загрузки data.json:', error);
+            console.error('❌ Ошибка загрузки kursanty.json:', error);
             console.log('📥 Используем данные из localStorage');
             loadFromLocalStorage();
             renderAll();
