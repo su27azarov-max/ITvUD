@@ -193,6 +193,8 @@
                         <button class="btn btn-secondary" onclick="toggleImport()">📥 Импорт</button>
                         <button class="btn btn-secondary" onclick="exportData()">💾 Экспорт</button>
                         <label class="btn btn-secondary" style="cursor:pointer">📂 Загрузить<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
+                        <button class="btn btn-secondary" onclick="syncWithGitHub()">🔄 Синхронизация</button>
+                        <button class="btn btn-secondary" onclick="openGitHubSettings()">⚙️ GitHub</button>
                         <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
                         <button class="btn btn-danger" onclick="clearAll()">🗑️ Очистить</button>
                         <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить</button>
@@ -278,6 +280,53 @@
         </div>
     </div>
 
+    <!-- GitHub Settings Modal -->
+    <div id="githubSettingsModal" class="modal-overlay hidden" onclick="if(event.target===this)closeGitHubSettings()">
+        <div class="modal" style="max-width:500px">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px">⚙️</div>
+                    <div>
+                        <h3 style="font-size:1.2rem;font-weight:700">Настройка GitHub</h3>
+                        <p style="font-size:0.85rem;opacity:0.8">Синхронизация данных между устройствами</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:6px">Владелец репозитория (username или organization)</label>
+                    <input type="text" id="githubOwner" class="form-input" placeholder="например: myusername">
+                </div>
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:6px">Название репозитория</label>
+                    <input type="text" id="githubRepo" class="form-input" placeholder="например: rating-system">
+                </div>
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:6px">Personal Access Token</label>
+                    <input type="password" id="githubToken" class="form-input" placeholder="ghp_...">
+                    <p style="font-size:0.75rem;color:#6b7280;margin-top:4px">Создайте токен на <a href="https://github.com/settings/tokens" target="_blank" style="color:#4f46e5">github.com/settings/tokens</a> с правами repo</p>
+                </div>
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:6px">Путь к файлу данных</label>
+                    <input type="text" id="githubFilePath" class="form-input" placeholder="data.json" value="data.json">
+                </div>
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:6px">Ветка</label>
+                    <input type="text" id="githubBranch" class="form-input" placeholder="main" value="main">
+                </div>
+                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-top:16px">
+                    <p style="font-size:0.85rem;color:#1e40af;margin:0">
+                        <strong>💡 Инструкция:</strong> Создайте публичный репозиторий на GitHub, добавьте файл data.json, создайте Personal Access Token и введите данные выше.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" style="flex:1" onclick="closeGitHubSettings()">Отмена</button>
+                <button class="btn btn-primary" style="flex:1" onclick="saveGitHubSettings()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="footer-inner">
             <p style="font-size:0.875rem;color:#6b7280">© 2026 Система рейтинга обучающихся</p>
@@ -289,33 +338,7 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    
     <script>
-    // ===== FIREBASE КОНФИГУРАЦИЯ =====
-    // ВСТАВЬТЕ СЮДА ВАШУ КОНФИГУРАЦИЮ FIREBASE (из шага 3)
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-        projectId: "YOUR_PROJECT",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
-    };
-    
-    // Инициализация Firebase
-    let db = null;
-    try {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        console.log('✅ Firebase инициализирован');
-    } catch (e) {
-        console.error('❌ Ошибка инициализации Firebase:', e);
-    }
-    
     const TEACHER_PASSWORD = '05072020';
 
     // ===== КАТЕГОРИИ =====
@@ -524,6 +547,7 @@
             html += '<li style="font-size:0.875rem;color:#4b5563;padding:4px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:#6366f1">•</span><strong>Доп. баллы</strong> — на усмотрение преподавателя</li>';
             html += '</ul></div>';
             html += '<div class="teacher-section"><h3>💾 Экспорт/Импорт</h3><p style="font-size:0.875rem;color:#4b5563">Для переноса данных между компьютерами:</p><ul style="font-size:0.875rem;color:#4b5563;margin-top:8px;margin-left:16px;list-style:disc"><li>Нажмите «💾 Экспорт» — скачается JSON файл</li><li>На другом компьютере нажмите «📂 Загрузить» и выберите файл</li></ul></div>';
+            html += '<div class="teacher-section"><h3>🔄 Синхронизация через GitHub</h3><p style="font-size:0.875rem;color:#4b5563">Для автоматической синхронизации данных между устройствами:</p><ul style="font-size:0.875rem;color:#4b5563;margin-top:8px;margin-left:16px;list-style:disc"><li>Нажмите «⚙️ GitHub» и настройте синхронизацию</li><li>Создайте репозиторий на GitHub и получите токен</li><li>Данные будут автоматически синхронизироваться через облако</li><li>Подробная инструкция: <a href="github-setup.html" target="_blank" style="color:#4f46e5">github-setup.html</a></li></ul></div>';
             container.innerHTML = html;
         } else {
             let html = '<div class="overview-box"><h3>📊 Система рейтинга</h3><p>Рейтинг формируется по накопительной системе. Оценка = процент от максимума основных категорий (без учёта дополнительных баллов).</p></div>';
@@ -877,95 +901,278 @@
         if (confirm('Удалить всех курсантов?')) { students = []; markAsChanged(); renderAll(); }
     }
 
-    // ===== FIREBASE СИНХРОНИЗАЦИЯ =====
+    // ===== GITHUB API СИНХРОНИЗАЦИЯ =====
     
-    // Загрузка данных из Firebase
-    function loadFromFirebase() {
-        if (!db) {
-            console.warn('Firebase не инициализирован, используем localStorage');
-            loadFromLocalStorage();
-            return;
+    // Конфигурация GitHub
+    const GITHUB_CONFIG = {
+        owner: '', // Имя пользователя или организация
+        repo: '', // Название репозитория
+        token: '', // Personal Access Token
+        filePath: 'data.json', // Путь к файлу с данными
+        branch: 'main' // Ветка
+    };
+    
+    // Загрузка конфигурации GitHub из localStorage
+    function loadGitHubConfig() {
+        try {
+            const saved = localStorage.getItem('github_config');
+            if (saved) {
+                const config = JSON.parse(saved);
+                GITHUB_CONFIG.owner = config.owner || '';
+                GITHUB_CONFIG.repo = config.repo || '';
+                GITHUB_CONFIG.token = config.token || '';
+                GITHUB_CONFIG.filePath = config.filePath || 'data.json';
+                GITHUB_CONFIG.branch = config.branch || 'main';
+            }
+        } catch (e) {
+            console.error('Ошибка загрузки конфигурации GitHub:', e);
+        }
+    }
+    
+    // Сохранение конфигурации GitHub в localStorage
+    function saveGitHubConfig() {
+        try {
+            localStorage.setItem('github_config', JSON.stringify(GITHUB_CONFIG));
+        } catch (e) {
+            console.error('Ошибка сохранения конфигурации GitHub:', e);
+        }
+    }
+    
+    // Проверка настроен ли GitHub
+    function isGitHubConfigured() {
+        return GITHUB_CONFIG.owner && GITHUB_CONFIG.repo && GITHUB_CONFIG.token;
+    }
+    
+    // Чтение файла из GitHub
+    async function readFromGitHub() {
+        if (!isGitHubConfigured()) {
+            console.warn('GitHub не настроен');
+            return null;
         }
         
-        console.log('📥 Загрузка данных из Firebase...');
-        
-        db.ref('ratingData').once('value').then(snapshot => {
-            const data = snapshot.val();
-            if (data) {
-                if (data.students) {
-                    students = data.students.map(s => ensureStudent(s));
+        try {
+            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`;
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
                 }
-                if (data.categories) {
+            });
+            
+            if (!response.ok) {
+                if (response.status === 404) {
+                    console.log('ℹ️ Файл data.json не найден в репозитории');
+                    return null;
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            const content = atob(data.content); // Декодирование base64
+            const jsonData = JSON.parse(content);
+            
+            console.log('✅ Данные загружены из GitHub');
+            return jsonData;
+        } catch (error) {
+            console.error('❌ Ошибка чтения из GitHub:', error);
+            return null;
+        }
+    }
+    
+    // Запись файла в GitHub
+    async function writeToGitHub() {
+        if (!isGitHubConfigured()) {
+            console.warn('GitHub не настроен');
+            return false;
+        }
+        
+        try {
+            // Сначала получаем SHA файла (если он существует)
+            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
+            
+            let sha = null;
+            try {
+                const getResponse = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (getResponse.ok) {
+                    const existingData = await getResponse.json();
+                    sha = existingData.sha;
+                }
+            } catch (e) {
+                // Файл не существует, создаём новый
+            }
+            
+            // Подготавливаем данные
+            const data = {
+                students: students,
+                categories: categories,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))); // Кодирование в base64
+            
+            // Формируем запрос
+            const requestBody = {
+                message: 'Обновление данных рейтинга',
+                content: content,
+                branch: GITHUB_CONFIG.branch
+            };
+            
+            if (sha) {
+                requestBody.sha = sha;
+            }
+            
+            // Отправляем запрос
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            console.log('✅ Данные сохранены в GitHub');
+            return true;
+        } catch (error) {
+            console.error('❌ Ошибка записи в GitHub:', error);
+            return false;
+        }
+    }
+    
+    // Загрузка данных (приоритет: GitHub > localStorage)
+    async function loadSavedData() {
+        loadGitHubConfig();
+        
+        if (isGitHubConfigured()) {
+            console.log('📥 Загрузка данных из GitHub...');
+            const githubData = await readFromGitHub();
+            
+            if (githubData) {
+                if (githubData.students) {
+                    students = githubData.students.map(s => ensureStudent(s));
+                }
+                if (githubData.categories) {
                     categories = DEFAULT_CATEGORIES.map(def => {
-                        const found = data.categories.find(l => l.key === def.key);
+                        const found = githubData.categories.find(l => l.key === def.key);
                         if (found) return { ...def, maxTotal: found.maxTotal };
                         return { ...def };
                     });
                 }
-                console.log('✅ Данные загружены из Firebase');
-            } else {
-                console.log('ℹ️ В Firebase нет данных, используем localStorage');
-                loadFromLocalStorage();
+                // Сохраняем в localStorage как резервную копию
+                saveToLocalStorage();
+                renderAll();
+                return;
             }
-            renderAll();
-        }).catch(error => {
-            console.error('❌ Ошибка загрузки из Firebase:', error);
-            loadFromLocalStorage();
-            renderAll();
-        });
+        }
+        
+        // Если GitHub не настроен или ошибка - загружаем из localStorage
+        console.log('📥 Загрузка данных из localStorage...');
+        loadFromLocalStorage();
+        renderAll();
     }
     
-    // Сохранение данных в Firebase
-    function saveToFirebase() {
-        if (!db) {
-            console.warn('Firebase не инициализирован, сохраняем в localStorage');
-            saveToLocalStorage();
+    // Сохранение данных (в GitHub и localStorage)
+    async function saveAllChanges() {
+        // Сначала сохраняем в localStorage
+        saveToLocalStorage();
+        
+        // Затем пытаемся сохранить в GitHub
+        if (isGitHubConfigured()) {
+            showNotification('📤 Сохранение в GitHub...');
+            const success = await writeToGitHub();
+            
+            if (success) {
+                hasChanges = false;
+                document.getElementById('saveBtn').style.display = 'none';
+                showNotification('✅ Изменения сохранены в GitHub и локально!');
+            } else {
+                showNotification('⚠️ Сохранено локально, но ошибка при сохранении в GitHub');
+            }
+        } else {
+            hasChanges = false;
+            document.getElementById('saveBtn').style.display = 'none';
+            showNotification('✅ Изменения сохранены локально!');
+        }
+    }
+    
+    // Синхронизация с GitHub
+    async function syncWithGitHub() {
+        if (!isGitHubConfigured()) {
+            alert('⚠️ GitHub не настроен. Пожалуйста, настройте синхронизацию в меню преподавателя.');
             return;
         }
         
-        console.log('📤 Сохранение данных в Firebase...');
+        showNotification('🔄 Синхронизация с GitHub...');
         
-        const data = {
-            students: students,
-            categories: categories,
-            lastUpdated: new Date().toISOString()
-        };
+        // Загружаем данные из GitHub
+        const githubData = await readFromGitHub();
         
-        db.ref('ratingData').set(data).then(() => {
-            console.log('✅ Данные сохранены в Firebase');
-            // Также сохраняем в localStorage как резервную копию
+        if (githubData) {
+            if (githubData.students) {
+                students = githubData.students.map(s => ensureStudent(s));
+            }
+            if (githubData.categories) {
+                categories = DEFAULT_CATEGORIES.map(def => {
+                    const found = githubData.categories.find(l => l.key === def.key);
+                    if (found) return { ...def, maxTotal: found.maxTotal };
+                    return { ...def };
+                });
+            }
             saveToLocalStorage();
-        }).catch(error => {
-            console.error('❌ Ошибка сохранения в Firebase:', error);
-            saveToLocalStorage();
-        });
+            renderAll();
+            showNotification('✅ Данные синхронизированы с GitHub!');
+        } else {
+            showNotification('❌ Ошибка синхронизации с GitHub');
+        }
     }
     
-    // Слушатель изменений в реальном времени
-    function listenToFirebaseChanges() {
-        if (!db) return;
+    // Открытие модального окна настроек GitHub
+    function openGitHubSettings() {
+        loadGitHubConfig();
+        document.getElementById('githubOwner').value = GITHUB_CONFIG.owner;
+        document.getElementById('githubRepo').value = GITHUB_CONFIG.repo;
+        document.getElementById('githubToken').value = GITHUB_CONFIG.token;
+        document.getElementById('githubFilePath').value = GITHUB_CONFIG.filePath;
+        document.getElementById('githubBranch').value = GITHUB_CONFIG.branch;
+        document.getElementById('githubSettingsModal').classList.remove('hidden');
+    }
+    
+    // Закрытие модального окна настроек GitHub
+    function closeGitHubSettings() {
+        document.getElementById('githubSettingsModal').classList.add('hidden');
+    }
+    
+    // Сохранение настроек GitHub
+    function saveGitHubSettings() {
+        GITHUB_CONFIG.owner = document.getElementById('githubOwner').value.trim();
+        GITHUB_CONFIG.repo = document.getElementById('githubRepo').value.trim();
+        GITHUB_CONFIG.token = document.getElementById('githubToken').value.trim();
+        GITHUB_CONFIG.filePath = document.getElementById('githubFilePath').value.trim() || 'data.json';
+        GITHUB_CONFIG.branch = document.getElementById('githubBranch').value.trim() || 'main';
         
-        db.ref('ratingData').on('value', snapshot => {
-            const data = snapshot.val();
-            if (data && data.students) {
-                // Проверяем, есть ли изменения
-                const currentData = JSON.stringify(students);
-                const newData = JSON.stringify(data.students);
-                
-                if (currentData !== newData) {
-                    console.log('🔄 Обнаружены изменения в Firebase, обновляем...');
-                    students = data.students.map(s => ensureStudent(s));
-                    if (data.categories) {
-                        categories = DEFAULT_CATEGORIES.map(def => {
-                            const found = data.categories.find(l => l.key === def.key);
-                            if (found) return { ...def, maxTotal: found.maxTotal };
-                            return { ...def };
-                        });
-                    }
-                    renderAll();
-                }
-            }
-        });
+        if (!GITHUB_CONFIG.owner || !GITHUB_CONFIG.repo || !GITHUB_CONFIG.token) {
+            alert('⚠️ Пожалуйста, заполните все обязательные поля (владелец, репозиторий, токен)');
+            return;
+        }
+        
+        saveGitHubConfig();
+        closeGitHubSettings();
+        showNotification('✅ Настройки GitHub сохранены!');
+        
+        // Предлагаем синхронизировать данные
+        if (confirm('Хотите синхронизировать данные с GitHub сейчас?')) {
+            syncWithGitHub();
+        }
     }
     
     // Резервное сохранение в localStorage
@@ -998,16 +1205,11 @@
             console.error('Ошибка загрузки из localStorage:', e);
         }
     }
-    
-    // Загрузка данных (приоритет: Firebase > localStorage)
-    function loadSavedData() {
-        loadFromFirebase();
-    }
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    loadSavedData();
-    listenToFirebaseChanges(); // Запускаем слушатель изменений в реальном времени
-    updateAuthUI();
+    loadSavedData().then(() => {
+        updateAuthUI();
+    });
     </script>
 </body>
 </html>
