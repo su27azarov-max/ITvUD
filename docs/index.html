@@ -1362,30 +1362,46 @@
         try {
             console.log('📥 Загрузка данных из kursanty.json...');
             
-            // Получаем URL текущего репозитория
-            const repoUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+            // Получаем URL текущего репозитория (корень)
+            // Если сайт на https://username.github.io/repo-name/, то убираем последний слэш
+            let repoUrl = window.location.origin + window.location.pathname;
+            
+            // Убираем index.html или другой файл из пути
+            repoUrl = repoUrl.replace(/\/index\.html$/, '').replace(/\/$/, '');
+            
             const dataUrl = repoUrl + '/kursanty.json';
             
             console.log('📡 URL для загрузки:', dataUrl);
+            console.log('🔍 Текущий URL:', window.location.href);
             
             const response = await fetch(dataUrl, {
-                cache: 'no-store'
+                cache: 'no-store',
+                headers: {
+                    'Accept': 'application/json'
+                }
             });
+            
+            console.log('📥 Статус ответа:', response.status, response.statusText);
             
             if (response.ok) {
                 const data = await response.json();
+                console.log('📦 Получены данные:', data);
                 
-                if (data.kursanty) {
+                if (data.kursanty && Array.isArray(data.kursanty)) {
                     students = data.kursanty.map(s => ensureStudent(s));
                     console.log('✅ Загружено курсантов:', students.length);
+                    
+                    // Сохраняем в localStorage как резервную копию
+                    saveToLocalStorage();
+                    renderAll();
+                    showNotification('✅ Данные загружены из kursanty.json (' + students.length + ' курсантов)');
+                } else {
+                    console.warn('⚠️ Файл kursanty.json не содержит массив kursanty');
+                    loadFromLocalStorage();
+                    renderAll();
                 }
-                
-                // Сохраняем в localStorage как резервную копию
-                saveToLocalStorage();
-                renderAll();
-                showNotification('✅ Данные загружены из kursanty.json');
             } else {
-                console.warn('⚠️ Не удалось загрузить kursanty.json, используем localStorage');
+                console.warn('⚠️ Не удалось загрузить kursanty.json (статус: ' + response.status + '), используем localStorage');
                 loadFromLocalStorage();
                 renderAll();
             }
