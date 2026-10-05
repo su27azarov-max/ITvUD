@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройка синхронизации GitHub - Пошаговая инструкция</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 18px;
+        }
+        .content {
+            padding: 40px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+        .step h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .step-content {
+            margin-left: 45px;
+        }
+        .step-content p {
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        .step-content ul {
+            margin: 10px 0 10px 20px;
+        }
+        .step-content li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .highlight {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .highlight strong {
+            color: #856404;
+        }
+        .success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success strong {
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .error strong {
+            color: #721c24;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        .screenshot {
+            background: #e9ecef;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .screenshot-placeholder {
+            background: white;
+            border: 2px dashed #adb5bd;
+            padding: 40px;
+            border-radius: 8px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        .checklist {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .checklist h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Настройка синхронизации GitHub</h1>
+            <p>Пошаговая инструкция по исправлению проблемы с синхронизацией</p>
+        </div>
+        
+        <div class="content">
+            <div class="highlight">
+                <strong>⚠️ Важно:</strong> Следуйте инструкциям шаг за шагом. Не пропускайте шаги!
+            </div>
+
+            <div class="step">
+                <h2><span class="step-number">1</span> Создайте репозиторий на GitHub</h2>
+                <div class="step-content">
+                    <p>Если у вас ещё нет репозитория:</p>
+                    <ol>
+                        <li>Перейдите на <a href="https://github.com/new" target="_blank">github.com/new</a></li>
+                        <li>Заполните форму:
+                            <ul>
+                                <li><strong>Repository name</strong>: <code>rating-system</code> (или любое другое)</li>
+                                <li><strong>Description</strong>: <code>Система рейтинга курсантов</code></li>
+                                <li><strong>Public</strong>: ✅ выберите Public</li>
+                                <li><strong>Add a README</strong>: ✅ отметьте</li>
+                            </ul>
+                        </li>
+                        <li>Нажмите <strong>"Create repository"</strong></li>
+                    </ol>
+                    <div class="screenshot">
+                        <div class="screenshot-placeholder">
+                            📸 Скриншот создания репозитория
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <h2><span class="step-number">2</span> Создайте файл data.json</h2>
+                <div class="step-content">
+                    <p>В созданном репозитории:</p>
+                    <ol>
+                        <li>Нажмите <strong>"Add file"</strong> → <strong>"Create new file"</strong></li>
+                        <li>В поле имени файла введите: <code>data.json</code></li>
+                        <li>Вставьте содержимое:
+                            <div class="code">{
+  "students": [],
+  "categories": [],
+  "lastUpdated": ""
+}</div>
+                        </li>
+                        <li>Прокрутите вниз</li>
+                        <li>Введите сообщение: <code>Начальные данные</code></li>
+                        <li>Нажмите <strong>"Commit new file"</strong></li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="step">
+                <h2><span class="step-number">3</span> Создайте Personal Access Token</h2>
+                <div class="step-content">
+                    <ol>
+                        <li>Перейдите на <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a></li>
+                        <li>Нажмите <strong>"Generate new token"</strong> → <strong>"Generate new token (classic)"</strong></li>
+                        <li>Заполните форму:
+                            <ul>
+                                <li><strong>Note</strong>: <code>Rating System</code></li>
+                                <li><strong>Expiration</strong>: <code>90 days</code></li>
+                                <li><strong>Select scopes</strong>: ✅ отметьте <code>repo</code></li>
+                            </ul>
+                        </li>
+                        <li>Прокрутите вниз и нажмите <strong>"Generate token"</strong></li>
+                        <li><strong>СКОПИРУЙТЕ ТОКЕН</strong> (начинается с <code>ghp_...</code>)
+                            <div class="error">
+                                <strong>⚠️ Важно:</strong> Вы не сможете увидеть токен снова! Сохраните его в надёжном месте.
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="step">
+                <h2><span class="step-number">4</span> Настройте синхронизацию на сайте</h2>
+                <div class="step-content">
+                    <ol>
+                        <li>Откройте основной сайт</li>
+                        <li>Войдите как преподаватель (пароль: <code>05072020</code>)</li>
+                        <li>Нажмите кнопку <strong>"⚙️ GitHub"</strong> в панели инструментов</li>
+                        <li>Заполните поля:
+                            <ul>
+                                <li><strong>Владелец репозитория</strong>: ваш username на GitHub</li>
+                                <li><strong>Название репозитория</strong>: <code>rating-system</code></li>
+                                <li><strong>Personal Access Token</strong>: вставьте скопированный токен</li>
+                                <li><strong>Путь к файлу данных</strong>: <code>data.json</code></li>
+                                <li><strong>Ветка</strong>: <code>main</code></li>
+                            </ul>
+                        </li>
+                        <li>Нажмите <strong>"Сохранить"</strong></li>
+                    </ol>
+                    <div class="screenshot">
+                        <div class="screenshot-placeholder">
+                            📸 Скриншот настроек GitHub
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <h2><span class="step-number">5</span> Протестируйте соединение</h2>
+                <div class="step-content">
+                    <ol>
+                        <li>В окне настроек GitHub нажмите <strong>"🔍 Тест"</strong></li>
+                        <li>Дождитесь результата</li>
+                        <li>Если всё хорошо - увидите сообщение <strong>"✅ Соединение с GitHub работает!"</strong></li>
+                    </ol>
+                    <div class="success">
+                        <strong>✅ Успех:</strong> Если тест прошёл успешно, переходите к шагу 6.
+                    </div>
+                    <div class="error">
+                        <strong>❌ Ошибка:</strong> Если есть ошибки, читайте раздел "Частые проблемы" ниже.
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <h2><span class="step-number">6</span> Проверьте синхронизацию</h2>
+                <div class="step-content">
+                    <ol>
+                        <li>Внесите любые изменения (например, добавьте курсанта)</li>
+                        <li>Нажмите <strong>"💾 Сохранить"</strong></li>
+                        <li>Дождитесь сообщения <strong>"✅ Изменения сохранены в GitHub!"</strong></li>
+                        <li>Откройте репозиторий на GitHub</li>
+                        <li>Проверьте файл <code>data.json</code> - он должен обновиться</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="step">
+                <h2><span class="step-number">7</span> Проверьте на другом устройстве</h2>
+                <div class="step-content">
+                    <ol>
+                        <li>Откройте сайт на другом устройстве</li>
+                        <li>Нажмите <strong>"🔄 Синхронизация"</strong></li>
+                        <li>Или обновите страницу (F5)</li>
+                        <li>Изменения должны появиться!</li>
+                    </ol>
+                    <div class="success">
+                        <strong>🎉 Поздравляем!</strong> Если изменения появились на другом устройстве - синхронизация работает!
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>✅ Чек-лист проверки</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1">Репозиторий создан на GitHub</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2">Файл data.json создан в репозитории</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check3">
+                    <label for="check3">Personal Access Token создан с правами repo</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check4">
+                    <label for="check4">Настройки GitHub заполнены на сайте</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check5">
+                    <label for="check5">Тест соединения прошёл успешно</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check6">
+                    <label for="check6">Данные сохраняются в GitHub</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check7">
+                    <label for="check7">Синхронизация работает на другом устройстве</label>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>💡 Совет:</strong> Если что-то не работает, откройте страницу диагностики:
+                <br><br>
+                <a href="check-sync.html" class="btn btn-primary" target="_blank">🔍 Открыть диагностику</a>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="index.html" class="btn btn-secondary">← Вернуться к рейтингу</a>
+                <a href="СИНХРОНИЗАЦИЯ_НЕ_РАБОТАЕТ.md" class="btn btn-secondary" target="_blank">📖 Подробная инструкция</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Сохраняем состояние чек-листа в localStorage
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach((checkbox, index) => {
+            const key = `checklist_${index}`;
+            checkbox.checked = localStorage.getItem(key) === 'true';
+            
+            checkbox.addEventListener('change', () => {
+                localStorage.setItem(key, checkbox.checked);
+            });
+        });
+    </script>
+</body>
+</html>

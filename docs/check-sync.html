@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Диагностика синхронизации GitHub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .status-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .status-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+        }
+        .status-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+        .status-text {
+            flex: 1;
+        }
+        .status-label {
+            font-weight: 600;
+            color: #333;
+        }
+        .status-value {
+            color: #666;
+            font-size: 14px;
+            margin-top: 3px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        .log-line {
+            margin: 3px 0;
+            padding: 2px;
+        }
+        .log-success { color: #4ec9b0; }
+        .log-error { color: #f48771; }
+        .log-warning { color: #dcdcaa; }
+        .log-info { color: #9cdcfe; }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Диагностика синхронизации GitHub</h1>
+            <p>Проверка работоспособности синхронизации данных</p>
+        </div>
+        
+        <div class="content">
+            <div class="alert alert-info">
+                <strong>💡 Инструкция:</strong> Нажмите кнопку "Запустить диагностику" для проверки всех компонентов синхронизации.
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="runDiagnostic()">🔍 Запустить диагностику</button>
+                <button class="btn btn-success" onclick="testWrite()">💾 Тест записи</button>
+                <button class="btn btn-secondary" onclick="testRead()">📖 Тест чтения</button>
+                <button class="btn btn-danger" onclick="clearAll()">🗑️ Очистить данные</button>
+            </div>
+
+            <div id="status-container">
+                <div class="status-card">
+                    <h3>📊 Статус компонентов</h3>
+                    <div id="status-list">
+                        <div class="status-item">
+                            <span class="status-icon">⏳</span>
+                            <div class="status-text">
+                                <div class="status-label">Ожидание проверки...</div>
+                                <div class="status-value">Нажмите "Запустить диагностику"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3>📝 Журнал событий</h3>
+                <div id="log" class="log">
+                    <div class="log-line log-info">Готов к диагностике...</div>
+                </div>
+            </div>
+
+            <div id="results-container"></div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Важно:</strong> Если диагностика показывает ошибки, прочитайте файл <code>FIX_SYNC_RU.md</code> для пошагового решения проблем.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Загружаем данные из основного файла
+        const script = document.createElement('script');
+        script.src = 'index.html';
+        document.head.appendChild(script);
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = `log-line log-${type}`;
+            line.textContent = `[${time}] ${message}`;
+            logDiv.appendChild(line);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(items) {
+            const statusList = document.getElementById('status-list');
+            statusList.innerHTML = '';
+            
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'status-item';
+                div.innerHTML = `
+                    <span class="status-icon">${item.icon}</span>
+                    <div class="status-text">
+                        <div class="status-label">${item.label}</div>
+                        <div class="status-value">${item.value}</div>
+                    </div>
+                `;
+                statusList.appendChild(div);
+            });
+        }
+
+        async function runDiagnostic() {
+            log('🚀 Начинаем диагностику...', 'info');
+            
+            const statusItems = [];
+            
+            // 1. Проверка localStorage
+            log('📦 Проверяем localStorage...', 'info');
+            const students = localStorage.getItem('rating_students');
+            const categories = localStorage.getItem('rating_categories');
+            const config = localStorage.getItem('github_config');
+            
+            if (students && categories && config) {
+                statusItems.push({
+                    icon: '✅',
+                    label: 'localStorage',
+                    value: 'Все данные найдены'
+                });
+                log('✅ localStorage: все данные найдены', 'success');
+            } else {
+                statusItems.push({
+                    icon: '⚠️',
+                    label: 'localStorage',
+                    value: 'Некоторые данные отсутствуют'
+                });
+                log('⚠️ localStorage: некоторые данные отсутствуют', 'warning');
+            }
+            
+            // 2. Проверка GitHub настроек
+            log('⚙️ Проверяем настройки GitHub...', 'info');
+            if (config) {
+                const cfg = JSON.parse(config);
+                if (cfg.owner && cfg.repo && cfg.token) {
+                    statusItems.push({
+                        icon: '✅',
+                        label: 'Настройки GitHub',
+                        value: `Владелец: ${cfg.owner}, Репозиторий: ${cfg.repo}`
+                    });
+                    log(`✅ GitHub настроен: ${cfg.owner}/${cfg.repo}`, 'success');
+                    
+                    // 3. Тест соединения
+                    log('🌐 Тестируем соединение с GitHub...', 'info');
+                    try {
+                        const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}`;
+                        const response = await fetch(url, {
+                            headers: {
+                                'Authorization': `Bearer ${cfg.token}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            statusItems.push({
+                                icon: '✅',
+                                label: 'Соединение с GitHub',
+                                value: `Репозиторий: ${data.full_name}`
+                            });
+                            log('✅ Соединение с GitHub работает', 'success');
+                        } else {
+                            statusItems.push({
+                                icon: '❌',
+                                label: 'Соединение с GitHub',
+                                value: `Ошибка: ${response.status}`
+                            });
+                            log(`❌ Ошибка соединения: ${response.status}`, 'error');
+                        }
+                    } catch (error) {
+                        statusItems.push({
+                            icon: '❌',
+                            label: 'Соединение с GitHub',
+                            value: `Ошибка: ${error.message}`
+                        });
+                        log(`❌ Ошибка: ${error.message}`, 'error');
+                    }
+                } else {
+                    statusItems.push({
+                        icon: '❌',
+                        label: 'Настройки GitHub',
+                        value: 'Не все поля заполнены'
+                    });
+                    log('❌ GitHub: не все поля заполнены', 'error');
+                }
+            } else {
+                statusItems.push({
+                    icon: '❌',
+                    label: 'Настройки GitHub',
+                    value: 'Не настроены'
+                });
+                log('❌ GitHub не настроен', 'error');
+            }
+            
+            updateStatus(statusItems);
+            log('✅ Диагностика завершена', 'success');
+        }
+
+        async function testWrite() {
+            log('💾 Тестируем запись в GitHub...', 'info');
+            
+            if (typeof writeToGitHub === 'undefined') {
+                log('❌ Функция writeToGitHub не найдена', 'error');
+                alert('Функция writeToGitHub не найдена. Убедитесь, что страница полностью загружена.');
+                return;
+            }
+            
+            try {
+                const success = await writeToGitHub();
+                if (success) {
+                    log('✅ Запись успешна!', 'success');
+                    alert('✅ Запись в GitHub успешна!');
+                } else {
+                    log('❌ Запись не удалась', 'error');
+                    alert('❌ Запись не удалась. Проверьте настройки GitHub.');
+                }
+            } catch (error) {
+                log(`❌ Ошибка: ${error.message}`, 'error');
+                alert(`❌ Ошибка: ${error.message}`);
+            }
+        }
+
+        async function testRead() {
+            log('📖 Тестируем чтение из GitHub...', 'info');
+            
+            if (typeof readFromGitHub === 'undefined') {
+                log('❌ Функция readFromGitHub не найдена', 'error');
+                alert('Функция readFromGitHub не найдена. Убедитесь, что страница полностью загружена.');
+                return;
+            }
+            
+            try {
+                const data = await readFromGitHub();
+                if (data) {
+                    log('✅ Чтение успешно!', 'success');
+                    log(`📊 Загружено курсантов: ${data.students ? data.students.length : 0}`, 'info');
+                    alert('✅ Чтение из GitHub успешно!');
+                } else {
+                    log('⚠️ Данные не найдены в GitHub', 'warning');
+                    alert('⚠️ Данные не найдены в GitHub. Возможно, файл data.json не создан.');
+                }
+            } catch (error) {
+                log(`❌ Ошибка: ${error.message}`, 'error');
+                alert(`❌ Ошибка: ${error.message}`);
+            }
+        }
+
+        function clearAll() {
+            if (confirm('⚠️ Это удалит все данные из localStorage. Продолжить?')) {
+                localStorage.clear();
+                log('🗑️ localStorage очищен', 'warning');
+                alert('✅ Данные очищены. Перезагрузите страницу.');
+                location.reload();
+            }
+        }
+
+        // Автоматическая проверка при загрузке
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('✅ Страница загружена', 'success');
+                log('💡 Нажмите "Запустить диагностику" для проверки', 'info');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
