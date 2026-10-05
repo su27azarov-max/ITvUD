@@ -195,6 +195,7 @@
                         <label class="btn btn-secondary" style="cursor:pointer">📂 Загрузить<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
                         <button class="btn btn-secondary" onclick="syncWithGitHub()">🔄 Синхронизация</button>
                         <button class="btn btn-secondary" onclick="openGitHubSettings()">⚙️ GitHub</button>
+                        <button class="btn btn-secondary" id="autoSaveBtn" onclick="toggleAutoSave()" style="background:#dcfce7;color:#166534;border-color:#86efac">🔄 Автосохранение: ВКЛ</button>
                         <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
                         <button class="btn btn-danger" onclick="clearAll()">🗑️ Очистить</button>
                         <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить</button>
@@ -866,10 +867,54 @@
     }
 
     // ===== СОХРАНЕНИЕ =====
+    let autoSaveEnabled = true; // Автосохранение включено по умолчанию
+    let autoSaveTimer = null; // Таймер для debounce
+    
     function markAsChanged() {
         hasChanges = true;
         const btn = document.getElementById('saveBtn');
         if (btn) btn.style.display = '';
+        
+        // Автосохранение в GitHub с задержкой 2 секунды (debounce)
+        if (autoSaveEnabled && isGitHubConfigured()) {
+            if (autoSaveTimer) clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(async () => {
+                console.log('🔄 Автосохранение в GitHub...');
+                showNotification('🔄 Автосохранение в GitHub...');
+                try {
+                    const success = await writeToGitHub();
+                    if (success) {
+                        hasChanges = false;
+                        if (btn) btn.style.display = 'none';
+                        showNotification('✅ Данные автоматически сохранены в GitHub!');
+                    }
+                } catch (error) {
+                    console.error('❌ Ошибка автосохранения:', error);
+                    showNotification('⚠️ Ошибка автосохранения: ' + error.message);
+                }
+            }, 2000); // Задержка 2 секунды
+        }
+    }
+    
+    // Переключение автосохранения
+    function toggleAutoSave() {
+        autoSaveEnabled = !autoSaveEnabled;
+        const btn = document.getElementById('autoSaveBtn');
+        if (btn) {
+            if (autoSaveEnabled) {
+                btn.textContent = '🔄 Автосохранение: ВКЛ';
+                btn.style.background = '#dcfce7';
+                btn.style.color = '#166534';
+                btn.style.borderColor = '#86efac';
+                showNotification('✅ Автосохранение включено');
+            } else {
+                btn.textContent = '⏸️ Автосохранение: ВЫКЛ';
+                btn.style.background = '#fef2f2';
+                btn.style.color = '#dc2626';
+                btn.style.borderColor = '#fecaca';
+                showNotification('⏸️ Автосохранение отключено');
+            }
+        }
     }
 
     // Функция saveAllChanges() определена ниже в разделе GitHub API
@@ -1109,6 +1154,12 @@
     
     // Сохранение данных (в GitHub и localStorage)
     async function saveAllChanges() {
+        // Отменяем автосохранение, если оно запущено
+        if (autoSaveTimer) {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = null;
+        }
+        
         // Защита от параллельных сохранений
         if (isSaving) {
             showNotification('⚠️ Сохранение уже выполняется, подождите...');
@@ -1128,7 +1179,7 @@
                 if (success) {
                     hasChanges = false;
                     document.getElementById('saveBtn').style.display = 'none';
-                    showNotification('✅ Изменения сохранены в data.json!');
+                    showNotification('✅ Изменения сохранены в kursanty.json!');
                 } else {
                     showNotification('⚠️ Сохранено локально, но ошибка при сохранении в GitHub');
                 }
