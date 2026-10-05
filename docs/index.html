@@ -938,7 +938,7 @@
         owner: '', // Имя пользователя или организация
         repo: '', // Название репозитория
         token: '', // Personal Access Token
-        filePath: 'data.json', // Путь к файлу с данными
+        filePath: 'docs/kursanty.json', // Путь к файлу с данными
         branch: 'main' // Ветка
     };
     
@@ -951,7 +951,7 @@
                 GITHUB_CONFIG.owner = config.owner || '';
                 GITHUB_CONFIG.repo = config.repo || '';
                 GITHUB_CONFIG.token = config.token || '';
-                GITHUB_CONFIG.filePath = config.filePath || 'data.json';
+                GITHUB_CONFIG.filePath = config.filePath || 'docs/kursanty.json';
                 GITHUB_CONFIG.branch = config.branch || 'main';
             }
         } catch (e) {
@@ -1440,7 +1440,6 @@
                     // Сохраняем в localStorage как резервную копию
                     saveToLocalStorage();
                     renderAll();
-                    showNotification('✅ Данные загружены из kursanty.json (' + students.length + ' курсантов)');
                 } else {
                     console.warn('⚠️ Файл kursanty.json не содержит массив kursanty');
                     loadFromLocalStorage();
