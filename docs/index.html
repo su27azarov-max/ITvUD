@@ -1053,17 +1053,27 @@
         let lastError = null;
         
         try {
+            // Детальная диагностика конфигурации
+            console.log('🔧 Конфигурация GitHub:');
+            console.log('   - Владелец:', GITHUB_CONFIG.owner);
+            console.log('   - Репозиторий:', GITHUB_CONFIG.repo);
+            console.log('   - Путь к файлу:', GITHUB_CONFIG.filePath);
+            console.log('   - Ветка:', GITHUB_CONFIG.branch);
+            console.log('   - Токен:', GITHUB_CONFIG.token.substring(0, 10) + '...');
+            
+            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
+            console.log('📍 Полный URL для API:', url);
+            
             for (let attempt = 1; attempt <= maxRetries; attempt++) {
                 try {
-                    console.log(`📡 Попытка ${attempt}/${maxRetries} записи в GitHub...`);
-                    
-                    const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
+                    console.log(`\n📡 Попытка ${attempt}/${maxRetries} записи в GitHub...`);
                     
                     // Получаем актуальный SHA файла
                     let sha = null;
                     let fileExists = false;
                     
-                    console.log('🔍 Проверяем существование файла:', GITHUB_CONFIG.filePath);
+                    console.log('\n🔍 ШАГ 1: Проверяем существование файла (GET запрос)...');
+                    console.log('   URL:', url);
                     
                     const getResponse = await fetch(url, {
                         method: 'GET',
@@ -1075,13 +1085,18 @@
                         cache: 'no-store'
                     });
                     
+                    console.log('   Статус ответа:', getResponse.status, getResponse.statusText);
+                    
                     if (getResponse.ok) {
                         const existingData = await getResponse.json();
                         sha = existingData.sha;
                         fileExists = true;
-                        console.log('✅ Файл существует, SHA:', sha.substring(0, 20) + '...');
+                        console.log('✅ Файл существует');
+                        console.log('   SHA:', sha.substring(0, 20) + '...');
+                        console.log('   Путь в GitHub:', existingData.path);
                     } else if (getResponse.status === 404) {
-                        console.log('📝 Файл не существует, будет создан новый:', GITHUB_CONFIG.filePath);
+                        console.log('📝 Файл не существует, будет создан новый');
+                        console.log('   Путь:', GITHUB_CONFIG.filePath);
                         fileExists = false;
                     } else {
                         throw new Error(`Не удалось получить информацию о файле: ${getResponse.status}`);
@@ -1108,10 +1123,13 @@
                         requestBody.sha = sha;
                     }
                     
-                    console.log('📤 Отправка данных в GitHub...');
+                    console.log('\n📤 ШАГ 2: Отправляем данные в GitHub (PUT запрос)...');
+                    console.log('   URL:', url);
+                    console.log('   Метод: PUT');
                     console.log('   Путь:', GITHUB_CONFIG.filePath);
                     console.log('   Файл существует:', fileExists);
                     console.log('   SHA:', sha ? 'есть' : 'нет (создаём новый файл)');
+                    console.log('   Размер данных:', jsonString.length, 'байт');
                     
                     const response = await fetch(url, {
                         method: 'PUT',
@@ -1125,25 +1143,45 @@
                         body: JSON.stringify(requestBody)
                     });
                     
+                    console.log('   Статус ответа:', response.status, response.statusText);
+                    
                     if (response.ok) {
                         const result = await response.json();
-                        console.log('✅ Данные сохранены в GitHub');
-                        console.log('📝 Commit:', result.commit.sha.substring(0, 20) + '...');
-                        console.log('📁 Файл:', result.content.path);
+                        console.log('\n✅ Данные успешно сохранены в GitHub!');
+                        console.log('   Commit SHA:', result.commit.sha.substring(0, 20) + '...');
+                        console.log('   Путь файла:', result.content.path);
+                        console.log('   URL файла:', result.content.html_url);
                         return true;
                     }
                     
                     // Обработка ошибок
+                    console.log('\n❌ Ошибка PUT запроса:');
                     const errorData = await response.json().catch(() => ({}));
+                    console.log('   Код ошибки:', response.status);
+                    console.log('   Сообщение:', errorData.message);
+                    console.log('   Документация:', errorData.documentation_url);
                     
                     if (response.status === 401) {
+                        console.error('\n🔴 ПРОБЛЕМА: Неверный токен GitHub');
+                        console.error('💡 РЕШЕНИЕ: Проверьте настройки токена в "⚙️ GitHub"');
                         throw new Error('Неверный токен GitHub. Проверьте настройки.');
                     }
                     if (response.status === 403) {
+                        console.error('\n🔴 ПРОБЛЕМА: Доступ запрещён');
+                        console.error('💡 РЕШЕНИЕ: Токен не имеет прав на запись. Нужно установить "Contents: Read and write"');
                         throw new Error('Доступ запрещён. Проверьте права токена (должен быть Contents: Read and write).');
                     }
                     if (response.status === 404) {
+                        console.error('\n🔴 ПРОБЛЕМА: Файл или репозиторий не найден');
+                        console.error('💡 РЕШЕНИЕ: Проверьте путь к файлу и имя репозитория');
+                        console.error('   Текущий путь:', GITHUB_CONFIG.filePath);
+                        console.error('   Полный URL:', url);
                         throw new Error(`Файл или репозиторий не найден. Проверьте путь: ${GITHUB_CONFIG.filePath}`);
+                    }
+                    if (response.status === 422) {
+                        console.error('\n🔴 ПРОБЛЕМА: Ошибка валидации');
+                        console.error('💡 РЕШЕНИЕ:', errorData.message);
+                        throw new Error(`Ошибка валидации: ${errorData.message || 'неизвестная ошибка'}`);
                     }
                     if (response.status === 422) {
                         throw new Error(`Ошибка валидации: ${errorData.message || 'неизвестная ошибка'}`);
