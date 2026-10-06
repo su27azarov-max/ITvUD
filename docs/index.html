@@ -1846,10 +1846,10 @@
     }
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    // Загружаем данные из data.json и конфигурацию GitHub
-    loadGitHubConfig();
-    loadDataFromJson();
-    updateAuthUI();
+    // Загружаем конфигурацию и данные с правильным приоритетом
+    loadSavedData().then(() => {
+        updateAuthUI();
+    });
     </script>
 </body>
 </html>
