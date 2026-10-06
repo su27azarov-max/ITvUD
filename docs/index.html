@@ -1023,9 +1023,13 @@
     };
     
     // Конфигурация JSONBin.io
+    // ===== НАСТРОЙКИ JSONBIN.IO =====
+    // Вставьте сюда ваши значения из JSONBin.io
+    // API Key: найдите на https://jsonbin.io/dashboard (начинается с $2a$10$...)
+    // Bin ID: найдите на https://jsonbin.io/app/bins (24 символа)
     const JSONBIN_CONFIG = {
-        apiKey: '',
-        binId: ''
+        apiKey: '$2a$10$YOUR_API_KEY_HERE', // ← ЗАМЕНИТЕ НА ВАШ API KEY
+        binId: 'YOUR_BIN_ID_HERE' // ← ЗАМЕНИТЕ НА ВАШ BIN ID
     };
     
     // Загрузка конфигурации GitHub из localStorage
@@ -1255,15 +1259,26 @@
     
     // ===== JSONBIN.IO СИНХРОНИЗАЦИЯ =====
     
-    // Загрузка конфигурации JSONBin.io из localStorage
+    // Загрузка конфигурации JSONBin.io
+    // Приоритет: localStorage > захардкоженные значения в коде
     function loadJsonBinConfig() {
         try {
             const saved = localStorage.getItem('jsonbin_config');
             if (saved) {
                 const config = JSON.parse(saved);
-                JSONBIN_CONFIG.apiKey = config.apiKey || '';
-                JSONBIN_CONFIG.binId = config.binId || '';
+                // Если в localStorage есть настройки, используем их
+                if (config.apiKey && config.apiKey !== '$2a$10$YOUR_API_KEY_HERE') {
+                    JSONBIN_CONFIG.apiKey = config.apiKey;
+                }
+                if (config.binId && config.binId !== 'YOUR_BIN_ID_HERE') {
+                    JSONBIN_CONFIG.binId = config.binId;
+                }
             }
+            // Если в localStorage нет настроек или они пустые, используем захардкоженные значения
+            console.log('🔧 JSONBin.io конфигурация:');
+            console.log('   - API Key:', JSONBIN_CONFIG.apiKey.substring(0, 10) + '...');
+            console.log('   - Bin ID:', JSONBIN_CONFIG.binId);
+            console.log('   - Настроен:', isJsonBinConfigured() ? '✅ ДА' : '❌ НЕТ');
         } catch (e) {
             console.error('Ошибка загрузки конфигурации JSONBin:', e);
         }
@@ -1280,7 +1295,11 @@
     
     // Проверка настроен ли JSONBin.io
     function isJsonBinConfigured() {
-        return JSONBIN_CONFIG.apiKey && JSONBIN_CONFIG.binId;
+        // Проверяем, что значения не пустые и не являются плейсхолдерами
+        return JSONBIN_CONFIG.apiKey && 
+               JSONBIN_CONFIG.binId && 
+               JSONBIN_CONFIG.apiKey !== '$2a$10$YOUR_API_KEY_HERE' && 
+               JSONBIN_CONFIG.binId !== 'YOUR_BIN_ID_HERE';
     }
     
     // Чтение данных из JSONBin.io
