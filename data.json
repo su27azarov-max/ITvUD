@@ -1,0 +1,55 @@
+{
+  "students": [],
+  "categories": [
+    {
+      "key": "practice",
+      "name": "Практические работы",
+      "maxPerItem": 10,
+      "maxTotal": 500,
+      "desc": "Защита практических работ",
+      "shortDesc": "Оценка 3→3б, 4→7б, 5→10б",
+      "useGrades": true,
+      "gradeMapping": {"grade3": 3, "grade4": 7, "grade5": 10}
+    },
+    {
+      "key": "testing",
+      "name": "Тестирование",
+      "maxPerItem": 10,
+      "maxTotal": 500,
+      "desc": "Результаты тестирования",
+      "shortDesc": "Оценка 3→3б, 4→7б, 5→10б",
+      "useGrades": true,
+      "gradeMapping": {"grade3": 3, "grade4": 7, "grade5": 10}
+    },
+    {
+      "key": "notes",
+      "name": "Конспекты",
+      "maxPerItem": 2,
+      "maxTotal": 500,
+      "desc": "Наличие конспектов на занятиях",
+      "shortDesc": "2 балла за конспект лекции",
+      "isBonus": true
+    },
+    {
+      "key": "reports",
+      "name": "Доклады",
+      "maxPerItem": 8,
+      "maxTotal": 500,
+      "desc": "Выступление с докладами",
+      "shortDesc": "Оценка 3→3б, 4→6б, 5→8б",
+      "useGrades": true,
+      "gradeMapping": {"grade3": 3, "grade4": 6, "grade5": 8},
+      "isBonus": true
+    },
+    {
+      "key": "bonus",
+      "name": "Доп. баллы",
+      "maxPerItem": 50,
+      "maxTotal": 500,
+      "desc": "Дополнительные баллы от преподавателя",
+      "shortDesc": "На усмотрение преподавателя",
+      "isBonus": true
+    }
+  ],
+  "lastUpdated": ""
+}

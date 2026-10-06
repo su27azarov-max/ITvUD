@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест функциональности</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #333;
+            border-bottom: 2px solid #4f46e5;
+            padding-bottom: 10px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-pass {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .test-fail {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .test-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Тест функциональности системы рейтинга</h1>
+    
+    <div class="test-section">
+        <h2>1. Проверка структуры данных</h2>
+        <button onclick="testDataStructure()">Запустить тест</button>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Проверка расчёта баллов</h2>
+        <button onclick="testScoreCalculation()">Запустить тест</button>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Проверка функций отображения</h2>
+        <button onclick="testDisplayFunctions()">Запустить тест</button>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Проверка модального окна</h2>
+        <button onclick="testModalWindow()">Запустить тест</button>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Проверка сохранения данных</h2>
+        <button onclick="testSaveFunctions()">Запустить тест</button>
+        <div id="test5-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. Полная проверка всех функций</h2>
+        <button onclick="runAllTests()">Запустить все тесты</button>
+        <div id="all-tests-result"></div>
+    </div>
+
+    <script>
+        // Загружаем данные из основного файла
+        function loadMainScript() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'index.html';
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Тест 1: Проверка структуры данных
+        function testDataStructure() {
+            const resultDiv = document.getElementById('test1-result');
+            let html = '';
+            
+            try {
+                // Проверяем наличие массива students
+                if (typeof students === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Массив students не определён</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Массив students определён</div>';
+                    html += `<div class="test-result test-info">Количество курсантов: ${students.length}</div>`;
+                    
+                    // Проверяем структуру первого курсанта
+                    if (students.length > 0) {
+                        const firstStudent = students[0];
+                        const requiredFields = ['id', 'fullName', 'group', 'notes', 'practice', 'reports', 'bonus', 'testing'];
+                        const missingFields = requiredFields.filter(field => !(field in firstStudent));
+                        
+                        if (missingFields.length === 0) {
+                            html += '<div class="test-result test-pass">✅ Все обязательные поля присутствуют</div>';
+                        } else {
+                            html += `<div class="test-result test-fail">❌ Отсутствуют поля: ${missingFields.join(', ')}</div>`;
+                        }
+                        
+                        // Проверяем наличие полей оценок
+                        const gradeFields = ['notesGrades', 'practiceGrades', 'reportsGrades', 'testingGrades'];
+                        const missingGradeFields = gradeFields.filter(field => !(field in firstStudent));
+                        
+                        if (missingGradeFields.length === 0) {
+                            html += '<div class="test-result test-pass">✅ Все поля оценок присутствуют</div>';
+                        } else {
+                            html += `<div class="test-result test-fail">❌ Отсутствуют поля оценок: ${missingGradeFields.join(', ')}</div>`;
+                        }
+                        
+                        // Показываем пример данных
+                        html += '<div class="test-result test-info"><strong>Пример данных первого курсанта:</strong><pre>' + 
+                            JSON.stringify(firstStudent, null, 2) + '</pre></div>';
+                    }
+                }
+                
+                // Проверяем наличие массива categories
+                if (typeof categories === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Массив categories не определён</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Массив categories определён</div>';
+                    html += `<div class="test-result test-info">Количество категорий: ${categories.length}</div>`;
+                    
+                    // Проверяем структуру категорий
+                    categories.forEach((cat, index) => {
+                        const requiredCatFields = ['key', 'name', 'maxTotal'];
+                        const missingCatFields = requiredCatFields.filter(field => !(field in cat));
+                        
+                        if (missingCatFields.length === 0) {
+                            html += `<div class="test-result test-pass">✅ Категория "${cat.name}" имеет все обязательные поля</div>`;
+                        } else {
+                            html += `<div class="test-result test-fail">❌ Категория "${cat.name}" не имеет полей: ${missingCatFields.join(', ')}</div>`;
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                html += `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 2: Проверка расчёта баллов
+        function testScoreCalculation() {
+            const resultDiv = document.getElementById('test2-result');
+            let html = '';
+            
+            try {
+                // Проверяем функцию calcTotal
+                if (typeof calcTotal === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция calcTotal не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция calcTotal определена</div>';
+                    
+                    // Тестируем расчёт
+                    if (students.length > 0) {
+                        const testStudent = students[0];
+                        const total = calcTotal(testStudent);
+                        const expectedTotal = (testStudent.notes || 0) + (testStudent.practice || 0) + 
+                                            (testStudent.reports || 0) + (testStudent.bonus || 0) + 
+                                            (testStudent.testing || 0);
+                        
+                        if (total === expectedTotal) {
+                            html += `<div class="test-result test-pass">✅ calcTotal работает правильно: ${total}</div>`;
+                        } else {
+                            html += `<div class="test-result test-fail">❌ calcTotal работает неправильно: получено ${total}, ожидалось ${expectedTotal}</div>`;
+                        }
+                    }
+                }
+                
+                // Проверяем функцию getMaxTotal
+                if (typeof getMaxTotal === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция getMaxTotal не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция getMaxTotal определена</div>';
+                    const maxTotal = getMaxTotal();
+                    html += `<div class="test-result test-info">Максимальный балл: ${maxTotal}</div>`;
+                }
+                
+                // Проверяем функции расчёта оценок
+                const calcFunctions = ['calcPracticeScore', 'calcReportsScore', 'calcTestingScore'];
+                calcFunctions.forEach(funcName => {
+                    if (typeof window[funcName] === 'undefined') {
+                        html += `<div class="test-result test-fail">❌ Функция ${funcName} не определена</div>`;
+                    } else {
+                        html += `<div class="test-result test-pass">✅ Функция ${funcName} определена</div>`;
+                        
+                        // Тестируем функцию
+                        const testGrades = {'3': 1, '4': 1, '5': 1};
+                        const result = window[funcName](testGrades);
+                        html += `<div class="test-result test-info">${funcName}({'3':1, '4':1, '5':1}) = ${result}</div>`;
+                    }
+                });
+                
+                // Проверяем функцию getGrade
+                if (typeof getGrade === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция getGrade не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция getGrade определена</div>';
+                    
+                    // Тестируем функцию
+                    const testCases = [
+                        { total: 95, expected: 'Отлично' },
+                        { total: 80, expected: 'Хорошо' },
+                        { total: 65, expected: 'Удовлетворительно' },
+                        { total: 50, expected: 'Неудовлетворительно' }
+                    ];
+                    
+                    testCases.forEach(testCase => {
+                        const grade = getGrade(testCase.total);
+                        if (grade.text === testCase.expected) {
+                            html += `<div class="test-result test-pass">✅ getGrade(${testCase.total}) = "${grade.text}"</div>`;
+                        } else {
+                            html += `<div class="test-result test-fail">❌ getGrade(${testCase.total}) = "${grade.text}", ожидалось "${testCase.expected}"</div>`;
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                html += `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 3: Проверка функций отображения
+        function testDisplayFunctions() {
+            const resultDiv = document.getElementById('test3-result');
+            let html = '';
+            
+            try {
+                // Проверяем функцию renderTable
+                if (typeof renderTable === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция renderTable не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция renderTable определена</div>';
+                }
+                
+                // Проверяем функцию renderGeneralTable
+                if (typeof renderGeneralTable === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция renderGeneralTable не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция renderGeneralTable определена</div>';
+                }
+                
+                // Проверяем функцию renderGroupTab
+                if (typeof renderGroupTab === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция renderGroupTab не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция renderGroupTab определена</div>';
+                }
+                
+                // Проверяем функцию getGroups
+                if (typeof getGroups === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция getGroups не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция getGroups определена</div>';
+                    const groups = getGroups();
+                    html += `<div class="test-result test-info">Группы: ${groups.join(', ')}</div>`;
+                }
+                
+                // Проверяем функцию ensureStudent
+                if (typeof ensureStudent === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция ensureStudent не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция ensureStudent определена</div>';
+                    
+                    // Тестируем функцию
+                    const testStudent = { id: 999, fullName: 'Тестов Курсант', group: 'ТЕСТ-001' };
+                    const ensured = ensureStudent(testStudent);
+                    const requiredFields = ['notes', 'practice', 'reports', 'bonus', 'testing', 'notesGrades', 'practiceGrades', 'reportsGrades', 'testingGrades'];
+                    const allFieldsPresent = requiredFields.every(field => field in ensured);
+                    
+                    if (allFieldsPresent) {
+                        html += '<div class="test-result test-pass">✅ ensureStudent добавляет все недостающие поля</div>';
+                    } else {
+                        html += '<div class="test-result test-fail">❌ ensureStudent не добавляет все поля</div>';
+                    }
+                }
+                
+            } catch (error) {
+                html += `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 4: Проверка модального окна
+        function testModalWindow() {
+            const resultDiv = document.getElementById('test4-result');
+            let html = '';
+            
+            try {
+                // Проверяем функцию openEditModal
+                if (typeof openEditModal === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция openEditModal не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция openEditModal определена</div>';
+                }
+                
+                // Проверяем функцию renderScoreModal
+                if (typeof renderScoreModal === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция renderScoreModal не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция renderScoreModal определена</div>';
+                }
+                
+                // Проверяем функции работы с оценками
+                const gradeFunctions = ['addGrade', 'removeGrade', 'resetGrades'];
+                gradeFunctions.forEach(funcName => {
+                    if (typeof window[funcName] === 'undefined') {
+                        html += `<div class="test-result test-fail">❌ Функция ${funcName} не определена</div>`;
+                    } else {
+                        html += `<div class="test-result test-pass">✅ Функция ${funcName} определена</div>`;
+                    }
+                });
+                
+                // Проверяем функции работы с баллами
+                const scoreFunctions = ['addCatScore', 'setCatScore'];
+                scoreFunctions.forEach(funcName => {
+                    if (typeof window[funcName] === 'undefined') {
+                        html += `<div class="test-result test-fail">❌ Функция ${funcName} не определена</div>`;
+                    } else {
+                        html += `<div class="test-result test-pass">✅ Функция ${funcName} определена</div>`;
+                    }
+                });
+                
+                // Проверяем функцию saveScoreModal
+                if (typeof saveScoreModal === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция saveScoreModal не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция saveScoreModal определена</div>';
+                }
+                
+            } catch (error) {
+                html += `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Тест 5: Проверка функций сохранения
+        function testSaveFunctions() {
+            const resultDiv = document.getElementById('test5-result');
+            let html = '';
+            
+            try {
+                // Проверяем функцию saveToLocalStorage
+                if (typeof saveToLocalStorage === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция saveToLocalStorage не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция saveToLocalStorage определена</div>';
+                }
+                
+                // Проверяем функцию loadFromLocalStorage
+                if (typeof loadFromLocalStorage === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция loadFromLocalStorage не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция loadFromLocalStorage определена</div>';
+                }
+                
+                // Проверяем функцию saveToFirebase
+                if (typeof saveToFirebase === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция saveToFirebase не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция saveToFirebase определена</div>';
+                }
+                
+                // Проверяем функцию saveAllChanges
+                if (typeof saveAllChanges === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция saveAllChanges не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция saveAllChanges определена</div>';
+                }
+                
+                // Проверяем функции GitHub API
+                const githubFunctions = ['readFromGitHub', 'writeToGitHub', 'syncWithGitHub'];
+                githubFunctions.forEach(funcName => {
+                    if (typeof window[funcName] === 'undefined') {
+                        html += `<div class="test-result test-fail">❌ Функция ${funcName} не определена</div>`;
+                    } else {
+                        html += `<div class="test-result test-pass">✅ Функция ${funcName} определена</div>`;
+                    }
+                });
+                
+                // Проверяем функции экспорта/импорта
+                if (typeof exportData === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция exportData не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция exportData определена</div>';
+                }
+                
+                if (typeof importData === 'undefined') {
+                    html += '<div class="test-result test-fail">❌ Функция importData не определена</div>';
+                } else {
+                    html += '<div class="test-result test-pass">✅ Функция importData определена</div>';
+                }
+                
+            } catch (error) {
+                html += `<div class="test-result test-fail">❌ Ошибка: ${error.message}</div>`;
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+
+        // Запуск всех тестов
+        function runAllTests() {
+            const resultDiv = document.getElementById('all-tests-result');
+            resultDiv.innerHTML = '<div class="test-result test-info">⏳ Запуск всех тестов...</div>';
+            
+            setTimeout(() => {
+                testDataStructure();
+                testScoreCalculation();
+                testDisplayFunctions();
+                testModalWindow();
+                testSaveFunctions();
+                
+                resultDiv.innerHTML = '<div class="test-result test-pass">✅ Все тесты завершены! Проверьте результаты выше.</div>';
+            }, 100);
+        }
+
+        // Автоматически загружаем данные при открытии страницы
+        window.addEventListener('load', () => {
+            console.log('Страница загружена, проверяем данные...');
+            
+            // Проверяем, загружены ли данные из основного файла
+            if (typeof students !== 'undefined') {
+                console.log('✅ Данные загружены из index.html');
+                console.log('Количество курсантов:', students.length);
+                console.log('Количество категорий:', categories.length);
+            } else {
+                console.warn('⚠️ Данные не загружены из index.html');
+            }
+        });
+    </script>
+</body>
+</html>
