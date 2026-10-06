@@ -1012,6 +1012,10 @@
                     
                     // Получаем актуальный SHA файла
                     let sha = null;
+                    let fileExists = false;
+                    
+                    console.log('🔍 Проверяем существование файла:', GITHUB_CONFIG.filePath);
+                    
                     const getResponse = await fetch(url, {
                         method: 'GET',
                         headers: {
@@ -1025,8 +1029,12 @@
                     if (getResponse.ok) {
                         const existingData = await getResponse.json();
                         sha = existingData.sha;
-                        console.log('📝 Файл существует, SHA:', sha.substring(0, 20) + '...');
-                    } else if (getResponse.status !== 404) {
+                        fileExists = true;
+                        console.log('✅ Файл существует, SHA:', sha.substring(0, 20) + '...');
+                    } else if (getResponse.status === 404) {
+                        console.log('📝 Файл не существует, будет создан новый:', GITHUB_CONFIG.filePath);
+                        fileExists = false;
+                    } else {
                         throw new Error(`Не удалось получить информацию о файле: ${getResponse.status}`);
                     }
                     
@@ -1041,16 +1049,20 @@
                     const content = btoa(unescape(encodeURIComponent(jsonString)));
                     
                     const requestBody = {
-                        message: 'Обновление данных рейтинга курсантов',
+                        message: fileExists ? 'Обновление данных рейтинга курсантов' : 'Создание файла данных рейтинга курсантов',
                         content: content,
                         branch: GITHUB_CONFIG.branch
                     };
                     
+                    // SHA нужен только для обновления существующего файла
                     if (sha) {
                         requestBody.sha = sha;
                     }
                     
                     console.log('📤 Отправка данных в GitHub...');
+                    console.log('   Путь:', GITHUB_CONFIG.filePath);
+                    console.log('   Файл существует:', fileExists);
+                    console.log('   SHA:', sha ? 'есть' : 'нет (создаём новый файл)');
                     
                     const response = await fetch(url, {
                         method: 'PUT',
@@ -1068,6 +1080,7 @@
                         const result = await response.json();
                         console.log('✅ Данные сохранены в GitHub');
                         console.log('📝 Commit:', result.commit.sha.substring(0, 20) + '...');
+                        console.log('📁 Файл:', result.content.path);
                         return true;
                     }
                     
@@ -1078,10 +1091,13 @@
                         throw new Error('Неверный токен GitHub. Проверьте настройки.');
                     }
                     if (response.status === 403) {
-                        throw new Error('Доступ запрещён. Проверьте права токена (должен быть repo).');
+                        throw new Error('Доступ запрещён. Проверьте права токена (должен быть Contents: Read and write).');
                     }
                     if (response.status === 404) {
-                        throw new Error('Репозиторий не найден. Проверьте имя владельца и репозитория.');
+                        throw new Error(`Файл или репозиторий не найден. Проверьте путь: ${GITHUB_CONFIG.filePath}`);
+                    }
+                    if (response.status === 422) {
+                        throw new Error(`Ошибка валидации: ${errorData.message || 'неизвестная ошибка'}`);
                     }
                     if (response.status === 409) {
                         // Конфликт версий - повторяем попытку
