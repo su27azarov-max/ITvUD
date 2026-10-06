@@ -916,28 +916,63 @@
     let autoSaveTimer = null; // Таймер для debounce
     
     function markAsChanged() {
+        console.log('\n📝 ===== ДАННЫЕ ИЗМЕНЕНЫ =====');
+        console.log('📊 Курсантов:', students.length);
+        
         hasChanges = true;
         const btn = document.getElementById('saveBtn');
         if (btn) btn.style.display = '';
         
-        // Автосохранение в GitHub с задержкой 2 секунды (debounce)
-        if (autoSaveEnabled && isGitHubConfigured()) {
+        // Автосохранение с задержкой 2 секунды (debounce)
+        // Приоритет: JSONBin.io > GitHub
+        if (autoSaveEnabled && (isJsonBinConfigured() || isGitHubConfigured())) {
+            console.log('⏰ Запускаем автосохранение через 2 секунды...');
+            
             if (autoSaveTimer) clearTimeout(autoSaveTimer);
             autoSaveTimer = setTimeout(async () => {
-                console.log('🔄 Автосохранение в GitHub...');
-                showNotification('🔄 Автосохранение в GitHub...');
-                try {
-                    const success = await writeToGitHub();
-                    if (success) {
-                        hasChanges = false;
-                        if (btn) btn.style.display = 'none';
-                        showNotification('✅ Данные автоматически сохранены в GitHub!');
+                console.log('\n🔄 ===== АВТОСОХРАНЕНИЕ =====');
+                
+                // Сначала пробуем JSONBin.io
+                if (isJsonBinConfigured()) {
+                    console.log('📤 Автосохранение в JSONBin.io...');
+                    showNotification('📤 Автосохранение в JSONBin.io...');
+                    
+                    try {
+                        const success = await writeToJsonBin();
+                        if (success) {
+                            hasChanges = false;
+                            if (btn) btn.style.display = 'none';
+                            showNotification('✅ Данные автоматически сохранены в JSONBin.io!');
+                            console.log('🎉 ===== АВТОСОХРАНЕНИЕ В JSONBIN.IO УСПЕШНО =====\n');
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('❌ Ошибка автосохранения в JSONBin.io:', error);
+                        showNotification('⚠️ Ошибка JSONBin.io, пробуем GitHub...');
                     }
-                } catch (error) {
-                    console.error('❌ Ошибка автосохранения:', error);
-                    showNotification('⚠️ Ошибка автосохранения: ' + error.message);
+                }
+                
+                // Если JSONBin.io не настроен или ошибка - пробуем GitHub
+                if (isGitHubConfigured()) {
+                    console.log('📤 Автосохранение в GitHub...');
+                    showNotification('📤 Автосохранение в GitHub...');
+                    
+                    try {
+                        const success = await writeToGitHub();
+                        if (success) {
+                            hasChanges = false;
+                            if (btn) btn.style.display = 'none';
+                            showNotification('✅ Данные автоматически сохранены в GitHub!');
+                            console.log('🎉 ===== АВТОСОХРАНЕНИЕ В GITHUB УСПЕШНО =====\n');
+                        }
+                    } catch (error) {
+                        console.error('❌ Ошибка автосохранения в GitHub:', error);
+                        showNotification('⚠️ Ошибка автосохранения: ' + error.message);
+                    }
                 }
             }, 2000); // Задержка 2 секунды
+        } else {
+            console.log('⏭️ Автосохранение отключено или не настроено');
         }
     }
     
@@ -1250,15 +1285,21 @@
     
     // Чтение данных из JSONBin.io
     async function readFromJsonBin() {
+        console.log('\n📡 ===== ЧТЕНИЕ ИЗ JSONBIN.IO =====');
+        
         if (!isJsonBinConfigured()) {
-            console.warn('JSONBin.io не настроен');
+            console.warn('❌ JSONBin.io не настроен');
             return null;
         }
         
+        const url = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}/latest`;
+        
+        console.log('🔗 URL запроса:', url);
+        console.log('🔑 API Key:', JSONBIN_CONFIG.apiKey.substring(0, 10) + '...');
+        console.log('📦 Bin ID:', JSONBIN_CONFIG.binId);
+        
         try {
-            const url = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}/latest`;
-            
-            console.log('📡 Чтение данных из JSONBin.io...');
+            console.log('📤 Отправка GET запроса...');
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -1268,24 +1309,43 @@
                 }
             });
             
+            console.log('📥 Статус ответа:', response.status, response.statusText);
+            
             if (response.ok) {
                 const result = await response.json();
-                console.log('✅ Данные загружены из JSONBin.io');
+                console.log('✅ Данные получены из JSONBin.io');
+                console.log('📦 Структура данных:', Object.keys(result));
+                
+                if (result.record) {
+                    console.log('📋 Записей в record:', Object.keys(result.record).length);
+                    if (result.record.kursanty) {
+                        console.log('👥 Курсантов:', result.record.kursanty.length);
+                    }
+                }
+                
+                console.log('🎉 ===== ЧТЕНИЕ ИЗ JSONBIN.IO УСПЕШНО =====\n');
                 return result.record;
             } else {
                 const errorData = await response.json().catch(() => ({}));
+                console.error('❌ Ошибка HTTP:', response.status);
+                console.error('📝 Сообщение:', errorData.message);
+                console.error('📚 Документация:', errorData.documentation_url);
                 throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
             }
         } catch (error) {
-            console.error('❌ Ошибка чтения из JSONBin.io:', error);
+            console.error('❌ Ошибка чтения из JSONBin.io:', error.message);
+            console.error('🔍 Stack:', error.stack);
+            console.log('❌ ===== ЧТЕНИЕ ИЗ JSONBIN.IO НЕ УДАЛОСЬ =====\n');
             throw error;
         }
     }
     
     // Запись данных в JSONBin.io
     async function writeToJsonBin() {
+        console.log('\n📤 ===== ЗАПИСЬ В JSONBIN.IO =====');
+        
         if (!isJsonBinConfigured()) {
-            console.warn('JSONBin.io не настроен');
+            console.warn('❌ JSONBin.io не настроен');
             return false;
         }
         
@@ -1296,16 +1356,26 @@
         
         isSaving = true;
         
+        const url = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`;
+        
+        console.log('🔗 URL запроса:', url);
+        console.log('🔑 API Key:', JSONBIN_CONFIG.apiKey.substring(0, 10) + '...');
+        console.log('📦 Bin ID:', JSONBIN_CONFIG.binId);
+        
+        const data = {
+            kursanty: students,
+            lastUpdated: new Date().toISOString(),
+            version: "1.0"
+        };
+        
+        console.log('📊 Данные для записи:');
+        console.log('   - Курсантов:', students.length);
+        console.log('   - Время:', data.lastUpdated);
+        console.log('   - Версия:', data.version);
+        console.log('   - Размер JSON:', JSON.stringify(data).length, 'байт');
+        
         try {
-            const url = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`;
-            
-            const data = {
-                kursanty: students,
-                lastUpdated: new Date().toISOString(),
-                version: "1.0"
-            };
-            
-            console.log('📤 Отправка данных в JSONBin.io...');
+            console.log('📤 Отправка PUT запроса...');
             
             const response = await fetch(url, {
                 method: 'PUT',
@@ -1316,15 +1386,25 @@
                 body: JSON.stringify(data)
             });
             
+            console.log('📥 Статус ответа:', response.status, response.statusText);
+            
             if (response.ok) {
-                console.log('✅ Данные сохранены в JSONBin.io');
+                const result = await response.json();
+                console.log('✅ Данные успешно сохранены в JSONBin.io');
+                console.log('📝 Metadata:', result.metadata);
+                console.log('🎉 ===== ЗАПИСЬ В JSONBIN.IO УСПЕШНА =====\n');
                 return true;
             } else {
                 const errorData = await response.json().catch(() => ({}));
+                console.error('❌ Ошибка HTTP:', response.status);
+                console.error('📝 Сообщение:', errorData.message);
+                console.error('📚 Документация:', errorData.documentation_url);
                 throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
             }
         } catch (error) {
-            console.error('❌ Ошибка записи в JSONBin.io:', error);
+            console.error('❌ Ошибка записи в JSONBin.io:', error.message);
+            console.error('🔍 Stack:', error.stack);
+            console.log('❌ ===== ЗАПИСЬ В JSONBIN.IO НЕ УДАЛАСЬ =====\n');
             throw error;
         } finally {
             isSaving = false;
@@ -1333,29 +1413,55 @@
     
     // Загрузка данных (приоритет: JSONBin.io > GitHub > localStorage)
     async function loadSavedData() {
+        console.log('\n🔍 ===== НАЧАЛО ЗАГРУЗКИ ДАННЫХ =====');
+        
         loadJsonBinConfig();
         loadGitHubConfig();
         
+        console.log('🔧 Конфигурация JSONBin.io:');
+        console.log('   - API Key:', JSONBIN_CONFIG.apiKey ? JSONBIN_CONFIG.apiKey.substring(0, 10) + '...' : 'не настроен');
+        console.log('   - Bin ID:', JSONBIN_CONFIG.binId || 'не настроен');
+        console.log('   - Настроен:', isJsonBinConfigured() ? '✅ ДА' : '❌ НЕТ');
+        
+        console.log('🔧 Конфигурация GitHub:');
+        console.log('   - Владелец:', GITHUB_CONFIG.owner || 'не настроен');
+        console.log('   - Репозиторий:', GITHUB_CONFIG.repo || 'не настроен');
+        console.log('   - Путь:', GITHUB_CONFIG.filePath || 'не настроен');
+        console.log('   - Настроен:', isGitHubConfigured() ? '✅ ДА' : '❌ НЕТ');
+        
         // Сначала пробуем JSONBin.io
         if (isJsonBinConfigured()) {
-            console.log('📥 Загрузка данных из JSONBin.io...');
+            console.log('\n📥 Попытка 1: Загрузка данных из JSONBin.io...');
             
             try {
                 const jsonBinData = await readFromJsonBin();
                 
+                console.log('📦 Получены данные из JSONBin.io:', jsonBinData);
+                
                 if (jsonBinData) {
-                    if (jsonBinData.kursanty) {
+                    if (jsonBinData.kursanty && Array.isArray(jsonBinData.kursanty)) {
                         students = jsonBinData.kursanty.map(s => ensureStudent(s));
+                        console.log('✅ Загружено курсантов из JSONBin.io:', students.length);
+                        
+                        // Сохраняем в localStorage как резервную копию
+                        saveToLocalStorage();
+                        console.log('✅ Данные сохранены в localStorage');
+                        renderAll();
+                        console.log('✅ Интерфейс обновлён');
+                        console.log('🎉 ===== ЗАГРУЗКА ИЗ JSONBIN.IO УСПЕШНА =====\n');
+                        return;
+                    } else {
+                        console.warn('⚠️ Данные из JSONBin.io не содержат массив kursanty');
                     }
-                    // Сохраняем в localStorage как резервную копию
-                    saveToLocalStorage();
-                    console.log('✅ Данные загружены из JSONBin.io');
-                    renderAll();
-                    return;
+                } else {
+                    console.warn('⚠️ Данные из JSONBin.io пусты');
                 }
             } catch (error) {
-                console.warn('⚠️ Не удалось загрузить из JSONBin.io:', error.message);
+                console.error('❌ Ошибка загрузки из JSONBin.io:', error.message);
+                console.error('   Stack:', error.stack);
             }
+        } else {
+            console.log('⏭️ JSONBin.io не настроен, пропускаем');
         }
         
         // Если JSONBin.io не настроен или ошибка - пробуем GitHub
@@ -1395,23 +1501,35 @@
     
     // Сохранение данных (в GitHub и localStorage)
     async function saveAllChanges() {
+        console.log('\n💾 ===== НАЧАЛО СОХРАНЕНИЯ ДАННЫХ =====');
+        console.log('📊 Текущее состояние:');
+        console.log('   - Курсантов:', students.length);
+        console.log('   - Есть изменения:', hasChanges);
+        console.log('   - JSONBin.io настроен:', isJsonBinConfigured());
+        console.log('   - GitHub настроен:', isGitHubConfigured());
+        
         // Отменяем автосохранение, если оно запущено
         if (autoSaveTimer) {
+            console.log('⏹️ Отменяем автосохранение...');
             clearTimeout(autoSaveTimer);
             autoSaveTimer = null;
         }
         
         // Защита от параллельных сохранений
         if (isSaving) {
+            console.warn('⚠️ Сохранение уже выполняется, подождите...');
             showNotification('⚠️ Сохранение уже выполняется, подождите...');
             return;
         }
         
         // Сначала сохраняем в localStorage
+        console.log('💾 Сохранение в localStorage...');
         saveToLocalStorage();
+        console.log('✅ Данные сохранены в localStorage');
         
         // Сначала пробуем сохранить в JSONBin.io
         if (isJsonBinConfigured()) {
+            console.log('\n📤 Попытка 1: Сохранение в JSONBin.io...');
             showNotification('📤 Сохранение в JSONBin.io...');
             
             try {
@@ -1421,12 +1539,15 @@
                     hasChanges = false;
                     document.getElementById('saveBtn').style.display = 'none';
                     showNotification('✅ Изменения сохранены в облаке!');
+                    console.log('🎉 ===== СОХРАНЕНИЕ В JSONBIN.IO УСПЕШНО =====\n');
                     return;
                 }
             } catch (error) {
-                console.error('Ошибка сохранения в JSONBin.io:', error);
+                console.error('❌ Ошибка сохранения в JSONBin.io:', error);
                 showNotification('⚠️ Ошибка JSONBin.io, пробуем GitHub...');
             }
+        } else {
+            console.log('⏭️ JSONBin.io не настроен, пропускаем');
         }
         
         // Если JSONBin.io не настроен или ошибка - пробуем GitHub
