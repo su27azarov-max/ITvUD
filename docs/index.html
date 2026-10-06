@@ -194,8 +194,9 @@
                         <button class="btn btn-secondary" onclick="exportData()">💾 Экспорт</button>
                         <label class="btn btn-secondary" style="cursor:pointer">📂 Загрузить<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
                         <button class="btn btn-secondary" onclick="syncWithGitHub()">🔄 Синхронизация</button>
+                        <button class="btn btn-secondary" onclick="openJsonBinSettings()">🗄️ JSONBin</button>
                         <button class="btn btn-secondary" onclick="openGitHubSettings()">⚙️ GitHub</button>
-                        <button class="btn btn-secondary" id="autoSaveBtn" onclick="toggleAutoSave()" style="background:#dcfce7;color:#166534;border-color:#86efac">🔄 Автосохранение: ВКЛ</button>
+                        <button class="btn btn-secondary" id="autoSaveBtn" onclick="toggleAutoSave()" style="background:#dcfce7;color:#166534;border-color:#86efac">🔄 Автосохранение: ВКЛ</button>efac">🔄 Автосохранение: ВКЛ</button>
                         <button class="btn btn-primary" onclick="openAddModal()">➕ Добавить</button>
                         <button class="btn btn-danger" onclick="clearAll()">🗑️ Очистить</button>
                         <button class="btn btn-save" onclick="saveAllChanges()" id="saveBtn" style="display:none">💾 Сохранить</button>
@@ -325,6 +326,48 @@
                 <button class="btn btn-secondary" style="flex:1" onclick="testGitHubConnection()">🔍 Тест</button>
                 <button class="btn btn-secondary" style="flex:1" onclick="closeGitHubSettings()">Отмена</button>
                 <button class="btn btn-primary" style="flex:1" onclick="saveGitHubSettings()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JSONBin Settings Modal -->
+    <div id="jsonbinSettingsModal" class="modal-overlay hidden" onclick="if(event.target===this)closeJsonBinSettings()">
+        <div class="modal" style="max-width:500px">
+            <div class="modal-header">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px">🗄️</div>
+                    <div>
+                        <h3 style="font-size:1.2rem;font-weight:700">Настройка JSONBin.io</h3>
+                        <p style="font-size:0.85rem;opacity:0.8">Облачное хранилище данных (рекомендуется)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:6px">API Key</label>
+                    <input type="password" id="jsonbinApiKey" class="form-input" placeholder="$2a$10$...">
+                    <p style="font-size:0.75rem;color:#6b7280;margin-top:4px">Получите API Key на <a href="https://jsonbin.io" target="_blank" style="color:#4f46e5">jsonbin.io</a> после регистрации</p>
+                </div>
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:0.85rem;font-weight:500;color:#374151;margin-bottom:6px">Bin ID</label>
+                    <input type="text" id="jsonbinBinId" class="form-input" placeholder="65a1b2c3d4e5f6a7b8c9d0e1">
+                    <p style="font-size:0.75rem;color:#6b7280;margin-top:4px">Создайте Bin на <a href="https://jsonbin.io/app/bins" target="_blank" style="color:#4f46e5">jsonbin.io/app/bins</a> и скопируйте ID</p>
+                </div>
+                <div style="background:#d1fae5;border:1px solid #86efac;border-radius:8px;padding:12px;margin-top:16px">
+                    <p style="font-size:0.85rem;color:#065f46;margin:0">
+                        <strong>✅ Рекомендация:</strong> JSONBin.io проще в настройке и надёжнее, чем GitHub API. Бесплатно 10,000 запросов/месяц.
+                    </p>
+                </div>
+                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-top:8px">
+                    <p style="font-size:0.85rem;color:#1e40af;margin:0">
+                        <strong>💡 Инструкция:</strong> Зарегистрируйтесь на jsonbin.io, создайте Bin с начальным содержимым <code>{"kursanty":[],"lastUpdated":"","version":"1.0"}</code>, скопируйте API Key и Bin ID.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" style="flex:1" onclick="testJsonBinConnection()">🔍 Тест</button>
+                <button class="btn btn-secondary" style="flex:1" onclick="closeJsonBinSettings()">Отмена</button>
+                <button class="btn btn-primary" style="flex:1" onclick="saveJsonBinSettings()">Сохранить</button>
             </div>
         </div>
     </div>
@@ -944,6 +987,12 @@
         branch: 'main' // Ветка
     };
     
+    // Конфигурация JSONBin.io
+    const JSONBIN_CONFIG = {
+        apiKey: '',
+        binId: ''
+    };
+    
     // Загрузка конфигурации GitHub из localStorage
     function loadGitHubConfig() {
         try {
@@ -1131,10 +1180,147 @@
         }
     }
     
-    // Загрузка данных (приоритет: GitHub > localStorage)
+    // ===== JSONBIN.IO СИНХРОНИЗАЦИЯ =====
+    
+    // Загрузка конфигурации JSONBin.io из localStorage
+    function loadJsonBinConfig() {
+        try {
+            const saved = localStorage.getItem('jsonbin_config');
+            if (saved) {
+                const config = JSON.parse(saved);
+                JSONBIN_CONFIG.apiKey = config.apiKey || '';
+                JSONBIN_CONFIG.binId = config.binId || '';
+            }
+        } catch (e) {
+            console.error('Ошибка загрузки конфигурации JSONBin:', e);
+        }
+    }
+    
+    // Сохранение конфигурации JSONBin.io в localStorage
+    function saveJsonBinConfig() {
+        try {
+            localStorage.setItem('jsonbin_config', JSON.stringify(JSONBIN_CONFIG));
+        } catch (e) {
+            console.error('Ошибка сохранения конфигурации JSONBin:', e);
+        }
+    }
+    
+    // Проверка настроен ли JSONBin.io
+    function isJsonBinConfigured() {
+        return JSONBIN_CONFIG.apiKey && JSONBIN_CONFIG.binId;
+    }
+    
+    // Чтение данных из JSONBin.io
+    async function readFromJsonBin() {
+        if (!isJsonBinConfigured()) {
+            console.warn('JSONBin.io не настроен');
+            return null;
+        }
+        
+        try {
+            const url = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}/latest`;
+            
+            console.log('📡 Чтение данных из JSONBin.io...');
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Master-Key': JSONBIN_CONFIG.apiKey,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                console.log('✅ Данные загружены из JSONBin.io');
+                return result.record;
+            } else {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
+            }
+        } catch (error) {
+            console.error('❌ Ошибка чтения из JSONBin.io:', error);
+            throw error;
+        }
+    }
+    
+    // Запись данных в JSONBin.io
+    async function writeToJsonBin() {
+        if (!isJsonBinConfigured()) {
+            console.warn('JSONBin.io не настроен');
+            return false;
+        }
+        
+        if (isSaving) {
+            console.warn('⚠️ Сохранение уже выполняется, подождите...');
+            return false;
+        }
+        
+        isSaving = true;
+        
+        try {
+            const url = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`;
+            
+            const data = {
+                kursanty: students,
+                lastUpdated: new Date().toISOString(),
+                version: "1.0"
+            };
+            
+            console.log('📤 Отправка данных в JSONBin.io...');
+            
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'X-Master-Key': JSONBIN_CONFIG.apiKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                console.log('✅ Данные сохранены в JSONBin.io');
+                return true;
+            } else {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
+            }
+        } catch (error) {
+            console.error('❌ Ошибка записи в JSONBin.io:', error);
+            throw error;
+        } finally {
+            isSaving = false;
+        }
+    }
+    
+    // Загрузка данных (приоритет: JSONBin.io > GitHub > localStorage)
     async function loadSavedData() {
+        loadJsonBinConfig();
         loadGitHubConfig();
         
+        // Сначала пробуем JSONBin.io
+        if (isJsonBinConfigured()) {
+            console.log('📥 Загрузка данных из JSONBin.io...');
+            
+            try {
+                const jsonBinData = await readFromJsonBin();
+                
+                if (jsonBinData) {
+                    if (jsonBinData.kursanty) {
+                        students = jsonBinData.kursanty.map(s => ensureStudent(s));
+                    }
+                    // Сохраняем в localStorage как резервную копию
+                    saveToLocalStorage();
+                    console.log('✅ Данные загружены из JSONBin.io');
+                    renderAll();
+                    return;
+                }
+            } catch (error) {
+                console.warn('⚠️ Не удалось загрузить из JSONBin.io:', error.message);
+            }
+        }
+        
+        // Если JSONBin.io не настроен или ошибка - пробуем GitHub
         if (isGitHubConfigured()) {
             console.log('📥 Загрузка данных из GitHub...');
             
@@ -1160,11 +1346,10 @@
                 }
             } catch (error) {
                 console.warn('⚠️ Не удалось загрузить из GitHub, используем localStorage:', error.message);
-                // Не показываем ошибку пользователю при автоматической загрузке
             }
         }
         
-        // Если GitHub не настроен или ошибка - загружаем из localStorage
+        // Если оба сервиса не настроены или ошибка - загружаем из localStorage
         console.log('📥 Загрузка данных из localStorage...');
         loadFromLocalStorage();
         renderAll();
@@ -1187,7 +1372,26 @@
         // Сначала сохраняем в localStorage
         saveToLocalStorage();
         
-        // Затем пытаемся сохранить в GitHub
+        // Сначала пробуем сохранить в JSONBin.io
+        if (isJsonBinConfigured()) {
+            showNotification('📤 Сохранение в JSONBin.io...');
+            
+            try {
+                const success = await writeToJsonBin();
+                
+                if (success) {
+                    hasChanges = false;
+                    document.getElementById('saveBtn').style.display = 'none';
+                    showNotification('✅ Изменения сохранены в облаке!');
+                    return;
+                }
+            } catch (error) {
+                console.error('Ошибка сохранения в JSONBin.io:', error);
+                showNotification('⚠️ Ошибка JSONBin.io, пробуем GitHub...');
+            }
+        }
+        
+        // Если JSONBin.io не настроен или ошибка - пробуем GitHub
         if (isGitHubConfigured()) {
             showNotification('📤 Сохранение в GitHub...');
             
@@ -1207,7 +1411,7 @@
                 // Показываем подробную информацию об ошибке с предложением повторить
                 setTimeout(() => {
                     const retry = confirm(
-                        '❌ Ошибка при сохранении в GitHub:\n\n' + 
+                        '❌ Ошибка при сохранении:\n\n' + 
                         error.message + '\n\n' +
                         'Данные сохранены локально.\n\n' +
                         'Нажмите "ОК" чтобы повторить попытку,\n' +
@@ -1238,7 +1442,7 @@
         if (hasChanges) {
             const confirmSync = confirm(
                 '⚠️ У вас есть несохранённые изменения!\n\n' +
-                'Синхронизация перезапишет локальные данные данными из data.json.\n\n' +
+                'Синхронизация перезапишет локальные данные данными из облака.\n\n' +
                 'Рекомендуется сначала нажать "💾 Сохранить".\n\n' +
                 'Продолжить синхронизацию?'
             );
@@ -1248,22 +1452,66 @@
             }
         }
         
-        showNotification('🔄 Загрузка данных из data.json...');
+        showNotification('🔄 Синхронизация данных...');
         
         try {
-            // Загружаем данные из data.json
+            // Сначала пробуем JSONBin.io
+            if (isJsonBinConfigured()) {
+                console.log('📥 Загрузка из JSONBin.io...');
+                const jsonBinData = await readFromJsonBin();
+                
+                if (jsonBinData) {
+                    if (jsonBinData.kursanty) {
+                        students = jsonBinData.kursanty.map(s => ensureStudent(s));
+                    }
+                    saveToLocalStorage();
+                    hasChanges = false;
+                    document.getElementById('saveBtn').style.display = 'none';
+                    renderAll();
+                    showNotification('✅ Данные синхронизированы из JSONBin.io!');
+                    return;
+                }
+            }
+            
+            // Если JSONBin.io не настроен или ошибка - пробуем GitHub
+            if (isGitHubConfigured()) {
+                console.log('📥 Загрузка из GitHub...');
+                const githubData = await readFromGitHub();
+                
+                if (githubData) {
+                    if (githubData.students) {
+                        students = githubData.students.map(s => ensureStudent(s));
+                    }
+                    if (githubData.categories) {
+                        categories = DEFAULT_CATEGORIES.map(def => {
+                            const found = githubData.categories.find(l => l.key === def.key);
+                            if (found) return { ...def, maxTotal: found.maxTotal };
+                            return { ...def };
+                        });
+                    }
+                    saveToLocalStorage();
+                    hasChanges = false;
+                    document.getElementById('saveBtn').style.display = 'none';
+                    renderAll();
+                    showNotification('✅ Данные синхронизированы из GitHub!');
+                    return;
+                }
+            }
+            
+            // Если оба сервиса не настроены - загружаем из локального файла
+            console.log('📥 Загрузка из локального файла...');
             await loadDataFromJson();
             
             hasChanges = false;
             document.getElementById('saveBtn').style.display = 'none';
-            showNotification('✅ Данные синхронизированы!');
+            showNotification('✅ Данные синхронизированы из локального файла!');
         } catch (error) {
             console.error('Ошибка синхронизации:', error);
             showNotification('❌ Ошибка: ' + error.message);
             
             // Показываем подробную информацию об ошибке
             setTimeout(() => {
-                alert('Ошибка при синхронизации:\n\n' + error.message + '\n\nПроверьте:\n1. Существует ли файл data.json в репозитории\n2. Правильность URL сайта\n3. Открыта ли консоль браузера (F12) для подробностей');
+                alert('Ошибка при синхронизации:\n\n' + error.message + '\n\nПроверьте:\n1. Настройки JSONBin.io или GitHub\n2. Открыта ли консоль браузера (F12) для подробностей');
             }, 100);
         }
     }
@@ -1384,6 +1632,79 @@
             console.error('❌ Ошибка проверки соединения:', error);
             showNotification('❌ Ошибка: ' + error.message);
             alert('❌ Ошибка соединения с GitHub:\n\n' + error.message + '\n\nПроверьте:\n1. Правильность токена\n2. Права токена (должен быть repo)\n3. Имя владельца и репозитория\n4. Открыта ли консоль браузера (F12) для подробностей');
+        }
+    }
+    
+    // ===== JSONBIN.IO НАСТРОЙКИ =====
+    
+    // Открытие модального окна настроек JSONBin.io
+    function openJsonBinSettings() {
+        loadJsonBinConfig();
+        document.getElementById('jsonbinApiKey').value = JSONBIN_CONFIG.apiKey;
+        document.getElementById('jsonbinBinId').value = JSONBIN_CONFIG.binId;
+        document.getElementById('jsonbinSettingsModal').classList.remove('hidden');
+    }
+    
+    // Закрытие модального окна настроек JSONBin.io
+    function closeJsonBinSettings() {
+        document.getElementById('jsonbinSettingsModal').classList.add('hidden');
+    }
+    
+    // Сохранение настроек JSONBin.io
+    function saveJsonBinSettings() {
+        JSONBIN_CONFIG.apiKey = document.getElementById('jsonbinApiKey').value.trim();
+        JSONBIN_CONFIG.binId = document.getElementById('jsonbinBinId').value.trim();
+        
+        if (!JSONBIN_CONFIG.apiKey || !JSONBIN_CONFIG.binId) {
+            alert('⚠️ Пожалуйста, заполните все поля (API Key и Bin ID)');
+            return;
+        }
+        
+        saveJsonBinConfig();
+        closeJsonBinSettings();
+        showNotification('✅ Настройки JSONBin.io сохранены!');
+        
+        // Предлагаем протестировать соединение
+        if (confirm('Хотите протестировать соединение с JSONBin.io?')) {
+            testJsonBinConnection();
+        }
+    }
+    
+    // Тестирование соединения с JSONBin.io
+    async function testJsonBinConnection() {
+        if (!isJsonBinConfigured()) {
+            alert('⚠️ JSONBin.io не настроен');
+            return;
+        }
+        
+        showNotification('🔍 Проверка соединения с JSONBin.io...');
+        
+        try {
+            const url = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}/latest`;
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Master-Key': JSONBIN_CONFIG.apiKey,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log('✅ JSONBin.io работает!');
+                console.log('📦 Bin ID:', JSONBIN_CONFIG.binId);
+                console.log('📊 Записей:', data.record ? Object.keys(data.record).length : 0);
+                alert('✅ Соединение с JSONBin.io работает!\n\nBin ID: ' + JSONBIN_CONFIG.binId + '\n\nМожете использовать синхронизацию.');
+                showNotification('✅ Соединение с JSONBin.io работает!');
+            } else {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
+            }
+        } catch (error) {
+            console.error('❌ Ошибка проверки соединения:', error);
+            showNotification('❌ Ошибка: ' + error.message);
+            alert('❌ Ошибка соединения с JSONBin.io:\n\n' + error.message + '\n\nПроверьте:\n1. Правильность API Key\n2. Правильность Bin ID\n3. Открыта ли консоль браузера (F12) для подробностей');
         }
     }
     
